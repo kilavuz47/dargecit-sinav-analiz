@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Gazi Ortaokulu Sınav Analiz Sistemi</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+/* CSS AYARLARI */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:14px;color:#333;background:#f8f9fa}
+:root{--blue:#185FA5;--blue-light:#E6F1FB;--teal:#0F6E56;--teal-light:#E1F5EE;--red:#A32D2D;--red-light:#FCEBEB;--amber:#BA7517;--amber-light:#FAEEDA;--gray-border:#ddd;--radius:8px;--radius-lg:12px}
+.app{min-height:600px}
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh}
+.login-card{background:#fff;border:1px solid var(--gray-border);border-radius:var(--radius-lg);padding:2rem;width:380px;box-shadow:0 4px 12px rgba(0,0,0,0.05)}
+.login-card h2{font-size:18px;font-weight:600;margin-bottom:4px;text-align:center}
+.login-card p{font-size:13px;color:#666;margin-bottom:1.5rem;text-align:center}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:12px;color:#555;margin-bottom:4px;font-weight:600}
+.form-group select,.form-group input{width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:var(--radius);font-size:13px;outline:none}
+.form-group select:focus,.form-group input:focus{border-color:var(--blue)}
+textarea{width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:var(--radius);font-size:13px;font-family:inherit;outline:none;resize:vertical}
+textarea:focus{border-color:var(--blue)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--radius);font-size:13px;cursor:pointer;border:1px solid transparent;background:#fff;color:#333;font-weight:600;transition:0.2s}
+.btn:hover{background:#f0f0f0}
+.btn-primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn-primary:hover{background:#0C447C}
+.btn-success{background:var(--teal);color:#fff;border-color:var(--teal)}
+.btn-success:hover{background:#0a4d3c}
+.btn-danger{background:var(--red-light);color:var(--red);border-color:var(--red)}
+.btn-full{width:100%;justify-content:center}
+.header{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:#fff;border-bottom:1px solid var(--gray-border)}
+.logo-badge{background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:4px 12px;border-radius:var(--radius)}
+.main-layout{display:flex;min-height:calc(100vh - 60px)}
+.sidebar{width:220px;background:#fff;border-right:1px solid var(--gray-border);padding:16px 10px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius);font-size:13px;cursor:pointer;color:#555;margin-bottom:4px;font-weight:500}
+.nav-item:hover{background:#f0f4f8;color:var(--blue)}
+.nav-item.active{background:var(--blue-light);color:var(--blue)}
+.content{flex:1;overflow:auto;padding:20px;background:#f8f9fa}
+.page{display:none}
+.page.active{display:block}
+.page-title{font-size:20px;font-weight:600;margin-bottom:4px;color:#222}
+.page-sub{font-size:13px;color:#666;margin-bottom:20px}
+.card{background:#fff;border:1px solid var(--gray-border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:16px;box-shadow:0 2px 6px rgba(0,0,0,0.02)}
+.card-title{font-size:15px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:#333;border-bottom:1px solid #eee;padding-bottom:8px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.metric-card{background:#fff;border:1px solid var(--gray-border);border-radius:var(--radius);padding:16px;text-align:center;box-shadow:0 2px 4px rgba(0,0,0,0.02)}
+.metric-val{font-size:24px;font-weight:bold;margin:8px 0 4px}
+.metric-label{font-size:12px;color:#666;text-transform:uppercase;letter-spacing:0.5px}
+.metric-card.blue{border-top:3px solid var(--blue)}
+.metric-card.green{border-top:3px solid var(--teal)}
+.metric-card.amber{border-top:3px solid var(--amber)}
+.metric-card.red{border-top:3px solid var(--red)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#f8f9fa;padding:10px 12px;text-align:left;font-weight:600;border-bottom:2px solid #ddd}
+td{padding:10px 12px;border-bottom:1px solid #eee}
+tr:hover td{background:#fcfcfc}
+.badge{display:inline-block;font-size:11px;padding:3px 8px;border-radius:20px;font-weight:600}
+.badge-blue{background:var(--blue-light);color:var(--blue)}
+.badge-green{background:var(--teal-light);color:var(--teal)}
+.badge-red{background:var(--red-light);color:var(--red)}
+.badge-amber{background:var(--amber-light);color:var(--amber)}
+.alert{padding:12px 16px;border-radius:var(--radius);font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:10px;font-weight:500}
+.alert-info{background:var(--blue-light);color:#0C447C;border:1px solid #B5D4F4}
+.upload-zone{border:2px dashed #ccc;border-radius:var(--radius);padding:30px;text-align:center;cursor:pointer;background:#fafafa}
+.upload-zone:hover{border-color:var(--blue);background:var(--blue-light)}
+.upload-zone input{display:none}
+.tab-bar{display:flex;border-bottom:1px solid #ddd;margin-bottom:20px}
+.tab-btn{padding:10px 20px;font-size:14px;cursor:pointer;border:none;background:transparent;color:#666;border-bottom:2px solid transparent;font-weight:600}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.chart-wrap{position:relative;height:300px;margin-top:10px}
+.ai-output{background:#fff;border:1px solid #eee;border-radius:var(--radius);padding:20px;font-size:14px;line-height:1.6;color:#333;white-space:pre-wrap;box-shadow:inset 0 2px 4px rgba(0,0,0,0.02)}
+/* PDF Özel Stilleri */
+.pdf-container { background: #fff; padding: 40px; }
+.pdf-header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
+.pdf-logo { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+.pdf-title { font-size: 18px; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+    <div class="login-wrap" id="loginPage">
+        <div class="login-card">
+            <div style="text-align:center;margin-bottom:1rem">
+                <h2>Gazi Ortaokulu</h2>
+                <p>Klasik Sınav Analiz ve Havuz Sistemi</p>
+            </div>
+            <div class="form-group">
+                <label>Yetki Türü</label>
+                <select id="loginRole">
+                    <option value="ogretmen">Öğretmen</option>
+                    <option value="yonetici">Okul Yöneticisi / İdare</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Kullanıcı Adı</label>
+                <input type="text" id="loginUser" placeholder="Örn: ahmet_hoca" />
+            </div>
+            <button class="btn btn-primary btn-full" style="margin-top:10px" onclick="doLogin()">Sisteme Giriş</button>
+        </div>
+    </div>
+
+    <div id="mainApp" style="display:none">
+        <div class="header">
+            <div class="logo-badge">MEB Dargeçit Analiz</div>
+            <div style="display:flex;align-items:center;gap:15px">
+                <div style="text-align:right">
+                    <div style="font-weight:600;font-size:14px" id="headerUser"></div>
+                    <div style="font-size:11px;color:#666" id="headerRole"></div>
+                </div>
+                <button class="btn" style="padding:6px 10px" onclick="doLogout()">Çıkış</button>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <div class="sidebar" id="sidebarEl">
+                </div>
+            <div class="content" id="contentEl">
+
+                <div class="page active" id="page-dashboard">
+                    <div class="page-title">Kontrol Paneli</div>
+                    <div class="page-sub">Kurum genel bakış istatistikleri</div>
+                    <div class="grid-4" id="dashMetrics" style="margin-bottom:20px"></div>
+                    <div class="card">
+                        <div class="card-title">Genel Başarı Grafiği</div>
+                        <div class="chart-wrap"><canvas id="chartDers"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="page" id="page-ogrenci">
+                    <div class="page-title">Öğrenci Yönetimi</div>
+                    <div class="page-sub">Öğrenci şablonu indirme ve listesi yükleme</div>
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-title">Öğrenci Şablonu İndir</div>
+                            <p style="font-size:13px;color:#666;margin-bottom:15px">Sisteme yeni öğrenci eklemek için resmi şablonu indirin, doldurun ve yandaki panelden yükleyin.</p>
+                            <button class="btn btn-success btn-full" onclick="ogrExcelIndir()">Boş Öğrenci Şablonu İndir (Excel)</button>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Öğrenci Listesi Yükle</div>
+                            <div class="upload-zone" onclick="document.getElementById('ogrExcel').click()">
+                                <input type="file" id="ogrExcel" accept=".xlsx,.xls" onchange="ogrExcelYukle(this)">
+                                <p style="font-weight:600;color:#333">Excel Dosyasını Seçin</p>
+                                <p style="font-size:12px;color:#666;margin-top:5px">Mükerrer numaralar sistem tarafından otomatik engellenir.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Sistemdeki Öğrenciler (<span id="ogrSayi">0</span>)</div>
+                        <div class="table-wrap"><table id="ogrTable"><thead><tr><th>Okul No</th><th>Adı</th><th>Soyadı</th><th>Sınıf</th><th>İşlem</th></tr></thead><tbody id="ogrBody"></tbody></table></div>
+                    </div>
+                </div>
+
+                <div class="page" id="page-senaryo">
+                    <div class="page-title">Sınav ve Senaryo Havuzu</div>
+                    <div class="page-sub">MEB formatında alt becerili senaryo tanımlama</div>
+                    
+                    <div class="card">
+                        <div class="card-title">Yeni Senaryo Ekle (Manuel veya Gemini AI)</div>
+                        <div class="grid-2" style="margin-bottom:15px">
+                            <div class="form-group"><label>Sınav Adı</label><input type="text" id="senaryoSinavAdi" placeholder="Örn: Matematik 2. Dönem 2. Yazılı" /></div>
+                            <div class="form-group"><label>Senaryo İsmi</label><input type="text" id="senaryoIsmi" placeholder="Örn: Senaryo 4" /></div>
+                        </div>
+                        
+                        <div class="tab-bar">
+                            <button class="tab-btn active" onclick="switchSenaryoTab(this, 's-ai')">Yapay Zeka ile Üret</button>
+                            <button class="tab-btn" onclick="switchSenaryoTab(this, 's-manuel')">Manuel Şablon Doldur</button>
+                        </div>
+
+                        <div class="tab-content active" id="s-ai">
+                            <div class="alert alert-info">Sınav kazanımlarını ve alt konularını (süreç bileşenlerini) MEB kılavuzundan kopyalayıp buraya yapıştırın. Gemini AI yapıyı otomatik çözecektir.</div>
+                            <div class="form-group"><textarea id="senaryoMetinAI" rows="6" placeholder="Kazanımları buraya yapıştırın..."></textarea></div>
+                            <button class="btn btn-primary" onclick="aiSenaryoCoz()" id="aiCozBtn">Gemini AI ile Çözümle ve Havuza Ekle</button>
+                        </div>
+
+                        <div class="tab-content" id="s-manuel">
+                            <div id="manuelKazanımlarWrapper">
+                                </div>
+                            <div style="display:flex;gap:10px;margin-top:10px">
+                                <button class="btn" onclick="manuelSatirEkle()">+ Soru/Kazanım Ekle</button>
+                                <button class="btn btn-success" onclick="manuelSenaryoKaydet()">Manuel Senaryoyu Havuza Kaydet</button>
+                            </div>
+                        </div>
+                        
+                        <div id="aiCozSonuc" style="display:none;margin-top:20px;border-top:1px solid #eee;padding-top:20px">
+                            <h4 style="margin-bottom:10px">Çözümlenen Senaryo Önizlemesi</h4>
+                            <div id="aiCozPreview"></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Havuza Kayıtlı Senaryolar</div>
+                        <div id="senaryoListesi"></div>
+                    </div>
+                </div>
+
+                <div class="page" id="page-sinav">
+                    <div class="page-title">Sınav Not Girişi</div>
+                    <div class="page-sub">Şablon indir ve puanlanmış listeyi yükle</div>
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-title">1. Adım: Not Şablonu İndir</div>
+                            <div class="form-group"><label>Senaryo Seçin</label><select id="sinavSenaryo"></select></div>
+                            <div class="form-group"><label>Sınıf Seçin</label><select id="sinavSinif"></select></div>
+                            <button class="btn btn-primary btn-full" onclick="sinavSablonIndir()">Öğrenci Not Şablonunu İndir</button>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">2. Adım: Puanlanmış Listeyi Yükle</div>
+                            <div class="upload-zone" onclick="document.getElementById('notExcel').click()">
+                                <input type="file" id="notExcel" accept=".xlsx,.xls" onchange="notYukle(this)">
+                                <p style="font-weight:600;color:#333">Notları Girilmiş Excel'i Seçin</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="notYuklenenPreview" style="display:none" class="card"></div>
+                </div>
+
+                <div class="page" id="page-analiz">
+                    <div class="page-title">Detaylı Sınav Analizi ve Müfettiş Raporları</div>
+                    <div class="page-sub">Gemini Yapay Zeka destekli zümre raporları ve grafikler</div>
+                    
+                    <div class="form-group" style="max-width:400px">
+                        <label>Analiz Edilecek Sınavı Seçin</label>
+                        <select id="analizSinav" onchange="analizYukle()"></select>
+                    </div>
+
+                    <div id="analizIcerik" style="display:none">
+                        <div class="tab-bar">
+                            <button class="tab-btn active" onclick="switchAnalizTab(this, 'a-ozet')">Genel Grafik Analizi</button>
+                            <button class="tab-btn" onclick="switchAnalizTab(this, 'a-tablo')">Sınıf Listesi ve Notlar</button>
+                            <button class="tab-btn" onclick="switchAnalizTab(this, 'a-rapor')">Resmi Müfettiş/Zümre Raporu</button>
+                        </div>
+
+                        <div class="tab-content active" id="a-ozet">
+                            <div class="grid-2">
+                                <div class="card">
+                                    <div class="card-title">Kazanım Ortalamaları (Soru Bazlı)</div>
+                                    <div class="chart-wrap"><canvas id="kazChart"></canvas></div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-title">Sınıf Başarı Dağılımı (Daire Grafiği)</div>
+                                    <div class="chart-wrap"><canvas id="pieChart"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-content" id="a-tablo">
+                            <div class="card">
+                                <div class="table-wrap" id="analizTabloAlani"></div>
+                            </div>
+                        </div>
+
+                        <div class="tab-content" id="a-rapor">
+                            <div class="card">
+                                <div class="card-title">Gemini AI Pedagojik Analiz Raporu</div>
+                                <button class="btn btn-primary" onclick="aiRaporUret()"><i class="ti ti-brain"></i> Raporu Oluştur</button>
+                                <div id="aiRaporSonuc" style="display:none;margin-top:20px">
+                                    <div id="pdfCiktiAlani" class="pdf-container">
+                                        <div class="pdf-header">
+                                            <div class="pdf-logo">T.C. MİLLİ EĞİTİM BAKANLIĞI</div>
+                                            <div class="pdf-title">Dargeçit Gazi Ortaokulu Sınav Analiz Raporu</div>
+                                        </div>
+                                        <div id="raporMetni" class="ai-output" style="border:none;box-shadow:none;padding:0"></div>
+                                    </div>
+                                    <button class="btn btn-success" style="margin-top:15px" onclick="pdfOlarakIndir()"><i class="ti ti-file-pdf"></i> Resmi PDF Olarak İndir (İlçe/Müfettiş)</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// --- GEMINI API YAPILANDIRMASI ---
+// LÜTFEN KENDİ GEMINI API ANAHTARINIZI BURAYA YAPIŞTIRIN
+const GEMINI_API_KEY = "BURAYA_GEMINI_API_ANAHTARINI_YAZIN";
+
+// --- TEMEL DURUM VE VERİLER (STATE) ---
+var state = {
+  giris: false,
+  rol: null,
+  kullanici: null,
+  ogrenciler: [],
+  senaryolar: {},
+  sinav_sonuclari: {},
+  aktivSayfa: 'dashboard',
+  charts: {}
+};
+
+// --- ARAYÜZ VE GİRİŞ İŞLEMLERİ ---
+function doLogin() {
+  var u = document.getElementById('loginUser').value.trim();
+  if (!u) { alert('Lütfen sicil veya kullanıcı adınızı giriniz.'); return; }
+  state.giris = true;
+  state.rol = document.getElementById('loginRole').value;
+  state.kullanici = u;
+  
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'block';
+  document.getElementById('headerUser').textContent = u;
+  document.getElementById('headerRole').textContent = state.rol === 'yonetici' ? 'İdareci' : 'Matematik Öğretmeni';
+  
+  buildSidebar();
+  showPage('dashboard');
+  manuelSatirEkle(); // Manuel senaryo için ilk satırı hazırla
+}
+
+function doLogout() {
+  state.giris = false;
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'flex';
+}
+
+function buildSidebar() {
+  var sb = document.getElementById('sidebarEl');
+  var items = [
+    {key:'dashboard', label:'Kontrol Paneli'},
+    {key:'ogrenci', label:'Öğrenci Yönetimi'},
+    {key:'senaryo', label:'Senaryo Havuzu'},
+    {key:'sinav', label:'Sınav Not Girişi'},
+    {key:'analiz', label:'Detaylı Analiz & PDF'}
+  ];
+  var html = '';
+  items.forEach(function(it) {
+    html += '<div class="nav-item" id="nav-'+it.key+'" onclick="showPage(\''+it.key+'\')">'+it.label+'</div>';
+  });
+  sb.innerHTML = html;
+}
+
+function showPage(key) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
+  document.getElementById('page-'+key).classList.add('active');
+  document.getElementById('nav-'+key).classList.add('active');
+  state.aktivSayfa = key;
+  
+  if (key === 'dashboard') renderDashboard();
+  else if (key === 'ogrenci') renderOgrenci();
+  else if (key === 'senaryo') renderSenaryoListesi();
+  else if (key === 'sinav') renderSinavSecenekleri();
+  else if (key === 'analiz') renderAnalizSecenekleri();
+}
+
+function renderDashboard() {
+    var ogrSayi = state.ogrenciler.length;
+    var senaryoSayi = Object.keys(state.senaryolar).length;
+    var sinavSayi = Object.keys(state.sinav_sonuclari).length;
+    
+    document.getElementById('dashMetrics').innerHTML = 
+        metricCard('Kayıtlı Öğrenci', ogrSayi, 'blue') +
+        metricCard('Sınav Senaryosu', senaryoSayi, 'amber') +
+        metricCard('Okunan Sınav', sinavSayi, 'green');
+}
+
+function metricCard(label, val, color) {
+  return '<div class="metric-card '+color+'"><div class="metric-val">'+val+'</div><div class="metric-label">'+label+'</div></div>';
+}
+
+// --- ÖĞRENCİ İŞLEMLERİ ---
+function ogrExcelIndir() {
+  var wb = XLSX.utils.book_new();
+  var ws = XLSX.utils.aoa_to_sheet([['Okul No','Adı','Soyadı','Sınıf'],['100','Ahmet','Yılmaz','6/A']]);
+  XLSX.utils.book_append_sheet(wb, ws, 'Ogrenciler');
+  XLSX.writeFile(wb, 'Ogrenci_Sablonu.xlsx');
+}
+
+function ogrExcelYukle(inp) {
+  var f = inp.files[0]; if (!f) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var wb = XLSX.read(e.target.result, {type:'binary'});
+    var data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+    var eklenen = 0;
+    data.forEach(function(r) {
+      var no = String(r['Okul No'] || '').trim();
+      if(no && !state.ogrenciler.find(o=>o.no===no)) {
+        state.ogrenciler.push({no:no, ad:r['Adı'], soyad:r['Soyadı'], sinif:r['Sınıf']});
+        eklenen++;
+      }
+    });
+    alert(eklenen + " yeni öğrenci sisteme kaydedildi.");
+    renderOgrenci();
+  };
+  reader.readAsBinaryString(f);
+}
+
+function renderOgrenci() {
+  document.getElementById('ogrSayi').textContent = state.ogrenciler.length;
+  var html = '';
+  state.ogrenciler.forEach(function(o, i) {
+    html += '<tr><td>'+o.no+'</td><td>'+o.ad+'</td><td>'+o.soyad+'</td><td>'+o.sinif+'</td><td><button class="btn btn-danger" onclick="state.ogrenciler.splice('+i+',1);renderOgrenci()">Sil</button></td></tr>';
+  });
+  document.getElementById('ogrBody').innerHTML = html;
+}
+
+// --- SENARYO VE ALT BECERİ İŞLEMLERİ ---
+function switchSenaryoTab(el, id) {
+    document.querySelectorAll('#page-senaryo .tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('#page-senaryo .tab-content').forEach(c=>c.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById(id).classList.add('active');
+}
+
+function manuelSatirEkle() {
+    var wrap = document.getElementById('manuelKazanımlarWrapper');
+    var i = wrap.children.length + 1;
+    var html = `
+        <div class="card" style="padding:15px;margin-bottom:10px" id="msatir_${i}">
+            <div style="font-weight:600;margin-bottom:8px">Soru ${i}</div>
+            <div class="grid-2">
+                <div class="form-group"><label>Kazanım Kodu / Metni</label><input type="text" class="m-kazanim" placeholder="Örn: MAT.6.2.1..."></div>
+                <div class="form-group"><label>Maksimum Puan</label><input type="number" class="m-puan" value="20"></div>
+            </div>
+            <div class="form-group"><label>Süreç Bileşenleri / Alt Konu (İsteğe Bağlı)</label><input type="text" class="m-altbeceri" placeholder="Örn: a) Nicelikleri belirler, b) İlişki kurar..."></div>
+        </div>`;
+    wrap.insertAdjacentHTML('beforeend', html);
+}
+
+function manuelSenaryoKaydet() {
+    var sinavAdi = document.getElementById('senaryoSinavAdi').value.trim() || 'İsimsiz Sınav';
+    var senaryoIsmi = document.getElementById('senaryoIsmi').value.trim() || 'Manuel Senaryo';
+    var id = sinavAdi + ' - ' + senaryoIsmi;
+    
+    var kazanimlar = [];
+    var satirlar = document.getElementById('manuelKazanımlarWrapper').children;
+    for(var i=0; i<satirlar.length; i++) {
+        var k = satirlar[i].querySelector('.m-kazanim').value;
+        var p = satirlar[i].querySelector('.m-puan').value;
+        var a = satirlar[i].querySelector('.m-altbeceri').value;
+        kazanimlar.push({
+            kazanim: k || `Soru ${i+1}`,
+            altBeceriler: a || 'Belirtilmedi',
+            maxPuan: parseInt(p) || 20
+        });
+    }
+    
+    state.senaryolar[id] = {sinav: sinavAdi, senaryo: senaryoIsmi, detaylar: kazanimlar};
+    alert('Senaryo havuza kaydedildi!');
+    renderSenaryoListesi();
+}
+
+async function aiSenaryoCoz() {
+    var metin = document.getElementById('senaryoMetinAI').value.trim();
+    var sinavAdi = document.getElementById('senaryoSinavAdi').value.trim() || 'İsimsiz Sınav';
+    var senaryoIsmi = document.getElementById('senaryoIsmi').value.trim() || 'AI Senaryo';
+    
+    if(!metin) { alert('Lütfen kazanım metnini girin'); return; }
+    if(GEMINI_API_KEY === "BURAYA_GEMINI_API_ANAHTARINI_YAZIN") { alert('Lütfen kodun sonundaki GEMINI API anahtarını değiştirin!'); return; }
+    
+    document.getElementById('aiCozBtn').innerText = "Gemini Düşünüyor...";
+    
+    var prompt = `Sen bir sınav analiz asistanısın. Aşağıdaki metinden sınav sorularının kazanımlarını ve eğer varsa a), b) gibi alt süreç bileşenlerini çıkar. 
+    Lütfen sadece geçerli JSON döndür, başka hiçbir şey yazma. Format:
+    [
+      {"kazanim": "MAT.6.2.1...", "altBeceriler": "a) ..., b) ...", "maxPuan": 20}
+    ]
+    Metin: ${metin}`;
+
+    try {
+        var res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({contents: [{parts: [{text: prompt}]}]})
+        });
+        var data = await res.json();
+        var rawText = data.candidates[0].content.parts[0].text;
+        var cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+        var kazanimlar = JSON.parse(cleanJson);
+        
+        var id = sinavAdi + ' - ' + senaryoIsmi;
+        state.senaryolar[id] = {sinav: sinavAdi, senaryo: senaryoIsmi, detaylar: kazanimlar};
+        
+        // Önizleme Tablosu
+        var html = '<table class="table-wrap"><tr><th>Soru</th><th>Kazanım</th><th>Alt Beceriler</th><th>Puan</th></tr>';
+        kazanimlar.forEach((k,i)=>{
+            html+=`<tr><td>Soru ${i+1}</td><td>${k.kazanim}</td><td>${k.altBeceriler}</td><td>${k.maxPuan}</td></tr>`;
+        });
+        html += '</table>';
+        document.getElementById('aiCozPreview').innerHTML = html;
+        document.getElementById('aiCozSonuc').style.display = 'block';
+        
+        renderSenaryoListesi();
+    } catch(e) {
+        alert("Yapay zeka hatası: " + e.message);
+    }
+    document.getElementById('aiCozBtn').innerText = "Gemini AI ile Çözümle ve Havuza Ekle";
+}
+
+function renderSenaryoListesi() {
+    var html = '';
+    Object.keys(state.senaryolar).forEach(id => {
+        var kCount = state.senaryolar[id].detaylar.length;
+        html += `<div class="card" style="padding:10px 15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center">
+            <div><strong style="color:var(--blue)">${id}</strong><br><small>${kCount} Soru/Kazanım Tanımlı</small></div>
+            <button class="btn btn-danger" onclick="delete state.senaryolar['${id}']; renderSenaryoListesi()">Sil</button>
+        </div>`;
+    });
+    document.getElementById('senaryoListesi').innerHTML = html || 'Kayıtlı senaryo yok.';
+}
+
+// --- SINAV NOT GİRİŞ İŞLEMLERİ ---
+function renderSinavSecenekleri() {
+    var sel = document.getElementById('sinavSenaryo');
+    var sinif = document.getElementById('sinavSinif');
+    sel.innerHTML = ''; sinif.innerHTML = '<option value="Tümü">Tümü</option>';
+    
+    Object.keys(state.senaryolar).forEach(k => sel.innerHTML += `<option value="${k}">${k}</option>`);
+    var siniflar = [...new Set(state.ogrenciler.map(o=>o.sinif))];
+    siniflar.forEach(s => sinif.innerHTML += `<option value="${s}">${s}</option>`);
+}
+
+function sinavSablonIndir() {
+    var id = document.getElementById('sinavSenaryo').value;
+    var sinifSec = document.getElementById('sinavSinif').value;
+    if(!id) { alert("Lütfen senaryo seçin."); return; }
+    
+    var s = state.senaryolar[id];
+    var ogrs = sinifSec === 'Tümü' ? state.ogrenciler : state.ogrenciler.filter(o=>o.sinif===sinifSec);
+    if(ogrs.length === 0) { alert("Bu sınıfa ait öğrenci bulunamadı."); return; }
+    
+    var header = ['Okul No', 'Adı', 'Soyadı', 'Sınıf'];
+    s.detaylar.forEach((k,i) => header.push(`Soru ${i+1} [Max:${k.maxPuan}]`));
+    
+    var rows = [header];
+    ogrs.forEach(o => {
+        var r = [o.no, o.ad, o.soyad, o.sinif];
+        s.detaylar.forEach(() => r.push('')); // Puanlar boş
+        rows.push(r);
+    });
+    
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), 'Notlar');
+    XLSX.writeFile(wb, `Sinav_${id}_Sablon.xlsx`);
+}
+
+function notYukle(inp) {
+    var f = inp.files[0]; if (!f) return;
+    var id = document.getElementById('sinavSenaryo').value;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var data = XLSX.utils.sheet_to_json(XLSX.read(e.target.result, {type:'binary'}).Sheets[0]);
+        state.sinav_sonuclari[id] = data; // Tüm excel JSON olarak tutuluyor
+        
+        document.getElementById('notYuklenenPreview').style.display = 'block';
+        document.getElementById('notYuklenenPreview').innerHTML = `
+            <div class="alert alert-success">Excel başarıyla okundu! ${data.length} öğrencinin sonucu ${id} sistemine işlendi.</div>
+        `;
+    };
+    reader.readAsBinaryString(f);
+}
+
+// --- ANALİZ VE PDF İŞLEMLERİ ---
+function renderAnalizSecenekleri() {
+    var sel = document.getElementById('analizSinav');
+    sel.innerHTML = '<option value="">Analiz için sınav seçin...</option>';
+    Object.keys(state.sinav_sonuclari).forEach(k => sel.innerHTML += `<option value="${k}">${k}</option>`);
+    document.getElementById('analizIcerik').style.display = 'none';
+}
+
+function switchAnalizTab(el, id) {
+    document.querySelectorAll('#page-analiz .tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('#page-analiz .tab-content').forEach(c=>c.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById(id).classList.add('active');
+}
+
+function analizYukle() {
+    var id = document.getElementById('analizSinav').value;
+    if(!id) { document.getElementById('analizIcerik').style.display = 'none'; return; }
+    document.getElementById('analizIcerik').style.display = 'block';
+    
+    var data = state.sinav_sonuclari[id];
+    var senaryo = state.senaryolar[id];
+    
+    // Soru Başlıklarını Bul (Örn: Soru 1 [Max:20])
+    var keys = Object.keys(data[0]).filter(k => k.startsWith('Soru'));
+    
+    // Tablo Çizimi
+    var thtml = '<table><tr><th>No</th><th>İsim</th><th>Sınıf</th>';
+    keys.forEach(k=> thtml+=`<th>${k}</th>`);
+    thtml += '<th>Toplam</th><th>% Başarı</th></tr>';
+    
+    var pieStats = { basarili: 0, orta: 0, zayif: 0 };
+    var soruToplamlari = keys.map(()=>0);
+    
+    data.forEach(r => {
+        var topPuan = 0, maxTop = 0;
+        thtml += `<tr><td>${r['Okul No']}</td><td>${r['Adı']} ${r['Soyadı']}</td><td>${r['Sınıf']}</td>`;
+        keys.forEach((k,i) => {
+            var p = parseFloat(r[k]) || 0;
+            var maxP = senaryo.detaylar[i].maxPuan;
+            topPuan += p; maxTop += maxP;
+            soruToplamlari[i] += p;
+            thtml += `<td>${p}</td>`;
+        });
+        var pct = (topPuan / maxTop) * 100;
+        if(pct >= 70) pieStats.basarili++;
+        else if(pct >= 45) pieStats.orta++;
+        else pieStats.zayif++;
+        
+        thtml += `<td><strong>${topPuan}</strong></td><td>%${pct.toFixed(1)}</td></tr>`;
+    });
+    thtml += '</table>';
+    document.getElementById('analizTabloAlani').innerHTML = thtml;
+    
+    // Bar Grafiği (Soru Ortalamaları)
+    var soruOrtalamalari = soruToplamlari.map(t => (t / data.length).toFixed(1));
+    if(state.charts.bar) state.charts.bar.destroy();
+    state.charts.bar = new Chart(document.getElementById('kazChart'), {
+        type: 'bar',
+        data: { labels: keys.map((k,i)=>'Soru '+(i+1)), datasets: [{ label: 'Soru Ortalaması', data: soruOrtalamalari, backgroundColor: '#185FA5'}] }
+    });
+    
+    // Daire Grafiği (Pie Chart) - Sınıf Dağılımı
+    if(state.charts.pie) state.charts.pie.destroy();
+    state.charts.pie = new Chart(document.getElementById('pieChart'), {
+        type: 'pie',
+        data: { 
+            labels: ['Başarılı (>%70)', 'Orta (%45-70)', 'Zayıf (<%45)'], 
+            datasets: [{ data: [pieStats.basarili, pieStats.orta, pieStats.zayif], backgroundColor: ['#0F6E56', '#BA7517', '#A32D2D'] }] 
+        }
+    });
+}
+
+// --- GEMINI AI MÜFETTİŞ RAPORU ---
+async function aiRaporUret() {
+    var id = document.getElementById('analizSinav').value;
+    if(!id) return;
+    if(GEMINI_API_KEY === "BURAYA_GEMINI_API_ANAHTARINI_YAZIN") { alert("Lütfen kodun sonundaki API anahtarını değiştirin!"); return; }
+    
+    document.getElementById('aiRaporSonuc').style.display = 'block';
+    document.getElementById('raporMetni').innerHTML = "Gemini Yapay Zeka analiz ediyor... Lütfen bekleyin.";
+    
+    var data = state.sinav_sonuclari[id];
+    var senaryo = state.senaryolar[id];
+    
+    var dataOzet = `Sınav Adı: ${id}\nÖğrenci Sayısı: ${data.length}\nKazanımlar ve Beceriler:\n`;
+    senaryo.detaylar.forEach((k,i) => {
+        dataOzet += `Soru ${i+1} (${k.maxPuan} Puan): ${k.kazanim}. Alt Beceriler: ${k.altBeceriler}\n`;
+    });
+    
+    var prompt = `Sen Dargeçit Gazi Ortaokulu'nda görevli MEB müfettişi standartlarında bir yapay zeka asistansın. Aşağıdaki sınav senaryosunu ve kazanımları/alt becerileri incele. Zümre toplantı tutanaklarına eklenebilecek, resmi, pedagojik ve eylem planı sunan bir 'Klasik Sınav Analiz Raporu' yaz. Alt becerileri de dikkate al. Metin çok profesyonel olsun.
+    Veri: ${dataOzet}`;
+
+    try {
+        var res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({contents: [{parts: [{text: prompt}]}]})
+        });
+        var result = await res.json();
+        var text = result.candidates[0].content.parts[0].text;
+        // Markdown bold ve listeleri HTML'e çevirme
+        var htmlText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\n/g, '<li>$1</li>').replace(/\n/g, '<br>');
+        document.getElementById('raporMetni').innerHTML = htmlText;
+    } catch(e) {
+        document.getElementById('raporMetni').innerHTML = "Rapor üretilemedi: " + e.message;
+    }
+}
+
+// --- RESMİ PDF İNDİRME İŞLEMİ (html2pdf) ---
+function pdfOlarakIndir() {
+    var element = document.getElementById('pdfCiktiAlani');
+    var sinavIsmi = document.getElementById('analizSinav').value;
+    var opt = {
+      margin:       10,
+      filename:     `Dargecit_Analiz_Raporu_${sinavIsmi}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+}
+</script>
+</body>
+</html>
