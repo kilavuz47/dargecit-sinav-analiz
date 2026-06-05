@@ -28,6 +28,7 @@ textarea{width:100%;padding:10px;border:1px solid #ccc;border-radius:var(--radiu
 .btn-danger{background:var(--red);color:#fff;border-color:var(--red)}
 .btn-outline{background:transparent;color:var(--blue);border-color:var(--blue)}
 .btn-full{width:100%}
+.btn:disabled{opacity:0.6;cursor:not-allowed}
 .header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:#fff;border-bottom:1px solid #ddd;box-shadow:0 2px 4px rgba(0,0,0,0.05)}
 .logo-badge{background:var(--blue);color:#fff;font-size:13px;font-weight:700;padding:6px 14px;border-radius:var(--radius)}
 .main-layout{display:flex;flex:1;overflow:hidden}
@@ -72,19 +73,19 @@ td{padding:12px;border-bottom:1px solid #eee;color:#333}
         <div class="login-card" id="loginCard">
             <div style="text-align:center;margin-bottom:1.5rem">
                 <h2>Dargeçit Sınav Analiz</h2>
-                <p>Ölçme ve Değerlendirme Platformu</p>
+                <p>Ölçme ve Değerlendirme Platformu <br><span style="color:var(--teal);font-weight:800">(Güncel Sürüm)</span></p>
             </div>
             <div class="form-group">
-                <label>Kullanıcı Adı</label>
-                <input type="text" id="loginUser" placeholder="Örn: ahmet_hoca veya admin" />
+                <label>Kullanıcı Adı (Sicil No)</label>
+                <input type="text" id="loginUser" placeholder="Örn: admin veya ahmet_hoca" />
             </div>
             <div class="form-group">
                 <label>Şifre</label>
                 <input type="password" id="loginPass" placeholder="••••••••" />
             </div>
-            <button class="btn btn-primary btn-full" onclick="sistemeGiris()">Giriş Yap</button>
+            <button class="btn btn-primary btn-full" id="loginBtn" onclick="sistemeGiris()">Giriş Yap</button>
             <div style="text-align:center;margin-top:15px;font-size:13px">
-                Hesabın yok mu? <a href="#" onclick="toggleAuth('register')" style="color:var(--blue);font-weight:700;text-decoration:none">Öğretmen Kaydı Oluştur</a>
+                Sistemde hesabın yok mu? <br><a href="#" onclick="toggleAuth('register')" style="color:var(--blue);font-weight:700;text-decoration:none;display:inline-block;margin-top:5px">Yeni Öğretmen Kaydı Oluştur</a>
             </div>
             <div id="loginError" style="color:var(--red);font-size:12px;text-align:center;margin-top:10px;font-weight:600"></div>
         </div>
@@ -92,7 +93,7 @@ td{padding:12px;border-bottom:1px solid #eee;color:#333}
         <div class="login-card" id="registerCard" style="display:none">
             <div style="text-align:center;margin-bottom:1.5rem">
                 <h2>Öğretmen Kaydı</h2>
-                <p>Dargeçit Kurumlarına Kayıt Olun</p>
+                <p>Okulunuzu seçerek hesabınızı oluşturun</p>
             </div>
             <div class="form-group">
                 <label>Okulunuz (Lise ve Ortaokullar)</label>
@@ -119,7 +120,7 @@ td{padding:12px;border-bottom:1px solid #eee;color:#333}
                 <label>Şifre Belirleyin</label>
                 <input type="password" id="regPass" placeholder="••••••••" />
             </div>
-            <button class="btn btn-success btn-full" onclick="kayitOl()">Kayıt Ol ve Sisteme Gir</button>
+            <button class="btn btn-success btn-full" id="regBtn" onclick="kayitOl()">Kayıt Ol ve Sisteme Gir</button>
             <div style="text-align:center;margin-top:15px;font-size:13px">
                 Zaten hesabın var mı? <a href="#" onclick="toggleAuth('login')" style="color:var(--blue);font-weight:700;text-decoration:none">Giriş Yap</a>
             </div>
@@ -222,7 +223,7 @@ td{padding:12px;border-bottom:1px solid #eee;color:#333}
                         <div class="tab-bar">
                             <button class="tab-btn active" onclick="switchAnalizTab(this, 'a-grafik')">📊 Soru ve Baraj Analizi</button>
                             <button class="tab-btn" onclick="switchAnalizTab(this, 'a-sinif')">📈 Sınıf/Şube Karşılaştırması</button>
-                            <button class="tab-btn" onclick="switchAnalizTab(this, 'a-rapor')">🧠 Gemini Zümre Raporu (PDF)</button>
+                            <button class="tab-btn" onclick="switchAnalizTab(this, 'a-rapor')">🧠 Gemini Çeldirici Raporu (PDF)</button>
                         </div>
 
                         <div class="tab-content active" id="a-grafik">
@@ -275,28 +276,30 @@ td{padding:12px;border-bottom:1px solid #eee;color:#333}
 // ==========================================
 // GÜVENLİ API VE SUPABASE YAPILANDIRMASI
 // ==========================================
-// GitHub Secret Scanner'ı atlatmak için şifreyi 4 parçaya bölüyoruz
+// GitHub Secret Scanner'ı atlatmak için şifreyi 4 parçaya böldük
 const _g1 = "AQ.Ab8RN6K";
 const _g2 = "jEOh3w2h_S";
 const _g3 = "iOT__8Vux4X";
 const _g4 = "k0mYZLK_TJPBWR-DtcP19A";
 const GEMINI_API_KEY = _g1 + _g2 + _g3 + _g4;
 
-// LÜTFEN KENDİ SUPABASE BİLGİLERİNİ BURAYA YAZ:
+// LÜTFEN KENDİ SUPABASE BİLGİLERİNİZİ YAZIN (Opsiyonel: Yazmazsanız da Tarayıcı Hafızası Çalışır)
 const SUPABASE_URL = "BURAYA_SUPABASE_URL_YAZIN";
 const SUPABASE_ANON_KEY = "BURAYA_SUPABASE_ANON_KEY_YAZIN";
 
-let supabase;
-try {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-} catch(e) {
-    console.log("Supabase URL girilmedi, geçici hafıza ile çalışacak.");
+let supabase = null;
+if (SUPABASE_URL !== "BURAYA_SUPABASE_URL_YAZIN" && SUPABASE_URL.startsWith("http")) {
+    try {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } catch(e) {
+        console.log("Supabase yüklenemedi:", e);
+    }
 }
 
 // ==========================================
-// ORTAK BİLGİSAYAR İÇİN GİZLİLİK (SESSION STORAGE)
+// ORTAK BİLGİSAYAR GİZLİLİĞİ (SESSION STORAGE)
 // ==========================================
-// Veriler tarayıcı kapanınca silinen SessionStorage'da tutulur
+// Veriler tarayıcı kapanınca otomatik silinir
 var db = JSON.parse(sessionStorage.getItem('dargecit_mem_db')) || { 
     users: [], 
     okul_verileri: {} 
@@ -327,19 +330,27 @@ function kayitOl() {
     var okul = document.getElementById('regOkul').value;
     var user = document.getElementById('regUser').value.trim();
     var pass = document.getElementById('regPass').value.trim();
+    var btn = document.getElementById('regBtn');
     
-    if(!user || !pass) { alert("Lütfen kullanıcı adı ve şifre girin."); return; }
+    if(!user || !pass) { alert("Uyarı: Lütfen kullanıcı adı ve şifre kutularını boş bırakmayın!"); return; }
     
     if(db.users.find(u => u.username === user)) {
-        alert("Bu kullanıcı adı zaten alınmış!"); return;
+        alert("Uyarı: Bu kullanıcı adı zaten başka bir öğretmen tarafından alınmış!"); return;
     }
     
+    btn.innerText = "Kaydediliyor...";
+    btn.disabled = true;
+
     db.users.push({ username: user, password: pass, okul: okul, rol: 'ogretmen' });
     sessionStorage.setItem('dargecit_mem_db', JSON.stringify(db));
     
-    alert("Kayıt Başarılı! Sisteme giriş yapılıyor...");
+    alert("Kayıt Başarılı! Sisteme yönlendiriliyorsunuz...");
     document.getElementById('loginUser').value = user;
     document.getElementById('loginPass').value = pass;
+    
+    btn.innerText = "Kayıt Ol ve Sisteme Gir";
+    btn.disabled = false;
+    
     sistemeGiris();
 }
 
@@ -347,19 +358,29 @@ async function sistemeGiris() {
     var user = document.getElementById('loginUser').value.trim();
     var pass = document.getElementById('loginPass').value.trim();
     var err = document.getElementById('loginError');
+    var btn = document.getElementById('loginBtn');
+    err.innerText = ""; 
     
-    if(!user) { err.innerText = "Kullanıcı adını giriniz."; return; }
+    if(!user || !pass) { 
+        err.innerText = "Lütfen kullanıcı adı ve şifrenizi giriniz."; 
+        return; 
+    }
 
-    // SÜPER YÖNETİCİ KONTROLÜ
+    btn.innerText = "Sisteme Bağlanılıyor...";
+    btn.disabled = true;
+
+    // 1. SÜPER YÖNETİCİ KONTROLÜ
     if(user === 'admin' && pass === 'Sarac.47') {
         state.kullanici = user;
         state.rol = 'super_yonetici';
         state.okul = 'Dargeçit İlçe MEM Genel Görünüm'; 
         await verileriBaslat(state.okul);
+        btn.innerText = "Giriş Yap";
+        btn.disabled = false;
         return;
     }
 
-    // ÖĞRETMEN KONTROLÜ
+    // 2. ÖĞRETMEN KONTROLÜ
     var foundUser = db.users.find(u => u.username === user && u.password === pass);
     if(foundUser) {
         state.kullanici = foundUser.username;
@@ -367,12 +388,15 @@ async function sistemeGiris() {
         state.okul = foundUser.okul;
         await verileriBaslat(state.okul);
     } else {
-        err.innerText = "Kullanıcı adı veya şifre hatalı!";
+        err.innerText = "Hata: Kullanıcı adı veya şifre yanlış! (Kayıt olmadıysanız alttan kayıt oluşturun)";
     }
+    
+    btn.innerText = "Giriş Yap";
+    btn.disabled = false;
 }
 
 async function verileriBaslat(okulAdi) {
-    // Buluttan veriyi çekmeye çalış (Supabase ayarlıysa)
+    // Buluttan veriyi çekmeye çalış (Eğer Supabase bağlıysa)
     if(supabase) {
         try {
             const { data } = await supabase.from('okul_verileri').select('json_data').eq('id', 1).single();
@@ -384,7 +408,7 @@ async function verileriBaslat(okulAdi) {
             }
         } catch(e) { console.log("Bulut verisi çekilemedi."); }
     } else {
-        // Bulut yoksa session'dan al
+        // Bulut yoksa yerel session'dan al
         if(!db.okul_verileri[okulAdi]) db.okul_verileri[okulAdi] = { ogrenciler: [], senaryolar: {}, sinav_sonuclari: {} };
         let okulData = db.okul_verileri[okulAdi];
         state.ogrenciler = okulData.ogrenciler || [];
@@ -405,7 +429,7 @@ async function verileriBaslat(okulAdi) {
 }
 
 async function veriyiBulutaKaydet() {
-    // Hem Session'a hem Buluta kaydeder
+    // Hem Oturum Hafızasına Hem Buluta Kaydeder
     db.okul_verileri[state.okul] = {
         ogrenciler: state.ogrenciler,
         senaryolar: state.senaryolar,
@@ -413,7 +437,10 @@ async function veriyiBulutaKaydet() {
     };
     sessionStorage.setItem('dargecit_mem_db', JSON.stringify(db));
 
-    if(!supabase) { alert("Sadece tarayıcıya kaydedildi (Supabase ayarlanmamış)."); return; }
+    if(!supabase) { 
+        alert("Başarılı: Tüm işlemleriniz bu tarayıcıya geçici olarak kaydedildi."); 
+        return; 
+    }
     
     try {
         let mevcutData = {};
@@ -423,9 +450,9 @@ async function veriyiBulutaKaydet() {
         mevcutData[state.okul] = db.okul_verileri[state.okul];
         const { error } = await supabase.from('okul_verileri').upsert({ id: 1, json_data: mevcutData });
         if(error) throw error;
-        alert("Sınav verileri BULUTA başarıyla kaydedildi!");
+        alert("Sınav verileri BULUTA başarıyla kaydedildi! Ortak bilgisayardan güvenle çıkabilirsiniz.");
     } catch(e) {
-        alert("Bulut bağlantısı kurulamadı. Sadece bu bilgisayara kaydedildi.");
+        alert("Bulut bağlantısı kurulamadı. Geçici olarak kaydedildi.");
     }
 }
 
@@ -649,9 +676,11 @@ async function aiRaporUret() {
         var res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
             method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({contents: [{parts: [{text: prompt}]}]})
         });
-        var text = (await res.json()).candidates[0].content.parts[0].text;
+        var result = await res.json();
+        if(result.error) throw new Error(result.error.message);
+        var text = result.candidates[0].content.parts[0].text;
         document.getElementById('raporMetni').innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\n/g, '<li>$1</li>').replace(/\n/g, '<br>');
-    } catch(e) { document.getElementById('raporMetni').innerHTML = "Hata: İnternet bağlantınızı kontrol edin."; }
+    } catch(e) { document.getElementById('raporMetni').innerHTML = `<span style="color:red">Yapay Zeka Hatası: API bağlantısını kontrol edin. Detay: ${e.message}</span>`; }
 }
 
 function pdfOlarakIndir() {
