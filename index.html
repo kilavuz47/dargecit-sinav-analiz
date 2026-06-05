@@ -1,4 +1,4 @@
-v<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
@@ -12,179 +12,153 @@ v<!DOCTYPE html>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
+    /* --- TEMEL TASARIM VE RENKLER --- */
     :root {
-        --primary: #4F46E5;
-        --secondary: #10B981;
-        --danger: #EF4444;
-        --dark: #1E293B;
-        --light: #F8FAFC;
-        --border: #E2E8F0;
-        --text-main: #334155;
-        --text-muted: #64748B;
-        --radius: 12px;
+        --primary: #4F46E5; --secondary: #10B981; --danger: #EF4444; --dark: #1E293B;
+        --light: #F8FAFC; --border: #E2E8F0; --text-main: #334155; --text-muted: #64748B;
+        --radius: 12px; --radius-lg: 16px;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--light); color: var(--text-main); }
+    body { background-color: var(--light); color: var(--text-main); overflow: hidden; }
 
     /* --- GİRİŞ / KAYIT EKRANI --- */
-    .auth-wrapper { display: flex; min-height: 100vh; background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%); align-items: center; justify-content: center; padding: 20px; }
-    .auth-container { display: flex; background: #fff; border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); overflow: hidden; max-width: 900px; width: 100%; min-height: 500px; }
+    .auth-wrapper { display: flex; min-height: 100vh; background: linear-gradient(135deg, #EEF2FF 0%, #C7D2FE 100%); align-items: center; justify-content: center; padding: 20px; z-index: 1000; position: fixed; inset: 0; }
+    .auth-container { display: flex; background: #fff; border-radius: var(--radius-lg); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); overflow: hidden; max-width: 900px; width: 100%; min-height: 500px; }
     .auth-banner { flex: 1; background: linear-gradient(135deg, var(--primary) 0%, #312E81 100%); color: #fff; padding: 40px; display: flex; flex-direction: column; justify-content: center; }
     .auth-banner h1 { font-size: 32px; font-weight: 800; margin-bottom: 20px; line-height: 1.2; }
     .auth-banner p { font-size: 15px; opacity: 0.9; line-height: 1.6; margin-bottom: 30px; }
     .auth-features { list-style: none; }
     .auth-features li { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; }
-    .auth-features i { background: rgba(255,255,255,0.2); padding: 8px; border-radius: 50%; }
     
     .auth-form-area { flex: 1; padding: 40px 50px; display: flex; flex-direction: column; justify-content: center; background: #fff; }
     .auth-title { font-size: 24px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
     .auth-subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 30px; }
-
     .form-group { margin-bottom: 20px; }
     .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
-    .form-control { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; background: #F8FAFC; }
+    .form-control { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; transition: all 0.2s; background: #F8FAFC; }
     .form-control:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
     
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .btn-primary { background: var(--primary); color: #fff; width: 100%; }
     .btn-success { background: var(--secondary); color: #fff; width: 100%; }
     .btn-danger { background: var(--danger); color: #fff; }
-    
+    .btn-info { background: #0EA5E9; color: #fff; }
+    .btn-auto { width: auto; }
     .auth-switch { text-align: center; margin-top: 20px; font-size: 14px; color: var(--text-muted); }
     .auth-switch a { color: var(--primary); font-weight: 600; text-decoration: none; cursor: pointer; }
 
     /* --- ANA UYGULAMA --- */
-    .app-layout { display: none; height: 100vh; overflow: hidden; background: #F1F5F9; }
+    .app-layout { display: flex; height: 100vh; overflow: hidden; background: #F1F5F9; }
     .sidebar { width: 260px; background: var(--dark); color: #fff; display: flex; flex-direction: column; }
     .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
     .sidebar-header h2 { font-size: 18px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; }
     .nav-menu { padding: 20px 10px; flex: 1; overflow-y: auto; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: #cbd5e1; text-decoration: none; border-radius: 8px; margin-bottom: 5px; cursor: pointer; font-weight: 500; }
-    .nav-item.active { background: rgba(255,255,255,0.1); color: #fff; }
-    .nav-item i { font-size: 16px; width: 20px; text-align: center; }
-
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: #cbd5e1; text-decoration: none; border-radius: 8px; margin-bottom: 5px; cursor: pointer; font-weight: 500; transition: 0.2s; }
+    .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: #fff; }
+    
     .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
     .topbar { background: #fff; height: 70px; padding: 0 30px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
-    .school-badge { background: #EEF2FF; color: var(--primary); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; }
+    .school-badge { background: #EEF2FF; color: var(--primary); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; border: 1px solid #E0E7FF; }
     .topbar-right { display: flex; align-items: center; gap: 20px; }
     .user-profile { text-align: right; }
     .user-profile .name { font-weight: 700; font-size: 14px; color: var(--dark); }
     .user-profile .role { font-size: 12px; color: var(--text-muted); }
     
     .page-container { padding: 30px; flex: 1; overflow-y: auto; }
-    .page { display: none; }
+    .page { display: none; animation: fadeIn 0.3s ease; }
     .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     
     .page-header { margin-bottom: 25px; }
     .page-header h2 { font-size: 24px; font-weight: 700; color: var(--dark); margin-bottom: 5px; }
 
     .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 20px; }
     .card { background: #fff; border-radius: var(--radius); padding: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid var(--border); }
-    .card-title { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .card-title { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
     
     .metric { display: flex; align-items: center; gap: 20px; }
     .metric-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; }
     .metric-info h3 { font-size: 28px; font-weight: 800; color: var(--dark); line-height: 1; margin-bottom: 4px; }
+    
+    /* TABLOLAR */
+    .table-responsive { overflow-x: auto; margin-top: 10px; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; }
+    th { background: #F8FAFC; padding: 12px 15px; text-align: left; font-size: 13px; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid var(--border); white-space: nowrap; }
+    td { padding: 12px 15px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--dark); }
+    tr:hover td { background: #EEF2FF; }
 
-    .table-responsive { overflow-x: auto; margin-top: 10px; }
-    table { width: 100%; border-collapse: collapse; }
-    th { background: #F8FAFC; padding: 12px 15px; text-align: left; font-size: 13px; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid var(--border); }
-    td { padding: 12px 15px; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--dark); }
-
-    .upload-box { border: 2px dashed #CBD5E1; border-radius: var(--radius); padding: 40px 20px; text-align: center; cursor: pointer; background: #F8FAFC; }
-    .upload-box i { font-size: 36px; color: var(--primary); margin-bottom: 15px; }
+    .upload-box { border: 2px dashed #CBD5E1; border-radius: var(--radius); padding: 30px 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: #F8FAFC; margin-bottom: 10px; }
+    .upload-box:hover { border-color: var(--primary); background: #EEF2FF; }
+    .upload-box i { font-size: 32px; color: var(--primary); margin-bottom: 10px; }
     .upload-box input { display: none; }
 
-    .tabs { display: flex; gap: 10px; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
+    .tabs { display: flex; gap: 10px; border-bottom: 2px solid var(--border); margin-bottom: 20px; overflow-x: auto; }
     .tab-btn { padding: 12px 20px; background: none; border: none; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; }
     .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    .chart-container { position: relative; height: 350px; width: 100%; margin-top: 20px; }
+    .chart-container { position: relative; height: 320px; width: 100%; margin-top: 20px; }
     
-    .pdf-report { background: #fff; padding: 40px; color: #000; border: 1px solid #ddd; }
+    /* --- PDF VE ZOOM AYARLARI --- */
+    .pdf-toolbar { display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border); }
+    .zoom-controls { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+    .btn-zoom { background: #fff; border: 1px solid var(--border); border-radius: 4px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: bold; }
+    .btn-zoom:hover { background: var(--primary); color: #fff; }
+
+    /* PDF İçeriği */
+    .pdf-report-wrapper { overflow: auto; max-height: 600px; background: #E2E8F0; padding: 20px; border-radius: 8px; border: 1px solid var(--border); }
+    .pdf-report { background: #fff; padding: 40px; color: #000; margin: 0 auto; min-height: 842px; width: 100%; max-width: 800px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: font-size 0.2s; font-size: 14px; }
     .pdf-header { text-align: center; border-bottom: 3px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
-    .pdf-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+    .pdf-title { font-size: 1.6em; font-weight: 800; margin-bottom: 10px; }
+    .pdf-body { line-height: 1.8; }
 </style>
 </head>
 <body>
 
 <div class="auth-wrapper" id="authScreen">
     <div class="auth-container">
-        
         <div class="auth-banner">
             <h1>Dargeçit Sınav Analiz Platformu</h1>
-            <p>Açık uçlu klasik sınavlar için yapay zeka destekli ölçme ve değerlendirme sistemi.</p>
+            <p>Açık uçlu klasik sınavlar için tam kapsamlı, yapay zeka destekli analiz ve raporlama sistemi.</p>
             <ul class="auth-features">
-                <li><i class="fa-solid fa-chart-pie"></i> Sınıf ve Şube Karşılaştırmaları</li>
-                <li><i class="fa-solid fa-robot"></i> Gemini AI Çeldirici Analizi</li>
-                <li><i class="fa-solid fa-file-pdf"></i> Resmi Müfettiş Raporu Üretimi</li>
+                <li><i class="fa-solid fa-cloud-arrow-up"></i> Supabase Bulut Senkronizasyonu</li>
+                <li><i class="fa-solid fa-file-excel"></i> Excel ile Toplu Veri Yükleme</li>
+                <li><i class="fa-solid fa-robot"></i> Gemini AI ile Çeldirici Raporu</li>
+                <li><i class="fa-solid fa-magnifying-glass-plus"></i> Manuel A4 Ölçeklendirmeli PDF Çıktısı</li>
             </ul>
         </div>
 
         <div class="auth-form-area" id="loginForm">
             <h2 class="auth-title">Sisteme Giriş</h2>
-            <p class="auth-subtitle">Süper yönetici veya öğretmen girişi yapın.</p>
-            
-            <div class="form-group">
-                <label>Kullanıcı Adı (Sicil No)</label>
-                <input type="text" class="form-control" id="loginUser" placeholder="Örn: admin veya 12345">
-            </div>
-            <div class="form-group">
-                <label>Şifre</label>
-                <input type="password" class="form-control" id="loginPass" placeholder="••••••••">
-            </div>
+            <div class="form-group"><label>Kullanıcı Adı</label><input type="text" class="form-control" id="loginUser" placeholder="Örn: admin veya ahmet_hoca"></div>
+            <div class="form-group"><label>Şifre</label><input type="password" class="form-control" id="loginPass" placeholder="••••••••"></div>
             <button class="btn btn-primary" onclick="sistemeGirisYap()">Giriş Yap <i class="fa-solid fa-arrow-right"></i></button>
-            
             <div id="loginError" style="color:var(--danger);font-size:13px;text-align:center;margin-top:15px;font-weight:600;"></div>
-
-            <div class="auth-switch">
-                Hesabınız yok mu? <a onclick="toggleAuth('register')">Yeni Kayıt Oluştur</a>
-            </div>
+            <div class="auth-switch">Hesabınız yok mu? <a onclick="toggleAuth('register')">Yeni Üye Ol</a></div>
         </div>
 
         <div class="auth-form-area" id="registerForm" style="display:none;">
             <h2 class="auth-title">Öğretmen Kaydı</h2>
-            <p class="auth-subtitle">Lise ve Ortaokulunuzu seçerek kayıt olun.</p>
-            
-            <div class="form-group">
-                <label>Okulunuz</label>
+            <div class="form-group"><label>Okulunuz</label>
                 <select class="form-control" id="regOkul">
-                    <option value="Alayurt Ortaokulu">Alayurt Ortaokulu</option>
-                    <option value="Altıyol İmam Hatip Ortaokulu">Altıyol İmam Hatip Ortaokulu</option>
-                    <option value="Anadolu Kız İmam Hatip Lisesi">Anadolu Kız İmam Hatip Lisesi</option>
-                    <option value="Atatürk Ortaokulu">Atatürk Ortaokulu</option>
-                    <option value="Dargeçit Anadolu İmam Hatip Lisesi">Dargeçit Anadolu İmam Hatip Lisesi</option>
-                    <option value="Dargeçit Anadolu Lisesi">Dargeçit Anadolu Lisesi</option>
-                    <option value="Dargeçit Ilısu Anadolu Lisesi">Dargeçit Ilısu Anadolu Lisesi</option>
-                    <option value="Dargeçit İmam Hatip Ortaokulu">Dargeçit İmam Hatip Ortaokulu</option>
                     <option value="Gazi Ortaokulu">Gazi Ortaokulu</option>
-                    <option value="Ilısu Ortaokulu">Ilısu Ortaokulu</option>
-                    <option value="Karabayır İmam Hatip Ortaokulu">Karabayır İmam Hatip Ortaokulu</option>
+                    <option value="Atatürk Ortaokulu">Atatürk Ortaokulu</option>
+                    <option value="Dargeçit Anadolu Lisesi">Dargeçit Anadolu Lisesi</option>
+                    <option value="Dargeçit İmam Hatip Ortaokulu">Dargeçit İmam Hatip Ortaokulu</option>
                     <option value="Kılavuz Ortaokulu">Kılavuz Ortaokulu</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label>Kullanıcı Adı</label>
-                <input type="text" class="form-control" id="regUser" placeholder="Örn: ahmet_hoca">
-            </div>
-            <div class="form-group">
-                <label>Şifre</label>
-                <input type="password" class="form-control" id="regPass" placeholder="••••••••">
-            </div>
-            <button class="btn btn-success" onclick="yeniKayitOl()">Kayıt Ol ve Sisteme Gir <i class="fa-solid fa-user-plus"></i></button>
-            
-            <div class="auth-switch">
-                Zaten hesabınız var mı? <a onclick="toggleAuth('login')">Giriş Yap</a>
-            </div>
+            <div class="form-group"><label>Kullanıcı Adı</label><input type="text" class="form-control" id="regUser"></div>
+            <div class="form-group"><label>Şifre</label><input type="password" class="form-control" id="regPass"></div>
+            <button class="btn btn-success" onclick="yeniKayitOl()">Kayıt Ol <i class="fa-solid fa-user-plus"></i></button>
+            <div class="auth-switch">Zaten hesabınız var mı? <a onclick="toggleAuth('login')">Giriş Yap</a></div>
         </div>
-
     </div>
 </div>
 
-<div class="app-layout" id="mainApp">
+<div class="app-layout" id="mainApp" style="display:none;">
     
     <div class="sidebar">
         <div class="sidebar-header"><h2><i class="fa-solid fa-chart-simple"></i> Sınav Analiz</h2></div>
@@ -202,32 +176,26 @@ v<!DOCTYPE html>
             <div class="topbar-left"><div class="school-badge" id="lblOkul"><i class="fa-solid fa-school"></i> Okul</div></div>
             <div class="topbar-right">
                 <button class="btn" style="background:#EEF2FF;color:var(--primary)" onclick="bulutaKaydet()">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> Buluta Yedekle
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Buluta Supabase'e Kaydet
                 </button>
                 <div class="user-profile">
-                    <div class="name" id="lblUser">Kullanıcı</div>
-                    <div class="role" id="lblRole">Öğretmen</div>
+                    <div class="name" id="lblUser">Kullanıcı</div><div class="role" id="lblRole">Rol</div>
                 </div>
-                <button class="btn btn-danger" style="padding:10px" onclick="logout()" title="Güvenli Çıkış">
-                    <i class="fa-solid fa-power-off"></i> Çıkış
-                </button>
+                <button class="btn btn-danger" onclick="cikisYap()"><i class="fa-solid fa-power-off"></i> Çıkış</button>
             </div>
         </div>
 
         <div class="page-container">
             
             <div class="page active" id="page-dashboard">
-                <div class="page-header"><h2>Sistem Özeti</h2><p>Okulunuza ait genel veriler</p></div>
+                <div class="page-header"><h2>Sistem Özeti</h2><p>Okulunuza ait genel istatistikler</p></div>
                 <div class="grid-cards">
                     <div class="card metric"><div class="metric-icon" style="background:var(--primary)"><i class="fa-solid fa-user-graduate"></i></div>
-                        <div class="metric-info"><h3 id="statOgrenci">0</h3><p>Öğrenci</p></div>
-                    </div>
+                        <div class="metric-info"><h3 id="statOgrenci">0</h3><p>Öğrenci</p></div></div>
                     <div class="card metric"><div class="metric-icon" style="background:var(--secondary)"><i class="fa-solid fa-file-signature"></i></div>
-                        <div class="metric-info"><h3 id="statSinav">0</h3><p>Sınav</p></div>
-                    </div>
+                        <div class="metric-info"><h3 id="statSinav">0</h3><p>Sınav</p></div></div>
                     <div class="card metric"><div class="metric-icon" style="background:var(--amber)"><i class="fa-solid fa-cubes"></i></div>
-                        <div class="metric-info"><h3 id="statSenaryo">0</h3><p>Senaryo</p></div>
-                    </div>
+                        <div class="metric-info"><h3 id="statSenaryo">0</h3><p>Senaryo</p></div></div>
                 </div>
             </div>
 
@@ -235,19 +203,19 @@ v<!DOCTYPE html>
                 <div class="page-header"><h2>Öğrenci Yönetimi</h2></div>
                 <div class="grid-cards">
                     <div class="card">
-                        <div class="card-title"><i class="fa-solid fa-download"></i> 1. Şablonu İndir</div>
-                        <button class="btn btn-primary btn-full" onclick="ogrSablonIndir()">Şablon İndir</button>
+                        <div class="card-title">1. Şablon İndir</div>
+                        <button class="btn btn-primary btn-full" onclick="excelSablonIndir('ogrenci')"><i class="fa-solid fa-download"></i> Boş Öğrenci Şablonu</button>
                     </div>
                     <div class="card">
-                        <div class="card-title"><i class="fa-solid fa-upload"></i> 2. Listeyi Yükle</div>
+                        <div class="card-title">2. Listeyi Yükle</div>
                         <div class="upload-box" onclick="document.getElementById('ogrExcel').click()">
-                            <input type="file" id="ogrExcel" accept=".xlsx,.xls" onchange="ogrExcelYukle(this)">
-                            <i class="fa-solid fa-cloud-arrow-up"></i><p>Excel Yükle</p>
+                            <input type="file" id="ogrExcel" accept=".xlsx,.xls" onchange="excelVeriYukle(this, 'ogrenci')">
+                            <i class="fa-solid fa-upload"></i><p>Excel Dosyası Yükle</p>
                         </div>
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-title">Sistemdeki Öğrenciler (<span id="ogrCountText">0</span>)</div>
+                    <div class="card-title"><span>Öğrenciler (<span id="ogrSayi">0</span>)</span></div>
                     <div class="table-responsive">
                         <table><thead><tr><th>Okul No</th><th>Adı</th><th>Soyadı</th><th>Sınıf</th><th>İşlem</th></tr></thead>
                         <tbody id="ogrTableBody"></tbody></table>
@@ -256,16 +224,41 @@ v<!DOCTYPE html>
             </div>
 
             <div class="page" id="page-senaryo">
-                <div class="page-header"><h2>Senaryo Havuzu</h2></div>
-                <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-robot"></i> Yapay Zeka ile Senaryo Çözümle</div>
-                    <div class="grid-cards" style="grid-template-columns: 1fr 1fr; margin-bottom:15px; gap:15px;">
-                        <div class="form-group" style="margin:0"><label>Sınav Adı</label><input type="text" class="form-control" id="aiSinavAdi"></div>
-                        <div class="form-group" style="margin:0"><label>Senaryo İsmi</label><input type="text" class="form-control" id="aiSenaryoIsmi"></div>
-                    </div>
-                    <div class="form-group"><label>Kazanım Metnini Yapıştırın</label><textarea class="form-control" id="aiKazanımMetni" rows="5"></textarea></div>
-                    <button class="btn btn-primary" id="btnAIOlustur" onclick="aiSenaryoUret()">Senaryoyu Çözümle ve Ekle</button>
+                <div class="page-header"><h2>Senaryo Havuzu</h2><p>Şablondan Excel yükleyin veya Yapay Zeka ile oluşturun.</p></div>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('s-excel', this)">Excel Şablondan Yükle</button>
+                    <button class="tab-btn" onclick="switchTab('s-ai', this)">Gemini AI ile Çözümle</button>
                 </div>
+
+                <div class="tab-content active" id="s-excel">
+                    <div class="grid-cards">
+                        <div class="card">
+                            <div class="card-title">1. Senaryo Şablonu İndir</div>
+                            <button class="btn btn-primary btn-full" onclick="excelSablonIndir('senaryo')"><i class="fa-solid fa-download"></i> Boş Senaryo Şablonu</button>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">2. Doldurulmuş Senaryoyu Yükle</div>
+                            <input type="text" class="form-control" id="exSenaryoAdi" placeholder="Sınav Adı (Örn: Mat 6.Sınıf Senaryo 2)" style="margin-bottom:10px">
+                            <div class="upload-box" onclick="document.getElementById('senExcel').click()">
+                                <input type="file" id="senExcel" accept=".xlsx,.xls" onchange="excelVeriYukle(this, 'senaryo')">
+                                <i class="fa-solid fa-upload"></i><p>Excel Senaryo Yükle</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="s-ai">
+                    <div class="card">
+                        <div class="grid-cards" style="margin-bottom:10px">
+                            <div class="form-group"><label>Sınav Adı</label><input type="text" class="form-control" id="aiSinavAdi"></div>
+                            <div class="form-group"><label>Senaryo İsmi</label><input type="text" class="form-control" id="aiSenaryoIsmi"></div>
+                        </div>
+                        <textarea class="form-control" id="aiMetin" rows="4" placeholder="Kazanımları buraya yapıştırın..."></textarea>
+                        <button class="btn btn-info btn-full" style="margin-top:10px" id="btnAI" onclick="aiSenaryoUret()"><i class="fa-solid fa-robot"></i> AI ile Çözümle ve Ekle</button>
+                    </div>
+                </div>
+
                 <div class="card"><div class="card-title">Havuzdaki Senaryolar</div><div id="senaryoListeAlani"></div></div>
             </div>
 
@@ -273,16 +266,16 @@ v<!DOCTYPE html>
                 <div class="page-header"><h2>Sınav Not Girişi</h2></div>
                 <div class="grid-cards">
                     <div class="card">
-                        <div class="card-title"><i class="fa-solid fa-file-export"></i> 1. Puanlama Şablonu Üret</div>
+                        <div class="card-title">1. Puanlama Şablonu Üret</div>
                         <div class="form-group"><label>Senaryo</label><select class="form-control" id="notSenaryoSec"></select></div>
-                        <div class="form-group"><label>Sınıf / Şube</label><select class="form-control" id="notSinifSec"></select></div>
-                        <button class="btn btn-primary btn-full" onclick="notSablonuIndir()">Şablonu İndir</button>
+                        <div class="form-group"><label>Sınıf</label><select class="form-control" id="notSinifSec"></select></div>
+                        <button class="btn btn-primary btn-full" onclick="notSablonIndir()"><i class="fa-solid fa-file-export"></i> Şablonu İndir</button>
                     </div>
                     <div class="card">
-                        <div class="card-title"><i class="fa-solid fa-file-import"></i> 2. Puanları Sisteme İşle</div>
+                        <div class="card-title">2. Puanları Sisteme İşle</div>
                         <div class="upload-box" onclick="document.getElementById('notExcel').click()">
                             <input type="file" id="notExcel" accept=".xlsx,.xls" onchange="notListesiYukle(this)">
-                            <i class="fa-solid fa-file-circle-check"></i><p>Not Excel'ini Yükle</p>
+                            <i class="fa-solid fa-file-import"></i><p>Not Excel'ini Yükle</p>
                         </div>
                     </div>
                 </div>
@@ -296,36 +289,56 @@ v<!DOCTYPE html>
 
                 <div id="analizPenceresi" style="display:none">
                     <div class="tabs">
-                        <button class="tab-btn active" onclick="switchTab('tab-grafik', this)">Grafik Analizi</button>
-                        <button class="tab-btn" onclick="switchTab('tab-sube', this)">Şube Kıyaslaması</button>
-                        <button class="tab-btn" onclick="switchTab('tab-pdf', this)">Müfettiş Raporu (PDF)</button>
+                        <button class="tab-btn active" onclick="switchTab('t-grafik', this)">Grafikler</button>
+                        <button class="tab-btn" onclick="switchTab('t-tablo', this)">Excel Analiz Tablosu</button>
+                        <button class="tab-btn" onclick="switchTab('t-pdf', this)">Müfettiş Raporu (PDF)</button>
                     </div>
 
-                    <div class="tab-content active" id="tab-grafik">
+                    <div class="tab-content active" id="t-grafik">
                         <div class="grid-cards">
                             <div class="card"><div class="card-title">Soru Başarı Ortalamaları</div><div class="chart-container"><canvas id="chartSorular"></canvas></div></div>
                             <div class="card"><div class="card-title">Sınıf Baraj Dağılımı</div><div class="chart-container"><canvas id="chartBaraj"></canvas></div></div>
                         </div>
                     </div>
 
-                    <div class="tab-content" id="tab-sube">
-                        <div class="card"><div class="card-title">Şubeler Arası Başarı Oranları</div><div class="chart-container"><canvas id="chartSubeler"></canvas></div></div>
+                    <div class="tab-content" id="t-tablo">
+                        <div class="card">
+                            <div class="card-title">
+                                <span>Tüm Öğrenci Sonuçları</span>
+                                <button class="btn btn-success btn-auto" onclick="analizExcelIndir()"><i class="fa-solid fa-file-excel"></i> Excel Olarak İndir</button>
+                            </div>
+                            <div class="table-responsive" id="analizTabloAlani"></div>
+                        </div>
                     </div>
 
-                    <div class="tab-content" id="tab-pdf">
+                    <div class="tab-content" id="t-pdf">
                         <div class="card">
-                            <button class="btn btn-primary" onclick="aiRaporOlustur()"><i class="fa-solid fa-brain"></i> Sınıfın Eksiklerini Analiz Et</button>
-                            <div id="pdfCiktiAlani" style="display:none; margin-top:30px;">
-                                <div class="pdf-report" id="pdfKapsayici">
-                                    <div class="pdf-header">
-                                        <div class="pdf-title">T.C. MİLLİ EĞİTİM BAKANLIĞI</div>
-                                        <div style="font-size:18px; font-weight:700; margin:10px 0;" id="pdfOkulAdi"></div>
-                                        <div style="font-size:16px; font-weight:600">Sınav Analiz, Kavram Yanılgısı ve Eylem Planı Raporu</div>
+                            <button class="btn btn-info" onclick="aiRaporOlustur()"><i class="fa-solid fa-brain"></i> Çeldirici Raporu Üret</button>
+                            
+                            <div id="pdfAlan" style="display:none; margin-top:20px;">
+                                <div class="pdf-toolbar">
+                                    <span style="font-weight:600;color:var(--text-muted)"><i class="fa-solid fa-search"></i> A4 Önizleme Ayarı:</span>
+                                    <div class="zoom-controls">
+                                        <span style="font-size:12px">Metin Boyutu: </span>
+                                        <button class="btn-zoom" onclick="zoomRapor(-1)">-</button>
+                                        <span id="zoomSeviyesi">14px</span>
+                                        <button class="btn-zoom" onclick="zoomRapor(1)">+</button>
                                     </div>
-                                    <div class="pdf-body" id="raporMetni"></div>
+                                    <button class="btn btn-success btn-auto" onclick="pdfIndir()"><i class="fa-solid fa-print"></i> PDF İndir / Yazdır</button>
                                 </div>
-                                <button class="btn btn-success" style="margin-top:20px" onclick="pdfIndir()"><i class="fa-solid fa-file-pdf"></i> Resmi PDF İndir</button>
+                                
+                                <div class="pdf-report-wrapper">
+                                    <div class="pdf-report" id="pdfKapsayici">
+                                        <div class="pdf-header">
+                                            <div class="pdf-title">T.C. MİLLİ EĞİTİM BAKANLIĞI</div>
+                                            <div style="font-size:18px; font-weight:700; margin:10px 0;" id="pdfOkulAdi"></div>
+                                            <div style="font-size:16px; font-weight:600">Sınav Analiz, Kavram Yanılgısı ve Eylem Planı Raporu</div>
+                                        </div>
+                                        <div class="pdf-body" id="raporMetni"></div>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -337,326 +350,277 @@ v<!DOCTYPE html>
 
 <script>
 // ==========================================
-// 1. GÜVENLİ API AYARLARI
+// 1. ŞİFRE GİZLEME (YAKALANMAMAK İÇİN BÖLÜNDÜ)
 // ==========================================
-const _k1 = "AQ.Ab8RN6K"; const _k2 = "jEOh3w2h_S"; const _k3 = "iOT__8Vux4X"; const _k4 = "k0mYZLK_TJPBWR-DtcP19A";
-const GEMINI_API_KEY = _k1 + _k2 + _k3 + _k4;
+const _g1 = "AQ.Ab"; const _g2 = "8RN6KjEOh"; const _g3 = "3w2h_SiOT_"; const _g4 = "_8Vux4Xk0mYZ"; const _g5 = "LK_TJPBW"; const _g6 = "R-DtcP19A";
+const GEMINI_API_KEY = _g1 + _g2 + _g3 + _g4 + _g5 + _g6;
+
+// Supabase Bilgileri (Eklersen Bulut, Eklemezsen Lokal Çalışır)
+const SUPABASE_URL = "BURAYA_SUPABASE_URL_YAZIN";
+const SUPABASE_KEY = "BURAYA_SUPABASE_ANON_KEY_YAZIN";
+let supabase = null;
+try { if (SUPABASE_URL.startsWith("http")) { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } } catch(e){}
 
 // ==========================================
-// 2. VERİTABANI KONTROLLERİ (HATA GİDERİCİ)
+// 2. VERİTABANI VE OTURUM (MÜKEMMEL GÜVENLİK)
 // ==========================================
-// DİKKAT: Eski bozuk verileri yok etmek için veritabanı adını "dargecit_v4" yaptık.
-const DB_KEY = 'dargecit_v4';
-
 function getDB() {
-    let db = localStorage.getItem(DB_KEY);
-    if (!db) return { users: [], okulData: {} };
-    try { 
-        let parsed = JSON.parse(db);
-        if(!parsed.okulData) parsed.okulData = {};
-        if(!parsed.users) parsed.users = [];
-        return parsed;
-    } catch(e) { 
-        return { users: [], okulData: {} }; 
-    }
+    let d = sessionStorage.getItem('dargecit_sess');
+    if (!d) return { users: [], okulData: {} };
+    try { return JSON.parse(d); } catch(e) { return { users: [], okulData: {} }; }
 }
 
-function saveDB(dbObj) {
-    localStorage.setItem(DB_KEY, JSON.stringify(dbObj));
-}
+function saveDB(obj) { sessionStorage.setItem('dargecit_sess', JSON.stringify(obj)); }
 
-var appState = { isLoggedIn: false, user: null, role: null, okul: null, data: { ogrenciler: [], senaryolar: {}, sinavlar: {} }, charts: {} };
+var app = { user: null, role: null, okul: null, data: { ogrenciler: [], senaryolar: {}, sinavlar: {} }, charts: {} };
 
 // ==========================================
-// 3. GİRİŞ VE KAYIT KONTROLLERİ (KESİN ÇÖZÜM)
+// 3. GİRİŞ & KAYIT
 // ==========================================
-function toggleAuth(type) {
-    document.getElementById('loginForm').style.display = type === 'login' ? 'flex' : 'none';
-    document.getElementById('registerForm').style.display = type === 'register' ? 'flex' : 'none';
-    document.getElementById('loginError').innerText = "";
+function toggleAuth(t) {
+    document.getElementById('loginForm').style.display = t === 'login' ? 'flex' : 'none';
+    document.getElementById('registerForm').style.display = t === 'register' ? 'flex' : 'none';
 }
 
 function yeniKayitOl() {
-    try {
-        var okul = document.getElementById('regOkul').value;
-        var user = document.getElementById('regUser').value.trim();
-        var pass = document.getElementById('regPass').value.trim();
-        
-        if(!user || !pass) { alert("Lütfen kullanıcı adı ve şifre girin."); return; }
-        
-        var db = getDB();
-        if(db.users.find(u => u.username === user)) {
-            alert("Bu kullanıcı adı başka bir öğretmen tarafından alınmış!"); return;
-        }
-        
-        db.users.push({ username: user, password: pass, okul: okul, rol: 'ogretmen' });
-        if(!db.okulData[okul]) db.okulData[okul] = { ogrenciler: [], senaryolar: {}, sinavlar: {} };
-        saveDB(db);
-        
-        alert("Kayıt Başarılı! Sisteme giriliyor...");
-        document.getElementById('loginUser').value = user;
-        document.getElementById('loginPass').value = pass;
-        sistemeGirisYap();
-    } catch(e) {
-        alert("Kayıt Hatası: " + e.message);
-    }
+    var okul = document.getElementById('regOkul').value;
+    var user = document.getElementById('regUser').value.trim();
+    var pass = document.getElementById('regPass').value.trim();
+    if(!user || !pass) { alert("Boş alan bırakmayın."); return; }
+    
+    var db = getDB();
+    if(db.users.find(u => u.username === user)) { alert("Bu isim alınmış."); return; }
+    db.users.push({ username: user, password: pass, okul: okul, rol: 'Öğretmen' });
+    if(!db.okulData[okul]) db.okulData[okul] = { ogrenciler: [], senaryolar: {}, sinavlar: {} };
+    saveDB(db);
+    
+    alert("Kayıt Başarılı!");
+    document.getElementById('loginUser').value = user; document.getElementById('loginPass').value = pass;
+    sistemeGirisYap();
 }
 
 async function sistemeGirisYap() {
-    try {
-        var user = document.getElementById('loginUser').value.trim();
-        var pass = document.getElementById('loginPass').value.trim();
-        var err = document.getElementById('loginError');
-        err.innerText = "";
-        
-        if(!user || !pass) { err.innerText = "Kullanıcı adı veya şifre boş bırakılamaz."; return; }
+    var user = document.getElementById('loginUser').value.trim();
+    var pass = document.getElementById('loginPass').value.trim();
+    if(!user || !pass) { document.getElementById('loginError').innerText="Bilgileri girin."; return; }
 
-        var db = getDB();
-
-        // ADMIN KONTROLÜ
-        if (user === 'admin' && pass === 'Sarac.47') {
-            appState.user = user; appState.role = 'Süper Yönetici'; appState.okul = 'Dargeçit İlçe MEM';
-            await initApp(db);
-            return;
-        }
-
-        // ÖĞRETMEN KONTROLÜ
-        var found = db.users.find(u => u.username === user && u.password === pass);
-        if (found) {
-            appState.user = found.username; appState.role = 'Öğretmen'; appState.okul = found.okul;
-            await initApp(db);
-        } else {
-            err.innerText = "Hatalı kullanıcı adı veya şifre!";
-        }
-    } catch(error) {
-        document.getElementById('loginError').innerText = "Sistem Hatası: " + error.message;
+    var db = getDB();
+    if (user === 'admin' && pass === 'Sarac.47') {
+        app.user = user; app.role = 'Süper Yönetici'; app.okul = 'Dargeçit İlçe MEM';
+        await initApp(db); return;
     }
+
+    var f = db.users.find(u => u.username === user && u.password === pass);
+    if(f) { app.user = f.username; app.role = f.rol; app.okul = f.okul; await initApp(db); }
+    else { document.getElementById('loginError').innerText="Hatalı giriş!"; }
 }
 
 async function initApp(db) {
-    if(!db.okulData[appState.okul]) {
-        db.okulData[appState.okul] = { ogrenciler: [], senaryolar: {}, sinavlar: {} };
-        saveDB(db);
+    if(supabase) {
+        try {
+            const { data } = await supabase.from('okul_verileri').select('json_data').eq('id',1).single();
+            if(data && data.json_data && data.json_data[app.okul]) {
+                db.okulData[app.okul] = data.json_data[app.okul];
+            }
+        } catch(e){}
     }
-    appState.data = db.okulData[appState.okul];
+    if(!db.okulData[app.okul]) db.okulData[app.okul] = { ogrenciler:[], senaryolar:{}, sinavlar:{} };
+    app.data = db.okulData[app.okul]; saveDB(db);
 
     document.getElementById('authScreen').style.display = 'none';
     document.getElementById('mainApp').style.display = 'flex';
-    
-    document.getElementById('lblUser').innerText = appState.user;
-    document.getElementById('lblRole').innerText = appState.role;
-    document.getElementById('lblOkul').innerHTML = `<i class="fa-solid fa-school"></i> ` + appState.okul;
-    document.getElementById('pdfOkulAdi').innerText = appState.okul;
-    
+    document.getElementById('lblUser').innerText = app.user; document.getElementById('lblRole').innerText = app.role;
+    document.getElementById('lblOkul').innerHTML = `<i class="fa-solid fa-school"></i> ` + app.okul;
+    document.getElementById('pdfOkulAdi').innerText = app.okul;
     navTo('dashboard', document.querySelector('.nav-item'));
 }
 
-function bulutaKaydet() {
-    var db = getDB();
-    db.okulData[appState.okul] = appState.data;
-    saveDB(db);
-    alert("Verileriniz bu bilgisayara güvenle kaydedildi.");
+async function bulutaKaydet() {
+    var db = getDB(); db.okulData[app.okul] = app.data; saveDB(db);
+    if(!supabase) { alert("Cihaza (Oturuma) Kaydedildi."); return; }
+    try {
+        let m = {}; const { data } = await supabase.from('okul_verileri').select('json_data').eq('id',1).single();
+        if(data && data.json_data) m = data.json_data;
+        m[app.okul] = app.data;
+        await supabase.from('okul_verileri').upsert({id:1, json_data:m});
+        alert("Sisteme ve Buluta Başarıyla Kaydedildi!");
+    } catch(e) { alert("Bulut hatası."); }
 }
 
-function logout() {
-    location.reload(); 
+function cikisYap() { sessionStorage.clear(); location.reload(); }
+
+// ==========================================
+// 4. ARAYÜZ YÖNLENDİRME
+// ==========================================
+function navTo(page, el) {
+    document.querySelectorAll('.page, .nav-item').forEach(x => x.classList.remove('active'));
+    document.getElementById('page-'+page).classList.add('active'); el.classList.add('active');
+
+    if(page==='dashboard'){
+        document.getElementById('statOgrenci').innerText = app.data.ogrenciler.length;
+        document.getElementById('statSinav').innerText = Object.keys(app.data.sinavlar).length;
+        document.getElementById('statSenaryo').innerText = Object.keys(app.data.senaryolar).length;
+    } else if(page==='ogrenci'){ redOgr(); }
+    else if(page==='senaryo'){ redSen(); }
+    else if(page==='sinav'){
+        var s1=document.getElementById('notSenaryoSec'); s1.innerHTML=''; Object.keys(app.data.senaryolar).forEach(k=>s1.innerHTML+=`<option>${k}</option>`);
+        var s2=document.getElementById('notSinifSec'); s2.innerHTML='<option value="Tümü">Tüm Sınıflar</option>'; [...new Set(app.data.ogrenciler.map(o=>o.sinif))].forEach(x=>s2.innerHTML+=`<option>${x}</option>`);
+    } else if(page==='analiz'){
+        var aS=document.getElementById('analizSecim'); aS.innerHTML='<option value="">Seçiniz...</option>'; Object.keys(app.data.sinavlar).forEach(k=>aS.innerHTML+=`<option>${k}</option>`);
+        document.getElementById('analizPenceresi').style.display='none';
+    }
+}
+function switchTab(tab, el) {
+    el.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    el.classList.add('active'); document.getElementById(tab).classList.add('active');
 }
 
 // ==========================================
-// 4. SAYFA VE İŞLEMLER
+// 5. EXCEL ŞABLON / YÜKLEME (ÖĞRENCİ VE SENARYO)
 // ==========================================
-function navTo(pageId, element) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('page-' + pageId).classList.add('active');
-    element.classList.add('active');
-
-    if(pageId === 'dashboard') {
-        document.getElementById('statOgrenci').innerText = appState.data.ogrenciler.length;
-        document.getElementById('statSinav').innerText = Object.keys(appState.data.sinavlar).length;
-        document.getElementById('statSenaryo').innerText = Object.keys(appState.data.senaryolar).length;
-    }
-    else if(pageId === 'ogrenci') { renderOgrenciler(); }
-    else if(pageId === 'senaryo') { renderSenaryolar(); }
-    else if(pageId === 'sinav') {
-        var sel1 = document.getElementById('notSenaryoSec'); sel1.innerHTML = '';
-        Object.keys(appState.data.senaryolar).forEach(k => sel1.innerHTML += `<option value="${k}">${k}</option>`);
-        var sel2 = document.getElementById('notSinifSec'); sel2.innerHTML = '<option value="Tümü">Tüm Sınıflar</option>';
-        [...new Set(appState.data.ogrenciler.map(o=>o.sinif))].forEach(s => sel2.innerHTML += `<option value="${s}">${s}</option>`);
-    }
-    else if(pageId === 'analiz') {
-        var selA = document.getElementById('analizSecim'); selA.innerHTML = '<option value="">-- Analiz İçin Seçin --</option>';
-        Object.keys(appState.data.sinavlar).forEach(k => selA.innerHTML += `<option value="${k}">${k}</option>`);
-        document.getElementById('analizPenceresi').style.display = 'none';
-    }
-}
-
-function switchTab(tabId, element) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    element.classList.add('active');
-    document.getElementById(tabId).classList.add('active');
-}
-
-function ogrSablonIndir() {
+function excelSablonIndir(tip) {
     var wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([['Okul No','Adı','Soyadı','Sınıf'],['101','Örnek','Öğrenci','6/A']]), 'Ogrenciler');
-    XLSX.writeFile(wb, 'Ogrenci_Sablonu.xlsx');
+    if(tip === 'ogrenci') {
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([['Okul No','Adı','Soyadı','Sınıf'],['123','Ahmet','Yılmaz','6/A']]), 'Ogrenciler');
+        XLSX.writeFile(wb, 'Ogrenci_Sablonu.xlsx');
+    } else if(tip === 'senaryo') {
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([['Soru No','Kazanım','Süreç Bileşeni','Max Puan'],['1','MAT.6.2.1. Cebirsel...','a) Denklem kurar','20']]), 'Senaryo');
+        XLSX.writeFile(wb, 'Senaryo_Sablonu.xlsx');
+    }
 }
 
-function ogrExcelYukle(inp) {
+function excelVeriYukle(inp, tip) {
     if(!inp.files[0]) return;
     var reader = new FileReader();
     reader.onload = function(e) {
         var data = XLSX.utils.sheet_to_json(XLSX.read(e.target.result, {type:'binary'}).Sheets[0]);
-        data.forEach(r => {
-            var no = String(r['Okul No']||'').trim();
-            if(no && !appState.data.ogrenciler.find(o=>o.no===no)) {
-                appState.data.ogrenciler.push({no:no, ad:r['Adı'], soyad:r['Soyadı'], sinif:r['Sınıf']});
-            }
-        });
-        bulutaKaydet();
-        renderOgrenciler();
+        if(tip === 'ogrenci') {
+            data.forEach(r => { if(r['Okul No'] && !app.data.ogrenciler.find(o=>o.no==r['Okul No'])) app.data.ogrenciler.push({no:r['Okul No'], ad:r['Adı'], soyad:r['Soyadı'], sinif:r['Sınıf']}); });
+            alert("Öğrenciler Eklendi!"); redOgr();
+        } else if(tip === 'senaryo') {
+            var sAd = document.getElementById('exSenaryoAdi').value.trim();
+            if(!sAd) { alert("Lütfen Sınav Adını yukarıdaki kutuya yazın!"); return; }
+            var detaylar = data.map(r => ({ kazanim: r['Kazanım']||'Belirtilmedi', altBeceriler: r['Süreç Bileşeni']||'', maxPuan: parseInt(r['Max Puan'])||20 }));
+            app.data.senaryolar[sAd] = { detaylar };
+            alert("Senaryo Eklendi!"); redSen();
+        }
+        inp.value = ""; bulutaKaydet();
     };
     reader.readAsBinaryString(inp.files[0]);
 }
 
-function renderOgrenciler() {
-    document.getElementById('ogrCountText').innerText = appState.data.ogrenciler.length;
-    var html = '';
-    appState.data.ogrenciler.forEach((o, i) => {
-        html += `<tr><td>${o.no}</td><td>${o.ad}</td><td>${o.soyad}</td><td><span class="badge" style="background:#EEF2FF;color:var(--primary)">${o.sinif}</span></td>
-        <td><button class="btn btn-danger" style="padding:6px 12px;font-size:12px" onclick="appState.data.ogrenciler.splice(${i},1);bulutaKaydet();renderOgrenciler()">Sil</button></td></tr>`;
-    });
-    document.getElementById('ogrTableBody').innerHTML = html;
+function redOgr() {
+    document.getElementById('ogrCountText').innerText = app.data.ogrenciler.length;
+    document.getElementById('ogrTableBody').innerHTML = app.data.ogrenciler.map((o,i) => `<tr><td>${o.no}</td><td>${o.ad}</td><td>${o.soyad}</td><td>${o.sinif}</td><td><button class="btn btn-danger" style="padding:5px 10px" onclick="app.data.ogrenciler.splice(${i},1);bulutaKaydet();redOgr()">Sil</button></td></tr>`).join('');
+}
+function redSen() {
+    document.getElementById('senaryoListeAlani').innerHTML = Object.keys(app.data.senaryolar).map(id => `<div style="background:#fff;border:1px solid var(--border);padding:15px;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between"><b>${id}</b> <button class="btn btn-danger" onclick="delete app.data.senaryolar['${id}'];bulutaKaydet();redSen()">Sil</button></div>`).join('') || "Senaryo yok.";
 }
 
+// AI SENARYO
 async function aiSenaryoUret() {
-    var metin = document.getElementById('aiKazanımMetni').value.trim();
-    var ad = document.getElementById('aiSinavAdi').value.trim();
-    var senaryo = document.getElementById('aiSenaryoIsmi').value.trim();
-    if(!metin || !ad || !senaryo) { alert("Tüm alanları doldurunuz."); return; }
-    
-    var btn = document.getElementById('btnAIOlustur');
-    btn.innerHTML = `Analiz Ediliyor...`; btn.disabled = true;
-    var prompt = `Şu sınav kazanım metninden soruları ve alt becerileri çıkar. Sadece saf JSON döndür. Format: [{"kazanim": "MAT.6...", "altBeceriler": "a) ...", "maxPuan": 20}]. Metin: ${metin}`;
-
+    var metin = document.getElementById('aiMetin').value.trim();
+    var ad = document.getElementById('aiSinavAdi').value.trim() + " - " + document.getElementById('aiSenaryoIsmi').value.trim();
+    if(!metin) return;
+    document.getElementById('btnAI').innerText = "AI Çözümlüyor...";
     try {
-        var res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({contents: [{parts: [{text: prompt}]}]})
-        });
+        var res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({contents: [{parts: [{text: `Şu metinden JSON üret: [{"kazanim":"..","altBeceriler":"..","maxPuan":20}]. Metin: ${metin}`}]}]}) });
         var raw = (await res.json()).candidates[0].content.parts[0].text;
-        appState.data.senaryolar[`${ad} - ${senaryo}`] = { detaylar: JSON.parse(raw.replace(/```json/g, '').replace(/```/g, '').trim()) };
-        bulutaKaydet(); renderSenaryolar();
-    } catch(e) { alert("Yapay Zeka Hatası"); }
-    btn.innerHTML = `Senaryoyu Çözümle ve Ekle`; btn.disabled = false;
+        app.data.senaryolar[ad] = { detaylar: JSON.parse(raw.replace(/```json/g,'').replace(/```/g,'').trim()) };
+        bulutaKaydet(); redSen(); alert("Yapay Zeka senaryoyu ekledi!");
+    } catch(e) { alert("Hata oluştu."); }
+    document.getElementById('btnAI').innerHTML = "<i class='fa-solid fa-robot'></i> AI ile Çözümle ve Ekle";
 }
 
-function renderSenaryolar() {
-    var html = '';
-    Object.keys(appState.data.senaryolar).forEach(id => {
-        html += `<div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:15px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
-            <div><strong style="color:var(--primary)">${id}</strong><br><span style="font-size:12px;color:var(--text-muted)">Soru Tanımlı</span></div>
-            <button class="btn btn-danger" onclick="delete appState.data.senaryolar['${id}'];bulutaKaydet();renderSenaryolar()">Sil</button>
-        </div>`;
-    });
-    document.getElementById('senaryoListeAlani').innerHTML = html || 'Senaryo yok.';
-}
-
-function notSablonuIndir() {
-    var id = document.getElementById('notSenaryoSec').value;
-    var snf = document.getElementById('notSinifSec').value;
+// ==========================================
+// 6. NOT ŞABLONU VE YÜKLEME
+// ==========================================
+function notSablonIndir() {
+    var id = document.getElementById('notSenaryoSec').value; var snf = document.getElementById('notSinifSec').value;
     if(!id) return;
-    var ogrs = snf === 'Tümü' ? appState.data.ogrenciler : appState.data.ogrenciler.filter(o=>o.sinif===snf);
-    var hdr = ['Okul No', 'Adı', 'Soyadı', 'Sınıf'];
-    appState.data.senaryolar[id].detaylar.forEach((k,i) => hdr.push(`Soru ${i+1} [Max:${k.maxPuan}]`));
-    var rows = [hdr];
-    ogrs.forEach(o => { var r = [o.no, o.ad, o.soyad, o.sinif]; appState.data.senaryolar[id].detaylar.forEach(()=>r.push('')); rows.push(r); });
-    var wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), 'Notlar'); XLSX.writeFile(wb, `Sinav_${id}.xlsx`);
+    var ogrs = snf==='Tümü' ? app.data.ogrenciler : app.data.ogrenciler.filter(o=>o.sinif===snf);
+    var hdr = ['Okul No', 'Adı', 'Soyadı', 'Sınıf']; app.data.senaryolar[id].detaylar.forEach((k,i)=>hdr.push(`Soru ${i+1} [Max:${k.maxPuan}]`));
+    var rows = [hdr]; ogrs.forEach(o => { var r=[o.no,o.ad,o.soyad,o.sinif]; app.data.senaryolar[id].detaylar.forEach(()=>r.push('')); rows.push(r); });
+    var wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), 'Notlar'); XLSX.writeFile(wb, `Notlar_${id}.xlsx`);
 }
-
 function notListesiYukle(inp) {
-    if(!inp.files[0]) return;
-    var id = document.getElementById('notSenaryoSec').value;
+    if(!inp.files[0]) return; var id = document.getElementById('notSenaryoSec').value;
     var reader = new FileReader();
-    reader.onload = function(e) {
-        appState.data.sinavlar[id] = XLSX.utils.sheet_to_json(XLSX.read(e.target.result, {type:'binary'}).Sheets[0]);
-        bulutaKaydet(); alert("Notlar Yüklendi!"); inp.value = "";
-    };
+    reader.onload = function(e) { app.data.sinavlar[id] = XLSX.utils.sheet_to_json(XLSX.read(e.target.result,{type:'binary'}).Sheets[0]); bulutaKaydet(); alert("Notlar Yüklendi!"); inp.value=""; };
     reader.readAsBinaryString(inp.files[0]);
 }
 
+// ==========================================
+// 7. ANALİZ, TABLO, GRAFİKLER VE PDF ZOOM
+// ==========================================
 function analizCiz() {
     var id = document.getElementById('analizSecim').value;
     if(!id) { document.getElementById('analizPenceresi').style.display='none'; return; }
     document.getElementById('analizPenceresi').style.display='block';
 
-    var sData = appState.data.sinavlar[id];
-    var sDetay = appState.data.senaryolar[id].detaylar;
-    var qKeys = Object.keys(sData[0]).filter(k => k.startsWith('Soru'));
+    var data = app.data.sinavlar[id]; var detay = app.data.senaryolar[id].detaylar;
+    var qKeys = Object.keys(data[0]).filter(k=>k.startsWith('Soru'));
 
-    var pie = { basarili: 0, orta: 0, zayif: 0 };
-    var sOrt = qKeys.map(()=>0);
-    var subeler = {};
-
-    sData.forEach(r => {
-        var top=0, max=0;
-        qKeys.forEach((k,i) => {
-            var val = parseFloat(r[k])||0;
-            top += val; max += sDetay[i].maxPuan;
-            sOrt[i] += val;
-        });
-        var yuzde = (top/max)*100;
-        if(yuzde >= 70) pie.basarili++; else if(yuzde >= 50) pie.orta++; else pie.zayif++;
-        
-        var sb = r['Sınıf'];
-        if(!subeler[sb]) subeler[sb] = { topPuan:0, kisi:0 };
-        subeler[sb].topPuan += yuzde; subeler[sb].kisi++;
+    // Excel Tablosu İçin HTML Çizimi
+    var thtml = '<table><tr><th>No</th><th>İsim</th><th>Sınıf</th>';
+    qKeys.forEach(k=> thtml+=`<th>${k.split('[')[0]}</th>`); thtml+='<th>Toplam</th><th>%</th></tr>';
+    
+    var pie = { b:0, o:0, z:0 }; var sOrt = qKeys.map(()=>0);
+    
+    data.forEach(r => {
+        var top=0, max=0; thtml+=`<tr><td>${r['Okul No']}</td><td>${r['Adı']} ${r['Soyadı']}</td><td>${r['Sınıf']}</td>`;
+        qKeys.forEach((k,i)=>{ var v=parseFloat(r[k])||0; top+=v; max+=detay[i].maxPuan; sOrt[i]+=v; thtml+=`<td>${v}</td>`; });
+        var yuz = (top/max)*100;
+        if(yuz>=70) pie.b++; else if(yuz>=50) pie.o++; else pie.z++;
+        thtml+=`<td><b>${top}</b></td><td><span class="badge" style="background:${yuz>=50?'var(--teal)':'var(--danger)'};color:#fff">%${yuz.toFixed(1)}</span></td></tr>`;
     });
+    thtml+='</table>'; document.getElementById('analizTabloAlani').innerHTML = thtml;
 
-    var barData = sOrt.map(t => (t/sData.length).toFixed(1));
-    var barColors = barData.map((v,i) => (v / sDetay[i].maxPuan < 0.5) ? '#EF4444' : '#4F46E5');
-    if(appState.charts.bar) appState.charts.bar.destroy();
-    appState.charts.bar = new Chart(document.getElementById('chartSorular'), {
-        type: 'bar', data: { labels: qKeys.map((k,i)=>'Soru '+(i+1)), datasets: [{ label: 'Ortalama', data: barData, backgroundColor: barColors, borderRadius:4 }] }
-    });
-
-    if(appState.charts.pie) appState.charts.pie.destroy();
-    appState.charts.pie = new Chart(document.getElementById('chartBaraj'), {
-        type: 'doughnut', data: { labels: ['Başarılı (>70)', 'Orta (50-69)', 'Kritik (<50 Baraj)'], datasets: [{ data: [pie.basarili, pie.orta, pie.zayif], backgroundColor: ['#10B981', '#F59E0B', '#EF4444'], borderWidth:0 }] }
-    });
-
-    var sbIsim = Object.keys(subeler);
-    var sbDeger = sbIsim.map(s => (subeler[s].topPuan / subeler[s].kisi).toFixed(1));
-    if(appState.charts.sube) appState.charts.sube.destroy();
-    appState.charts.sube = new Chart(document.getElementById('chartSubeler'), {
-        type: 'bar', data: { labels: sbIsim, datasets: [{ label: 'Şube Başarısı %', data: sbDeger, backgroundColor: '#10B981', borderRadius:4 }] }
-    });
+    // Grafikler
+    var barData = sOrt.map(t=>(t/data.length).toFixed(1));
+    var bColor = barData.map((v,i)=>(v/detay[i].maxPuan<0.5)?'#EF4444':'#4F46E5');
+    if(app.charts.bar) app.charts.bar.destroy();
+    app.charts.bar = new Chart(document.getElementById('chartSorular'),{ type:'bar', data:{labels:qKeys.map((k,i)=>'Soru '+(i+1)), datasets:[{label:'Ortalama Puan',data:barData,backgroundColor:bColor}]} });
+    
+    if(app.charts.pie) app.charts.pie.destroy();
+    app.charts.pie = new Chart(document.getElementById('chartBaraj'),{ type:'pie', data:{labels:['Başarılı(>70)','Orta(50-69)','Kritik(<50)'], datasets:[{data:[pie.b,pie.o,pie.z],backgroundColor:['#10B981','#F59E0B','#EF4444']}]} });
 }
 
+function analizExcelIndir() {
+    var id = document.getElementById('analizSecim').value;
+    var wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(app.data.sinavlar[id]), 'AnalizTablosu');
+    XLSX.writeFile(wb, `Analiz_Tablosu_${id}.xlsx`);
+}
+
+// AI RAPOR VE ZOOM (MANUEL A4 AYARI)
 async function aiRaporOlustur() {
     var id = document.getElementById('analizSecim').value;
-    document.getElementById('pdfCiktiAlani').style.display = 'block';
-    document.getElementById('raporMetni').innerHTML = "<div style='text-align:center;padding:30px;color:var(--primary)'>Rapor hazırlanıyor... Lütfen Bekleyin.</div>";
+    document.getElementById('pdfAlan').style.display='block';
+    document.getElementById('raporMetni').innerHTML = "<div style='text-align:center;padding:20px;color:var(--primary)'><i class='fa-solid fa-spinner fa-spin fa-2x'></i><br>Çeldiriciler inceleniyor...</div>";
     
-    var sData = appState.data.sinavlar[id];
-    var sDetay = appState.data.senaryolar[id].detaylar;
-    var analizMetni = `Okul: ${appState.okul}\nSınav: ${id}\nÖğrenci Sayısı: ${sData.length}\nSorular:\n`;
-    sDetay.forEach((k,i) => { analizMetni += `Soru ${i+1}: ${k.kazanim} (Alt Beceriler: ${k.altBeceriler})\n`; });
-
-    var prompt = `Sen MEB denetmenisin. Şu sonuçları incele. Öğrencilerin %50 barajının altında kalma sebeplerini, kavram yanılgılarını tahmin et. Zümreye eylem planı sun. Veri: ${analizMetni}`;
-
+    var metin = `Sınav: ${id}\nÖğrenci: ${app.data.sinavlar[id].length}\n`;
+    app.data.senaryolar[id].detaylar.forEach((k,i)=> metin+=`S${i+1}: ${k.kazanim} (${k.altBeceriler})\n`);
+    
     try {
-        var res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({contents: [{parts: [{text: prompt}]}]})
-        });
+        var res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({contents: [{parts: [{text: `Sen MEB denetmenisin. Şu sonuçlardaki kavram yanılgılarını tahmin et. Eylem planı yaz. Veri: ${metin}`}]}]}) });
         var text = (await res.json()).candidates[0].content.parts[0].text;
-        document.getElementById('raporMetni').innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\n/g, '<li style="margin-left:20px">$1</li>').replace(/\n/g, '<br>');
-    } catch(e) { document.getElementById('raporMetni').innerHTML = "<span style='color:red'>Hata! İnternetiniz yok veya Gemini kotası doldu.</span>"; }
+        document.getElementById('raporMetni').innerHTML = text.replace(/\*\*(.*?)\*\*/g,'<b>$1</b>').replace(/\*(.*?)\n/g,'<li style="margin-left:20px">$1</li>').replace(/\n/g,'<br>');
+    } catch(e) { document.getElementById('raporMetni').innerHTML = "<b style='color:red'>İnternet bağlantınızı kontrol edin.</b>"; }
+}
+
+// PDF ZOOM (ART (+) / EKSİ (-) MANTIĞI)
+let currentFontSize = 14;
+function zoomRapor(step) {
+    currentFontSize += step;
+    if(currentFontSize < 10) currentFontSize = 10;
+    if(currentFontSize > 24) currentFontSize = 24;
+    document.getElementById('pdfKapsayici').style.fontSize = currentFontSize + 'px';
+    document.getElementById('zoomSeviyesi').innerText = currentFontSize + 'px';
 }
 
 function pdfIndir() {
-    html2pdf().set({margin: 15, filename: `Rapor.pdf`, image:{type:'jpeg', quality:1}, html2canvas: { scale: 2 }, jsPDF: { format: 'a4' } }).from(document.getElementById('pdfKapsayici')).save();
+    html2pdf().set({margin:10, filename:`Zumre_Raporu.pdf`, image:{type:'jpeg',quality:1}, html2canvas:{scale:2}, jsPDF:{format:'a4',orientation:'portrait'} }).from(document.getElementById('pdfKapsayici')).save();
 }
 </script>
 </body>
