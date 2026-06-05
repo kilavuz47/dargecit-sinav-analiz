@@ -470,8 +470,8 @@
 </div>
 
 <script>
-    // --- LOKAL VERİTABANI VE OTURUM (SESSION) ---
-const DB_KEY = 'dargecit_v5_pro';
+    const DB_KEY = 'dargecit_v6_pro';
+
 function getDB() {
     let d = sessionStorage.getItem(DB_KEY);
     if (!d) return { users: [], okulData: {} };
@@ -482,6 +482,7 @@ function getDB() {
         return parsed;
     } catch(e) { return { users: [], okulData: {} }; }
 }
+
 function saveDB(obj) { sessionStorage.setItem(DB_KEY, JSON.stringify(obj)); }
 
 var app = { user: null, role: null, okul: null, data: { ogrenciler: [], senaryolar: {}, sinavlar: {} }, charts: {} };
@@ -503,7 +504,7 @@ function register() {
     var db = getDB();
     if(db.users.find(u => u.username === user)) { alert("Bu kullanıcı adı sistemde mevcut!"); return; }
     
-    // Yeni kayıt olan öğretmen varsayılan olarak "Beklemede" olur
+    // Öğretmen ilk kayıt olduğunda "Beklemede" olur
     db.users.push({ username: user, password: pass, okul: okul, rol: 'Öğretmen', durum: 'Beklemede' });
     if(!db.okulData[okul]) db.okulData[okul] = { ogrenciler: [], senaryolar: {}, sinavlar: {} };
     saveDB(db);
@@ -521,7 +522,7 @@ async function login() {
 
     var db = getDB();
 
-    // SÜPER YÖNETİCİ GİRİŞİ
+    // SÜPER YÖNETİCİ
     if (user === 'admin' && pass === 'Sarac.47') {
         app.user = user; app.role = 'Süper Yönetici'; app.okul = 'Dargeçit İlçe MEM';
         document.getElementById('navAdmin').style.display = 'flex'; // Admin panelini aç
@@ -540,12 +541,15 @@ async function login() {
 }
 
 async function initApp(db) {
+    // Bulut bağlantısı varsa verileri güncelle
     if(supa) {
         try {
             const { data } = await supa.from('okul_verileri').select('json_data').eq('id',1).single();
             if(data && data.json_data && data.json_data[app.okul]) { db.okulData[app.okul] = data.json_data[app.okul]; }
+            // Adminse kullanıcı listesini de buluttan çekebiliriz ama şimdilik lokal session'da tutuyoruz
         } catch(e){}
     }
+    
     if(!db.okulData[app.okul]) db.okulData[app.okul] = { ogrenciler:[], senaryolar:{}, sinavlar:{} };
     app.data = db.okulData[app.okul]; saveDB(db);
 
@@ -553,20 +557,20 @@ async function initApp(db) {
     document.getElementById('mainApp').style.display = 'flex';
     document.getElementById('lblUser').innerText = app.user; 
     document.getElementById('lblRole').innerText = app.role;
-    document.getElementById('lblOkul').innerText = app.okul;
+    document.getElementById('lblOkul').innerHTML = `<i class="fa-solid fa-school"></i> ` + app.okul;
     document.getElementById('pdfOkulAdi').innerText = app.okul;
     navTo('dashboard');
 }
 
 async function bulutaKaydet() {
     var db = getDB(); db.okulData[app.okul] = app.data; saveDB(db);
-    if(!supa) { alert("Veriler bu oturuma güvenle kaydedildi."); return; }
+    if(!supa) { alert("Supabase ayarlanmamış. Sadece bu bilgisayara kaydedildi."); return; }
     try {
         let m = {}; const { data } = await supa.from('okul_verileri').select('json_data').eq('id',1).single();
         if(data && data.json_data) m = data.json_data;
         m[app.okul] = app.data;
         await supa.from('okul_verileri').upsert({id:1, json_data:m});
-        alert("Sisteme ve Buluta Başarıyla Kaydedildi!");
+        alert("Tüm değişiklikler Buluta Başarıyla Kaydedildi!");
     } catch(e) { alert("Bulut bağlantı hatası."); }
 }
 
@@ -579,7 +583,7 @@ function navTo(page) {
     document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
     document.getElementById('page-'+page).classList.add('active');
-    event.currentTarget.classList.add('active');
+    if(event && event.currentTarget) event.currentTarget.classList.add('active');
 
     if(page==='dashboard') {
         document.getElementById('statOgrenci').innerText = app.data.ogrenciler.length;
@@ -590,14 +594,14 @@ function navTo(page) {
     else if(page==='senaryo') { renderSenaryolar(); }
     else if(page==='sinav') {
         let s1 = document.getElementById('mnSenaryoSec'); let s2 = document.getElementById('exNotSenaryoSec');
-        s1.innerHTML = '<option value="">Senaryo Seç</option>'; s2.innerHTML = '';
+        s1.innerHTML = '<option value="">Senaryo Seç</option>'; s2.innerHTML = '<option value="">Senaryo Seç</option>';
         Object.keys(app.data.senaryolar).forEach(k => { s1.innerHTML+=`<option>${k}</option>`; s2.innerHTML+=`<option>${k}</option>`; });
         
         let c1 = document.getElementById('mnSinifSec'); let c2 = document.getElementById('exNotSinifSec');
         c1.innerHTML = '<option value="Tümü">Tüm Sınıflar</option>'; c2.innerHTML = '<option value="Tümü">Tüm Sınıflar</option>';
         [...new Set(app.data.ogrenciler.map(o=>o.sinif))].forEach(x => { c1.innerHTML+=`<option>${x}</option>`; c2.innerHTML+=`<option>${x}</option>`; });
     } else if(page==='analiz') {
-        let aS = document.getElementById('analizSecim'); aS.innerHTML='<option value="">-- Sınav Seç --</option>';
+        let aS = document.getElementById('analizSecim'); aS.innerHTML='<option value="">-- Analiz Edilecek Sınavı Seç --</option>';
         Object.keys(app.data.sinavlar).forEach(k => aS.innerHTML+=`<option>${k}</option>`);
         document.getElementById('analizKapsayici').style.display='none';
     }
@@ -617,14 +621,14 @@ function renderAdmin() {
     db.users.forEach((u, i) => {
         if(u.rol !== 'Süper Yönetici') {
             let badge = u.durum==='Beklemede' ? 'bg-yellow' : (u.durum==='Onaylı' ? 'bg-green' : 'bg-red');
-            html += `<tr><td>${u.username}</td><td>${u.okul}</td><td><span class="badge ${badge}">${u.durum||'Beklemede'}</span></td>
+            html += `<tr><td><strong>${u.username}</strong></td><td>${u.okul}</td><td><span class="badge ${badge}">${u.durum||'Beklemede'}</span></td>
             <td>
-                <button class="btn btn-success btn-sm" onclick="userOnayla(${i}, 'Onaylı')"><i class="fa-solid fa-check"></i></button>
-                <button class="btn btn-danger btn-sm" onclick="userOnayla(${i}, 'Reddedildi')"><i class="fa-solid fa-xmark"></i></button>
+                <button class="btn btn-success btn-sm" onclick="userOnayla(${i}, 'Onaylı')"><i class="fa-solid fa-check"></i> Onayla</button>
+                <button class="btn btn-danger btn-sm" onclick="userOnayla(${i}, 'Reddedildi')"><i class="fa-solid fa-xmark"></i> Reddet</button>
             </td></tr>`;
         }
     });
-    document.getElementById('adminTableBody').innerHTML = html;
+    document.getElementById('adminTableBody').innerHTML = html || '<tr><td colspan="4">Kayıtlı öğretmen bulunmuyor.</td></tr>';
 }
 function userOnayla(index, durum) {
     var db = getDB(); db.users[index].durum = durum; saveDB(db); renderAdmin();
@@ -636,7 +640,7 @@ function userOnayla(index, durum) {
 function downloadTemplate(tip) {
     var wb = XLSX.utils.book_new();
     if(tip==='ogrenci') { XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([['Okul No','Adı','Soyadı','Sınıf'],['101','Ali','Veli','6/A']]), 'Ogrenciler'); XLSX.writeFile(wb, 'Ogrenci_Sablon.xlsx'); }
-    else if(tip==='senaryo') { XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([['Soru No','Kazanım','Süreç Bileşeni','Max Puan'],['1','MAT.6.1...','a) Çözer','20']]), 'Senaryo'); XLSX.writeFile(wb, 'Senaryo_Sablon.xlsx'); }
+    else if(tip==='senaryo') { XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([['Soru No','Kazanım','Süreç Bileşeni','Max Puan'],['1','MAT.6.1. Örüntüler...','a) Algoritma kurar','20']]), 'Senaryo'); XLSX.writeFile(wb, 'Senaryo_Sablon.xlsx'); }
 }
 
 function uploadExcel(inp, tip) {
@@ -644,15 +648,23 @@ function uploadExcel(inp, tip) {
     reader.onload = function(e) {
         var data = XLSX.utils.sheet_to_json(XLSX.read(e.target.result, {type:'binary'}).Sheets[0]);
         if(tip==='ogrenci') {
-            data.forEach(r => { if(r['Okul No'] && !app.data.ogrenciler.find(o=>o.no==r['Okul No'])) app.data.ogrenciler.push({no:r['Okul No'], ad:r['Adı'], soyad:r['Soyadı'], sinif:r['Sınıf']}); });
-            alert("Öğrenciler Eklendi!"); renderOgrenciler();
+            let eklenen = 0;
+            data.forEach(r => { 
+                let no = String(r['Okul No']||'').trim();
+                if(no && !app.data.ogrenciler.find(o=>o.no==no)) {
+                    app.data.ogrenciler.push({no:no, ad:r['Adı']||'', soyad:r['Soyadı']||'', sinif:r['Sınıf']||'Tasarım'}); 
+                    eklenen++;
+                } 
+            });
+            alert(`${eklenen} Öğrenci Eklendi!`); renderOgrenciler();
         } else if(tip==='senaryo') {
-            var sAd = document.getElementById('exSenAdi').value.trim(); if(!sAd){ alert("Sınav Adı yazın!"); return; }
-            var detaylar = data.map(r => ({ kazanim: r['Kazanım']||'', altBeceriler: r['Süreç Bileşeni']||'', maxPuan: parseInt(r['Max Puan'])||20 }));
-            app.data.senaryolar[sAd] = { detaylar }; alert("Senaryo Eklendi!"); renderSenaryolar();
+            var sAd = document.getElementById('exSenAdi').value.trim(); if(!sAd){ alert("Lütfen Sınav/Senaryo Adı yazın!"); return; }
+            var detaylar = data.map(r => ({ kazanim: r['Kazanım']||'Belirtilmedi', altBeceriler: r['Süreç Bileşeni']||'', maxPuan: parseInt(r['Max Puan'])||20 }));
+            app.data.senaryolar[sAd] = { detaylar }; alert("Senaryo Havuza Eklendi!"); renderSenaryolar();
         } else if(tip==='not') {
             var nId = document.getElementById('exNotSenaryoSec').value;
-            app.data.sinavlar[nId] = data; alert("Notlar Yüklendi!");
+            if(!nId) { alert("Lütfen önce Senaryo seçin!"); return; }
+            app.data.sinavlar[nId] = data; alert("Sınav Sonuçları Başarıyla Sisteme İşlendi!");
         }
         inp.value = ""; bulutaKaydet();
     }; reader.readAsBinaryString(inp.files[0]);
@@ -662,122 +674,179 @@ function manuelOgrenciEkle() {
     var no = document.getElementById('mOgrNo').value.trim(); var ad = document.getElementById('mOgrAd').value.trim();
     var soyad = document.getElementById('mOgrSoyad').value.trim(); var sinif = document.getElementById('mOgrSinif').value.trim();
     if(!no||!ad||!soyad||!sinif) { alert("Tüm alanları doldurun"); return; }
-    if(app.data.ogrenciler.find(o=>o.no===no)){ alert("Bu numara var!"); return; }
+    if(app.data.ogrenciler.find(o=>o.no===no)){ alert("Bu okul numarası sistemde mevcut!"); return; }
     app.data.ogrenciler.push({no, ad, soyad, sinif}); bulutaKaydet(); renderOgrenciler();
     document.getElementById('mOgrNo').value=''; document.getElementById('mOgrAd').value=''; document.getElementById('mOgrSoyad').value='';
 }
+
 function tumOgrencileriSil() { if(confirm("Tüm öğrenciler silinecek. Emin misiniz?")) { app.data.ogrenciler = []; bulutaKaydet(); renderOgrenciler(); } }
+
 function renderOgrenciler() {
-    document.getElementById('ogrSayi').innerText = app.data.ogrenciler.length;
-    document.getElementById('ogrTableBody').innerHTML = app.data.ogrenciler.map((o,i) => `<tr><td>${o.no}</td><td>${o.ad}</td><td>${o.soyad}</td><td><span class="badge bg-green">${o.sinif}</span></td><td><button class="btn btn-danger btn-sm" onclick="app.data.ogrenciler.splice(${i},1);bulutaKaydet();renderOgrenciler()">Sil</button></td></tr>`).join('');
+    document.getElementById('ogrSayiText').innerText = app.data.ogrenciler.length;
+    document.getElementById('ogrTableBody').innerHTML = app.data.ogrenciler.map((o,i) => `<tr><td><b>${o.no}</b></td><td>${o.ad}</td><td>${o.soyad}</td><td><span class="badge bg-blue">${o.sinif}</span></td><td><button class="btn btn-danger btn-sm" onclick="app.data.ogrenciler.splice(${i},1);bulutaKaydet();renderOgrenciler()"><i class="fa-solid fa-trash"></i> Sil</button></td></tr>`).join('');
 }
 
 // ==========================================
-// 5. SENARYO HAVUZU (MANUEL & AI)
+// 5. SENARYO HAVUZU (MANUEL & YAPAY ZEKA)
 // ==========================================
 function mSenSatirEkle() {
     var i = document.getElementById('mSenBody').children.length + 1;
-    document.getElementById('mSenBody').insertAdjacentHTML('beforeend', `<tr><td>${i}</td><td><input type="text" class="form-control m-kaz"></td><td><input type="text" class="form-control m-alt"></td><td><input type="number" class="form-control m-puan" value="20"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>`);
+    document.getElementById('mSenBody').insertAdjacentHTML('beforeend', `<tr><td>${i}</td><td><input type="text" class="form-control m-kaz" placeholder="Örn: MAT.6.1. Gerçek yaşam..."></td><td><input type="text" class="form-control m-alt" placeholder="Örn: a) denklem kurar"></td><td><input type="number" class="form-control m-puan input-cell" value="20"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>`);
 }
+
 function mSenKaydet() {
     var ad = document.getElementById('mSenSinavAdi').value.trim() + " - " + document.getElementById('mSenSenaryoAdi').value.trim();
-    if(ad.length < 5) { alert("Sınav ve Senaryo adını girin."); return; }
+    if(ad.length < 5) { alert("Sınav ve Senaryo adını eksiksiz girin."); return; }
     var detaylar = [];
     document.querySelectorAll('#mSenBody tr').forEach(tr => {
-        detaylar.push({ kazanim: tr.querySelector('.m-kaz').value, altBeceriler: tr.querySelector('.m-alt').value, maxPuan: parseInt(tr.querySelector('.m-puan').value)||0 });
+        var k = tr.querySelector('.m-kaz').value.trim();
+        if(k) detaylar.push({ kazanim: k, altBeceriler: tr.querySelector('.m-alt').value, maxPuan: parseInt(tr.querySelector('.m-puan').value)||0 });
     });
-    app.data.senaryolar[ad] = { detaylar }; bulutaKaydet(); alert("Senaryo Kaydedildi!"); renderSenaryolar();
+    if(detaylar.length === 0) { alert("En az 1 soru/kazanım eklemelisiniz!"); return; }
+    
+    app.data.senaryolar[ad] = { detaylar }; bulutaKaydet(); alert("Manuel Senaryo Havuza Kaydedildi!"); renderSenaryolar();
 }
 
 async function aiSenaryoOlustur() {
     var metin = document.getElementById('aiKazanımMetni').value.trim();
-    var ad = document.getElementById('aiSinavAdi').value.trim() + " - " + document.getElementById('aiSenaryoAdi').value.trim();
-    if(!metin) return; document.getElementById('btnAiSen').innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> AI Çözümlüyor...`;
+    var sinav = document.getElementById('aiSinavAdi').value.trim();
+    var sen = document.getElementById('aiSenaryoAdi').value.trim();
+    if(!metin || !sinav || !sen) { alert("Sınav Adı, Senaryo İsmi ve Metin alanlarını doldurunuz."); return; }
+    
+    var ad = sinav + " - " + sen;
+    var btn = document.getElementById('btnAiSen');
+    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Gemini Çözümlüyor...`; btn.disabled = true;
+
+    var prompt = `Sen MEB Sınav uzmanısın. Aşağıdaki kazanım metnini analiz et. Bana sadece ve sadece bir JSON dizisi (array) döndür. Başka hiçbir açıklama yazma.
+Format: [{"kazanim":"Kazanım metni", "altBeceriler":"a) süreç, b) süreç", "maxPuan": 20}]
+Metin: ${metin}`;
+
     try {
-        var res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({contents: [{parts: [{text: `Şu metinden JSON üret: [{"kazanim":"..","altBeceriler":"..","maxPuan":20}]. Metin: ${metin}`}]}]}) });
-        var raw = (await res.json()).candidates[0].content.parts[0].text;
-        app.data.senaryolar[ad] = { detaylar: JSON.parse(raw.replace(/```json/g,'').replace(/```/g,'').trim()) };
-        bulutaKaydet(); renderSenaryolar(); alert("AI Senaryoyu Havuza Ekledi!");
-    } catch(e) { alert("AI Hatası: Metni kontrol edin."); }
-    document.getElementById('btnAiSen').innerHTML = `<i class="fa-solid fa-robot"></i> Çözümle ve Kaydet`;
+        var res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({contents: [{parts: [{text: prompt}]}]}) });
+        var data = await res.json();
+        if(data.error) throw new Error(data.error.message);
+        
+        var raw = data.candidates[0].content.parts[0].text;
+        var jsonMatch = raw.match(/\[[\s\S]*\]/); // Regex ile markdown engellerini aşar
+        
+        if(jsonMatch) {
+            app.data.senaryolar[ad] = { detaylar: JSON.parse(jsonMatch[0]) };
+            bulutaKaydet(); renderSenaryolar(); alert("Yapay Zeka Metni Başarıyla Tabloya Çevirdi!");
+            document.getElementById('aiKazanımMetni').value = '';
+        } else { throw new Error("Yapay zeka JSON üretemedi."); }
+    } catch(e) { alert("AI Hatası: Lütfen metni daha düzgün kopyalayın.\nDetay: " + e.message); }
+    
+    btn.innerHTML = `<i class="fa-solid fa-robot"></i> Çözümle ve Havuza Ekle`; btn.disabled = false;
 }
+
 function renderSenaryolar() {
-    document.getElementById('senaryoListesi').innerHTML = Object.keys(app.data.senaryolar).map(id => `<div style="background:#fff;border:1px solid var(--border);padding:15px;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><div><strong style="color:var(--primary)">${id}</strong><br><span style="font-size:12px;color:var(--text-muted)">${app.data.senaryolar[id].detaylar.length} Soru Tanımlı</span></div><button class="btn btn-danger" onclick="delete app.data.senaryolar['${id}'];bulutaKaydet();renderSenaryolar()"><i class="fa-solid fa-trash"></i></button></div>`).join('') || "Senaryo yok.";
+    var html = '';
+    Object.keys(app.data.senaryolar).forEach(id => {
+        var detay = app.data.senaryolar[id].detaylar;
+        html += `<div class="card" style="margin-bottom:15px; border-left:4px solid var(--primary); padding:15px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h3 style="color:var(--primary); font-size:16px;">${id}</h3>
+                <button class="btn btn-danger btn-sm" onclick="delete app.data.senaryolar['${id}'];bulutaKaydet();renderSenaryolar()"><i class="fa-solid fa-trash"></i> Sil</button>
+            </div>
+            <div class="table-responsive">
+                <table style="font-size:12px;">
+                    <thead><tr><th>Soru</th><th>Kazanım / Konu</th><th>Süreç Bileşeni</th><th>Puan</th></tr></thead>
+                    <tbody>`;
+        detay.forEach((k,i) => { html += `<tr><td><b>${i+1}</b></td><td>${k.kazanim}</td><td>${k.altBeceriler}</td><td>${k.maxPuan}</td></tr>`; });
+        html += `</tbody></table></div></div>`;
+    });
+    document.getElementById('senaryoListesi').innerHTML = html || '<div style="color:var(--text-muted)">Havuzda henüz senaryo bulunmuyor.</div>';
 }
 
 // ==========================================
-// 6. MANUEL NOT GİRİŞ TABLOSU
+// 6. MANUEL NOT GİRİŞ TABLOSU VE İŞLEMLERİ
 // ==========================================
 function manuelNotTablosuCiz() {
     var id = document.getElementById('mnSenaryoSec').value; var snf = document.getElementById('mnSinifSec').value;
     if(!id) return;
-    var detay = app.data.senaryolar[id].detaylar; var ogrs = snf==='Tümü' ? app.data.ogrenciler : app.data.ogrenciler.filter(o=>o.sinif===snf);
+    var detay = app.data.senaryolar[id].detaylar; 
+    var ogrs = snf==='Tümü' ? app.data.ogrenciler : app.data.ogrenciler.filter(o=>o.sinif===snf);
     
-    var hHtml = '<th>No</th><th>Adı Soyadı</th><th>Sınıf</th>';
-    detay.forEach((k,i)=> hHtml+=`<th>S${i+1} (Max:${k.maxPuan})</th>`);
+    // Var olan notları çekelim ki inputlara yazdıralım
+    var sinavKayıtları = app.data.sinavlar[id] || [];
+    
+    var hHtml = '<th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
+    detay.forEach((k,i)=> hHtml+=`<th>Soru ${i+1} <br><span style="font-size:10px; font-weight:normal;">(Max:${k.maxPuan})</span></th>`);
     document.getElementById('mnHead').innerHTML = hHtml;
     
     var bHtml = '';
     ogrs.forEach(o => {
-        bHtml += `<tr data-no="${o.no}"><td>${o.no}</td><td>${o.ad} ${o.soyad}</td><td>${o.sinif}</td>`;
-        detay.forEach((k,i)=> bHtml+=`<td><input type="number" class="input-cell n-inp" data-idx="${i}" max="${k.maxPuan}" min="0"></td>`);
+        // Öğrencinin daha önce notu girilmiş mi kontrol et
+        var exNot = sinavKayıtları.find(sn => String(sn['Okul No']) === String(o.no));
+        
+        bHtml += `<tr data-no="${o.no}"><td><b>${o.no}</b></td><td>${o.ad} ${o.soyad}</td><td>${o.sinif}</td>`;
+        detay.forEach((k,i)=> {
+            var colName = `Soru ${i+1} [Max:${k.maxPuan}]`;
+            var val = (exNot && exNot[colName] !== undefined) ? exNot[colName] : '';
+            bHtml += `<td><input type="number" class="input-cell n-inp" data-idx="${i}" data-col="${colName}" max="${k.maxPuan}" min="0" value="${val}"></td>`;
+        });
         bHtml += `</tr>`;
     });
     document.getElementById('mnBody').innerHTML = bHtml;
 }
+
 function manuelNotKaydet() {
-    var id = document.getElementById('mnSenaryoSec').value; if(!id) return;
-    var detay = app.data.senaryolar[id].detaylar; var tabloData = [];
+    var id = document.getElementById('mnSenaryoSec').value; if(!id) { alert("Senaryo seçin"); return; }
+    var tabloData = [];
     
     document.querySelectorAll('#mnBody tr').forEach(tr => {
         var row = { 'Okul No': tr.dataset.no, 'Adı': tr.cells[1].innerText.split(' ')[0], 'Soyadı': tr.cells[1].innerText.split(' ')[1]||'', 'Sınıf': tr.cells[2].innerText };
-        tr.querySelectorAll('.n-inp').forEach(inp => { row[`Soru ${parseInt(inp.dataset.idx)+1} [Max:${detay[inp.dataset.idx].maxPuan}]`] = parseFloat(inp.value)||0; });
+        tr.querySelectorAll('.n-inp').forEach(inp => { 
+            let p = parseFloat(inp.value);
+            row[inp.dataset.col] = isNaN(p) ? 0 : p; 
+        });
         tabloData.push(row);
     });
     
     if(!app.data.sinavlar[id]) app.data.sinavlar[id] = [];
     
-    // Eski notları ezmeden üstüne yaz veya güncelle
     tabloData.forEach(yeni => {
         var idx = app.data.sinavlar[id].findIndex(e => String(e['Okul No']) === String(yeni['Okul No']));
         if(idx > -1) app.data.sinavlar[id][idx] = yeni; else app.data.sinavlar[id].push(yeni);
     });
     
-    bulutaKaydet(); alert("Manuel Notlar Kaydedildi!");
+    bulutaKaydet(); alert("Notlar Başarıyla Sisteme İşlendi!");
 }
+
 function notSablonIndir() {
     var id = document.getElementById('exNotSenaryoSec').value; var snf = document.getElementById('exNotSinifSec').value;
-    if(!id) return; var ogrs = snf==='Tümü' ? app.data.ogrenciler : app.data.ogrenciler.filter(o=>o.sinif===snf);
+    if(!id) { alert("Lütfen Senaryo seçin."); return; }
+    var ogrs = snf==='Tümü' ? app.data.ogrenciler : app.data.ogrenciler.filter(o=>o.sinif===snf);
     var hdr = ['Okul No', 'Adı', 'Soyadı', 'Sınıf']; app.data.senaryolar[id].detaylar.forEach((k,i)=>hdr.push(`Soru ${i+1} [Max:${k.maxPuan}]`));
     var rows = [hdr]; ogrs.forEach(o => { var r=[o.no,o.ad,o.soyad,o.sinif]; app.data.senaryolar[id].detaylar.forEach(()=>r.push('')); rows.push(r); });
-    var wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), 'Notlar'); XLSX.writeFile(wb, `Sinav_${id}.xlsx`);
+    var wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), 'Notlar'); XLSX.writeFile(wb, `Sinav_Sablon_${id}.xlsx`);
 }
 
 // ==========================================
-// 7. ANALİZ, DİNAMİK BARAJ VE EXCEL İNDİR
+// 7. DETAYLI ANALİZ, BARAJ VE GRAFİKLER
 // ==========================================
 function analizCiz() {
     var id = document.getElementById('analizSecim').value;
-    var baraj = parseFloat(document.getElementById('basariBaraji').value) || 50; // Öğretmenin belirlediği baraj
+    var baraj = parseFloat(document.getElementById('basariBaraji').value) || 50; 
     if(!id) { document.getElementById('analizKapsayici').style.display='none'; return; }
     document.getElementById('analizKapsayici').style.display='block';
 
     var data = app.data.sinavlar[id]; var detay = app.data.senaryolar[id].detaylar;
     var qKeys = Object.keys(data[0]).filter(k=>k.startsWith('Soru'));
 
-    // Tablo Oluşturma
+    // Excel Çıktısı Formatında HTML Tablo
     var thtml = '<table><tr><th>No</th><th>İsim</th><th>Sınıf</th>';
     qKeys.forEach(k=> thtml+=`<th>${k.split('[')[0]}</th>`); thtml+='<th>Toplam</th><th>% Başarı</th></tr>';
     
     var pie = { basarili:0, orta:0, zayif:0 }; var sOrt = qKeys.map(()=>0); var subeler = {};
     
     data.forEach(r => {
-        var top=0, max=0; thtml+=`<tr><td>${r['Okul No']}</td><td>${r['Adı']} ${r['Soyadı']}</td><td>${r['Sınıf']}</td>`;
+        var top=0, max=0; thtml+=`<tr><td><b>${r['Okul No']}</b></td><td>${r['Adı']} ${r['Soyadı']}</td><td>${r['Sınıf']}</td>`;
         qKeys.forEach((k,i)=>{ var v=parseFloat(r[k])||0; top+=v; max+=detay[i].maxPuan; sOrt[i]+=v; thtml+=`<td>${v}</td>`; });
         var yuz = (top/max)*100;
         
-        // Dinamik Baraj Hesaplaması
-        if(yuz >= 85) pie.basarili++; 
+        // Dinamik Baraja Göre Analiz
+        if(yuz >= baraj + 20) pie.basarili++; 
         else if(yuz >= baraj) pie.orta++; 
         else pie.zayif++;
         
@@ -788,71 +857,73 @@ function analizCiz() {
     });
     thtml+='</table>'; document.getElementById('analizTabloAlani').innerHTML = thtml;
 
-    // Grafikler
+    // 1. GRAFİK: Soru Ortalamaları (Baraj Altı Kırmızı)
     var barData = sOrt.map(t=>(t/data.length).toFixed(1));
-    // Soru bazında baraj hesabı (Soru max puanının baraj yüzdesi kadar)
     var bColor = barData.map((v,i)=>(v/detay[i].maxPuan < (baraj/100)) ? '#EF4444' : '#4F46E5');
     if(app.charts.bar) app.charts.bar.destroy();
-    app.charts.bar = new Chart(document.getElementById('chartSoru'),{ type:'bar', data:{labels:qKeys.map((k,i)=>'Soru '+(i+1)), datasets:[{label:'Ortalama Puan',data:barData,backgroundColor:bColor}]} });
+    app.charts.bar = new Chart(document.getElementById('chartSoru'),{ type:'bar', data:{labels:qKeys.map((k,i)=>'Soru '+(i+1)), datasets:[{label:'Sınıf Ortalaması',data:barData,backgroundColor:bColor, borderRadius:6}]} });
     
+    // 2. GRAFİK: Baraj Dağılımı
     if(app.charts.pie) app.charts.pie.destroy();
-    app.charts.pie = new Chart(document.getElementById('chartBaraj'),{ type:'pie', data:{labels:['Çok İyi(>85)','Geçti(>'+baraj+')','Kaldı(<'+baraj+')'], datasets:[{data:[pie.basarili,pie.orta,pie.zayif],backgroundColor:['#10B981','#0EA5E9','#EF4444']}]} });
+    app.charts.pie = new Chart(document.getElementById('chartBaraj'),{ type:'doughnut', data:{labels:[`Çok İyi (>${baraj+20})`,`Geçti (>${baraj})`,`Kaldı (<${baraj})`], datasets:[{data:[pie.basarili,pie.orta,pie.zayif],backgroundColor:['#10B981','#0EA5E9','#EF4444'], borderWidth:0}]} });
 
+    // 3. GRAFİK: Şubeler Arası Ortalama
     var sbIsim = Object.keys(subeler); var sbDeger = sbIsim.map(s=>(subeler[s].top/subeler[s].kisi).toFixed(1));
     if(app.charts.sube) app.charts.sube.destroy();
-    app.charts.sube = new Chart(document.getElementById('chartSube'),{ type:'bar', data:{labels:sbIsim, datasets:[{label:'Şube Başarısı %',data:sbDeger,backgroundColor:'#F59E0B'}]} });
+    app.charts.sube = new Chart(document.getElementById('chartSube'),{ type:'bar', data:{labels:sbIsim, datasets:[{label:'Şube Başarısı %',data:sbDeger,backgroundColor:'#F59E0B', borderRadius:6}]} });
 }
 
 function analizExcelIndir() {
     var id = document.getElementById('analizSecim').value;
-    var wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(app.data.sinavlar[id]), 'AnalizTablosu');
-    XLSX.writeFile(wb, `Sınav_Analizi_${id}.xlsx`);
+    var wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(app.data.sinavlar[id]), 'Analiz_Tablosu');
+    XLSX.writeFile(wb, `Analiz_Tablosu_${id}.xlsx`);
 }
 
 // ==========================================
-// 8. GEMİNİ ÇELDİRİCİ RAPORU VE PDF ZOOM (+/-)
+// 8. GEMİNİ MÜFETTİŞ RAPORU VE PDF SİSTEMİ
 // ==========================================
 async function aiRaporOlustur() {
     var id = document.getElementById('analizSecim').value;
     var baraj = document.getElementById('basariBaraji').value;
     document.getElementById('pdfAlan').style.display='block';
-    document.getElementById('aiRaporMetni').innerHTML = "<div style='text-align:center;padding:30px;color:var(--primary)'><i class='fa-solid fa-spinner fa-spin fa-2x'></i><br><br><b>Müfettiş formatında rapor hazırlanıyor...</b></div>";
+    document.getElementById('aiRaporMetni').innerHTML = "<div style='text-align:center;padding:50px;color:var(--primary)'><i class='fa-solid fa-spinner fa-spin fa-3x'></i><br><br><b style='font-size:16px;'>Müfettiş formatında çeldirici analizi hazırlanıyor... Lütfen bekleyin.</b></div>";
     
     var sData = app.data.sinavlar[id]; var sDetay = app.data.senaryolar[id].detaylar;
-    var metin = `Okul: ${app.okul}\nSınav: ${id}\nÖğrenci: ${sData.length}\nBelirlenen Baraj: %${baraj}\nSorular:\n`;
-    sDetay.forEach((k,i)=> metin+=`S${i+1}: ${k.kazanim} (${k.altBeceriler})\n`);
+    var metin = `Okul: ${app.okul}\nSınav: ${id}\nÖğrenci: ${sData.length}\nÖğretmenin Belirlediği Başarı Barajı: %${baraj}\nSorular ve Kazanımlar:\n`;
+    sDetay.forEach((k,i)=> metin+=`S${i+1}: ${k.kazanim} (Alt Beceriler: ${k.altBeceriler})\n`);
     
-    var prompt = `Sen MEB müfettişisin. Şu sonuçlardaki kavram yanılgılarını, zayıf olunan süreç bileşenlerini tahmin et. Zümreye resmi eylem planı yaz. Baraj %${baraj} alınmıştır. Veri: ${metin}`;
+    var prompt = `Sen uzman bir MEB Sınav Denetmenisin. Aşağıdaki verileri kullanarak profesyonel, zümre toplantısına eklenecek bir "Sınav Analiz, Kavram Yanılgısı ve Eylem Planı" raporu yaz. Öğrencilerin ${baraj} barajı altında kalma ihtimali olan "çeldiricileri" açıkla. Metin ciddi ve pedagojik olmalı. Veri: ${metin}`;
 
     try {
         var res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({contents: [{parts: [{text: prompt}]}]}) });
         var text = (await res.json()).candidates[0].content.parts[0].text;
-        document.getElementById('aiRaporMetni').innerHTML = text.replace(/\*\*(.*?)\*\*/g,'<b>$1</b>').replace(/\*(.*?)\n/g,'<li style="margin-left:20px; margin-bottom:5px;">$1</li>').replace(/\n/g,'<br>');
-    } catch(e) { document.getElementById('aiRaporMetni').innerHTML = "<b style='color:red'>İnternet bağlantınızı kontrol edin.</b>"; }
+        // Markdown formatını güzel bir HTML'e çevirir
+        document.getElementById('aiRaporMetni').innerHTML = text.replace(/\*\*(.*?)\*\*/g,'<b style="color:var(--dark); font-size:15px;">$1</b>').replace(/\*(.*?)\n/g,'<li style="margin-left:25px; margin-bottom:8px;">$1</li>').replace(/\n/g,'<br>');
+    } catch(e) { document.getElementById('aiRaporMetni').innerHTML = "<b style='color:red'>Hata! İnternetiniz yok veya Gemini kotası doldu.</b>"; }
 }
 
-// Manuel PDF Sığdırma Algoritması (0.05 Hassasiyetle)
-let currentZoom = 1.0;
+// PDF'i A4 Sayfasına Sığdırma (Manuel +/- Kontrolü)
+let currentZoom = 1.00;
 function zoomPdf(val) {
     currentZoom += val;
-    if(currentZoom < 0.5) currentZoom = 0.5;
-    if(currentZoom > 1.5) currentZoom = 1.5;
+    if(currentZoom < 0.4) currentZoom = 0.4;
+    if(currentZoom > 1.6) currentZoom = 1.6;
     document.getElementById('pdfIcerik').style.transform = `scale(${currentZoom})`;
     document.getElementById('zoomDeger').innerText = currentZoom.toFixed(2);
 }
 
 function pdfIndir() {
     var element = document.getElementById('pdfIcerik');
-    // PDF çıktısı almadan önce transform'u geçici olarak sıfırlar ki net çıksın
-    var oldTransform = element.style.transform;
+    // PDF alırken transform'u 1'e çekip html2pdf'e öyle aktarıyoruz, bulanıklığı önler
+    var oTrans = element.style.transform;
     element.style.transform = 'scale(1)';
     
     html2pdf().set({
-        margin: 15, filename: `Zümre_Eylem_Plani.pdf`, image: {type: 'jpeg', quality: 1},
+        margin: 15, filename: `Zümre_Eylem_Plani.pdf`, image: {type: 'jpeg', quality: 0.98},
         html2canvas: { scale: 2, useCORS: true }, jsPDF: { format: 'a4', orientation: 'portrait' }
     }).from(element).save().then(() => {
-        // İndirme bitince eski haline getir
-        element.style.transform = oldTransform;
+        // İndirme tamamlanınca sayfadaki ölçeği geri yükle
+        element.style.transform = oTrans;
     });
 }
 </script>
