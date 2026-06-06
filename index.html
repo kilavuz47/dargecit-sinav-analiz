@@ -1422,8 +1422,13 @@ let res=await fetch(`${GEM_URL}?key=${activeKey}`,{
       method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json'}})
     });
-    if(!res.ok){ let err=await res.json(); throw new Error('HTTP '+res.status+': '+(err.error?.message||JSON.stringify(err))); }
-    let data=await res.json();
+    if(!res.ok){ 
+  let err=await res.json(); 
+  if(res.status === 400 || res.status === 403) {
+    localStorage.removeItem('dargecit_secure_ai_key'); // Hatalı anahtarı temizle
+  }
+  throw new Error('HTTP '+res.status+': '+(err.error?.message||JSON.stringify(err))); 
+}
     if(data.error) throw new Error(data.error.message);
     let raw=data.candidates?.[0]?.content?.parts?.[0]?.text||'[]';
     let parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());
