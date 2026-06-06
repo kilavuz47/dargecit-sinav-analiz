@@ -298,12 +298,14 @@ textarea.fc { resize: vertical; min-height: 40px; font-family: inherit; }
         <div id="ogrIzinUyari" class="alert alert-err" style="display:none;"><i class="fa-solid fa-ban"></i> Yönetici tarafından öğrenci ekleme izniniz kısıtlanmıştır.</div>
         <div id="ogrEklemeAlanlari">
           <div class="card">
-            <div class="ct">Öğrenci Ekle (Manuel)</div>
+            <div class="ct">Öğrenci Ekle / Düzenle (Manuel)</div>
             <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+              <input type="hidden" id="mOldNo">
               <div class="fg" style="margin:0;flex:1"><label>Okul No</label><input class="fc" id="mNo" placeholder="Örn: 100"></div>
               <div class="fg" style="margin:0;flex:2"><label>Adı Soyadı</label><input class="fc" id="mAds"></div>
               <div class="fg" style="margin:0;flex:1"><label>Sınıf/Şube</label><input class="fc" id="mSinif" placeholder="Örn: 6/A"></div>
-              <button class="btn btn-success" style="height:43px;" onclick="addOgrManuel()">Ekle</button>
+              <button class="btn btn-success" id="btnOgrKaydet" style="height:43px;" onclick="addOgrManuel()">Ekle</button>
+              <button class="btn btn-outline" id="btnOgrIptal" style="height:43px; display:none;" onclick="cancelOgrEdit()">İptal</button>
             </div>
           </div>
           <div class="card">
@@ -316,7 +318,14 @@ textarea.fc { resize: vertical; min-height: 40px; font-family: inherit; }
           </div>
         </div>
         <div class="card">
-          <div class="ct">Kayıtlı Öğrenciler (<span id="ogrC">0</span>) <button class="btn btn-danger btn-sm" id="btnOgrSil" onclick="clearOgr()">Tümünü Sil</button></div>
+          <div class="ct">
+            <span>Kayıtlı Öğrenciler (<span id="ogrC">0</span>)</span>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+              <select class="fc" id="delSinifSelect" style="width:130px; padding:6px;"></select>
+              <button class="btn btn-warning btn-sm" id="btnSinifSil" onclick="delSinif()"><i class="fa-solid fa-eraser"></i> Sınıfı Sil</button>
+              <button class="btn btn-danger btn-sm" id="btnOgrSil" onclick="clearOgr()"><i class="fa-solid fa-trash-can"></i> Tüm Okulu Sil</button>
+            </div>
+          </div>
           <div class="tr-wrap"><table><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th><th>İşlem</th></tr></thead><tbody id="ogrBody"></tbody></table></div>
         </div>
       </div>
@@ -672,7 +681,10 @@ function uygulaIzinler() {
 
   document.getElementById('ogrEklemeAlanlari').style.display = ogrIz ? 'block' : 'none';
   document.getElementById('ogrIzinUyari').style.display = ogrIz ? 'none' : 'flex';
-  document.getElementById('btnOgrSil').style.display = ogrIz ? 'inline-block' : 'none';
+  
+  let btnOgrSil = document.getElementById('btnOgrSil'); if(btnOgrSil) btnOgrSil.style.display = ogrIz ? 'inline-flex' : 'none';
+  let btnSinifSil = document.getElementById('btnSinifSil'); if(btnSinifSil) btnSinifSil.style.display = ogrIz ? 'inline-flex' : 'none';
+  let delSinifSelect = document.getElementById('delSinifSelect'); if(delSinifSelect) delSinifSelect.style.display = ogrIz ? 'inline-block' : 'none';
 
   document.getElementById('tabSenXlBtn').style.display = sabIz ? 'inline-block' : 'none';
   document.getElementById('sablonIzinUyari').style.display = sabIz ? 'none' : 'flex';
@@ -780,15 +792,70 @@ function delBrans(i){ let db=getDB(); db.branslar.splice(i,1); setDB(db); render
 // =================== ÖĞRENCİ ===================
 function renderOgr(){
   document.getElementById('ogrC').textContent=app.d.ogrenciler.length;
-  document.getElementById('ogrBody').innerHTML=app.d.ogrenciler.map(o=>`<tr><td><b>${o.no}</b></td><td>${o.ads}</td><td><span class="badge bg-b">${o.sinif||''}</span></td><td><button class="btn btn-danger btn-sm" onclick="delOgr('${o.no}')">Sil</button></td></tr>`).join('');
+  document.getElementById('ogrBody').innerHTML=app.d.ogrenciler.map(o=>`<tr><td><b>${o.no}</b></td><td>${o.ads}</td><td><span class="badge bg-b">${o.sinif||''}</span></td>
+  <td>
+    <button class="btn btn-outline btn-sm" onclick="editOgr('${o.no}')" title="Düzenle"><i class="fa-solid fa-pen"></i></button>
+    <button class="btn btn-danger btn-sm" onclick="delOgr('${o.no}')" title="Sil"><i class="fa-solid fa-trash"></i></button>
+  </td></tr>`).join('');
+
+  let siniflar = [...new Set(app.d.ogrenciler.map(o=>o.sinif).filter(Boolean))].sort();
+  let delSel = document.getElementById('delSinifSelect');
+  if(delSel) delSel.innerHTML = '<option value="">-- Sınıf Seç --</option>' + siniflar.map(s=>`<option value="${s}">${s}</option>`).join('');
 }
+
+function editOgr(no) {
+  let o = app.d.ogrenciler.find(x => String(x.no) === String(no));
+  if(!o) return;
+  document.getElementById('mOldNo').value = o.no;
+  document.getElementById('mNo').value = o.no;
+  document.getElementById('mAds').value = o.ads;
+  document.getElementById('mSinif').value = o.sinif || '';
+  document.getElementById('btnOgrKaydet').textContent = 'Güncelle';
+  document.getElementById('btnOgrKaydet').classList.replace('btn-success', 'btn-primary');
+  document.getElementById('btnOgrIptal').style.display = 'inline-flex';
+  document.getElementById('mNo').focus();
+}
+
+function cancelOgrEdit() {
+  document.getElementById('mOldNo').value = '';
+  document.getElementById('mNo').value = '';
+  document.getElementById('mAds').value = '';
+  document.getElementById('mSinif').value = '';
+  document.getElementById('btnOgrKaydet').textContent = 'Ekle';
+  document.getElementById('btnOgrKaydet').classList.replace('btn-primary', 'btn-success');
+  document.getElementById('btnOgrIptal').style.display = 'none';
+}
+
 function addOgrManuel(){
+  if(!(app.role==='Süper Yönetici' && !app.isObserving) && !app.userObj.izin_ogrenci) return alert("Öğrenci ekleme izniniz yok.");
+  let oldNo = document.getElementById('mOldNo') ? document.getElementById('mOldNo').value : '';
   let no=document.getElementById('mNo').value.trim(), ads=document.getElementById('mAds').value.trim(), s=document.getElementById('mSinif').value.trim();
-  if(!no||!ads) return; if(app.d.ogrenciler.find(o=>String(o.no)===String(no))) return alert('Numara mevcut.');
-  app.d.ogrenciler.push({no:no, ads:ads, sinif:s}); renderOgr(); saveAll();
+  if(!no||!ads) return; 
+  
+  if(oldNo) {
+    let idx = app.d.ogrenciler.findIndex(o => String(o.no) === String(oldNo));
+    if(idx > -1) {
+      if(oldNo !== no && app.d.ogrenciler.find(o=>String(o.no)===String(no))) return alert('Bu numara başka öğrencide var.');
+      app.d.ogrenciler[idx] = {no:no, ads:ads, sinif:s};
+    }
+    cancelOgrEdit();
+  } else {
+    if(app.d.ogrenciler.find(o=>String(o.no)===String(no))) return alert('Numara mevcut.');
+    app.d.ogrenciler.push({no:no, ads:ads, sinif:s}); 
+    document.getElementById('mNo').value=''; document.getElementById('mAds').value=''; document.getElementById('mSinif').value='';
+  }
+  renderOgr(); saveAll();
 }
-function delOgr(no){ app.d.ogrenciler=app.d.ogrenciler.filter(o=>String(o.no)!==String(no)); renderOgr(); saveAll(); }
-function clearOgr(){ if(confirm("Tümü silinecek?")){ app.d.ogrenciler=[]; renderOgr(); saveAll(); } }
+
+function delOgr(no){ if(confirm("Öğrenci silinsin mi?")) { app.d.ogrenciler=app.d.ogrenciler.filter(o=>String(o.no)!==String(no)); renderOgr(); saveAll(); } }
+function clearOgr(){ if(confirm("Bu okuldaki TÜM öğrenciler silinecek. Emin misiniz?")){ app.d.ogrenciler=[]; renderOgr(); saveAll(); } }
+function delSinif(){ 
+  let s = document.getElementById('delSinifSelect').value; 
+  if(!s) return alert('Lütfen silinecek sınıfı seçin.'); 
+  if(confirm(`"${s}" sınıfındaki tüm öğrenciler silinecek. Onaylıyor musunuz?`)) { 
+    app.d.ogrenciler=app.d.ogrenciler.filter(o=>o.sinif!==s); renderOgr(); saveAll(); 
+  } 
+}
 
 // =================== YENİ: KELİME KELİME DÜZENLENEBİLİR SENARYO HAVUZU ===================
 function renderSen(){
