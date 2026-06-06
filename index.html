@@ -1,3 +1,5 @@
+html
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -29,7 +31,7 @@ body{background:var(--light);color:var(--text);overflow:hidden}
   padding:45px;display:flex;flex-direction:column;justify-content:center}
 .auth-left h1{font-size:32px;font-weight:800;margin-bottom:16px;line-height:1.2}
 .auth-left p{font-size:14px;opacity:.9;margin-bottom:28px;line-height:1.6}
-.auth-feat{list-style:none; padding:0;}
+.auth-feat{list-style:none}
 .auth-feat li{margin-bottom:14px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500}
 .auth-feat i{background:rgba(255,255,255,.2);width:32px;height:32px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;font-size:13px}
@@ -66,7 +68,7 @@ body{background:var(--light);color:var(--text);overflow:hidden}
   font-size:17px;font-weight:700;display:flex;align-items:center;gap:9px}
 .nav-menu{padding:16px 10px;flex:1;overflow-y:auto}
 .nav-item{display:flex;align-items:center;gap:11px;padding:11px 14px;color:#cbd5e1;
-  border-radius:8px;margin-bottom:4px;cursor:pointer;font-size:13px;font-weight:500;transition:.2s; text-decoration:none;}
+  border-radius:8px;margin-bottom:4px;cursor:pointer;font-size:13px;font-weight:500;transition:.2s}
 .nav-item i{width:18px;text-align:center}
 .nav-item.active,.nav-item:hover{background:rgba(255,255,255,.1);color:#fff}
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#F1F5F9;width:100%}
@@ -82,6 +84,7 @@ body{background:var(--light);color:var(--text);overflow:hidden}
 
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
 .g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-bottom:18px}
+.g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:18px}
 
 .card{background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);
   border:1px solid var(--border);margin-bottom:18px;width:100%}
@@ -95,19 +98,17 @@ body{background:var(--light);color:var(--text);overflow:hidden}
 .stat-val{font-size:38px;font-weight:800;color:var(--dark);margin-bottom:4px}
 .stat-lbl{color:var(--muted);font-size:13px;font-weight:600}
 
-/* YENİ: SABİT BAŞLIKLI TABLO (STICKY HEADER) */
-.tr-wrap{overflow-x:auto; overflow-y:auto; max-height:550px; background:#fff; border-radius:var(--radius);
+.tr-wrap{overflow-x:auto;background:#fff;border-radius:var(--radius);
   border:1px solid var(--border);margin-bottom:14px;-webkit-overflow-scrolling:touch;width:100%}
-table{width:100%;border-collapse:collapse;min-width:600px; position:relative;}
-thead th { position: sticky; top: 0; z-index: 10; background: #F8FAFC; 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-bottom: 2px solid var(--border); 
-  padding:12px 14px; text-align:left; font-size:12px; font-weight:600; color:var(--muted); white-space:nowrap; }
-td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;color:var(--dark); vertical-align:middle;}
-tr:hover td{background:#F1F5F9}
-
+table{width:100%;border-collapse:collapse;min-width:600px}
+th{background:#F8FAFC;padding:12px 14px;text-align:left;font-size:12px;
+  font-weight:600;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;color:var(--dark)}
+tr:hover td{background:#F8FAFC}
 .ic{width:65px;padding:7px;border:1.5px solid var(--border);border-radius:7px;
   text-align:center;outline:none;font-size:13px;font-weight:600;color:var(--dark);background:#fff}
 .ic:focus{border-color:var(--primary)}
+.ic:disabled{background:#f8fafc;color:#94a3b8}
 
 .badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block;white-space:nowrap}
 .bg-g{background:#D1FAE5;color:#065F46}
@@ -130,66 +131,148 @@ tr:hover td{background:#F1F5F9}
 .upbox i{font-size:34px;color:var(--primary);margin-bottom:12px;display:block}
 .upbox p{font-size:13px;color:var(--muted)}
 
-.alert{padding:12px 16px;border-radius:var(--radius);font-size:13px;margin-bottom:14px;
-  display:flex;align-items:flex-start;gap:9px;border:1px solid transparent}
-.alert-info{background:#DBEAFE;color:#1e40af;border-color:#BFDBFE}
-.alert-err{background:#FEE2E2;color:#991B1B;border-color:#FECACA}
+/* PDF */
+.pdf-bar{display:flex;align-items:center;justify-content:space-between;background:#E2E8F0;
+  padding:11px 18px;border-radius:var(--radius);margin-bottom:18px;border:1px solid var(--border);flex-wrap:wrap;gap:10px}
+.zoom-c{display:flex;align-items:center;gap:12px;font-weight:600;background:#fff;
+  padding:5px 14px;border-radius:20px;border:1px solid #ccc}
+.zoom-c button{background:transparent;border:none;font-size:17px;cursor:pointer;
+  color:var(--primary);font-weight:700}
+.pdf-wrap{overflow:auto;background:#94a3b8;padding:28px;border-radius:12px;
+  max-height:620px;display:flex;justify-content:center;-webkit-overflow-scrolling:touch}
+.pdf-doc{background:#fff;width:210mm;min-height:297mm;padding:18mm;
+  box-shadow:0 10px 25px rgba(0,0,0,.18);transform-origin:top center;transition:transform .2s;color:#000}
+.pdf-h{text-align:center;border-bottom:3px solid #000;padding-bottom:18px;margin-bottom:22px}
 
-.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);
-  border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite;vertical-align:middle;margin-right:6px}
-@keyframes sp{to{transform:rotate(360deg)}}
-
-.chart-zoom-bar{display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:8px;padding:6px 10px;background:#F8FAFC;border-radius:8px;border:1px solid var(--border);flex-wrap:wrap;gap:8px}
-.chart-zoom-btns button{background:#fff;border:1px solid var(--border);border-radius:6px;
-  width:26px;height:26px;cursor:pointer;font-size:14px;font-weight:700;color:var(--primary);
-  display:flex;align-items:center;justify-content:center;transition:.15s}
-
-/* Yönetici Düzenleme Modalı */
-.admin-modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center; padding:15px; }
-.admin-modal.active{ display:flex; }
-.am-box{ background:#fff; border-radius:12px; padding:24px; width:100%; max-width:600px; box-shadow:0 10px 25px rgba(0,0,0,0.2); }
-.cb-wrap{ display:flex; gap:10px; align-items:center; margin-bottom:10px; }
-.cb-wrap input{ width:18px; height:18px; cursor:pointer; }
-.obs-banner{ background:var(--danger); color:#fff; padding:8px 15px; font-size:13px; font-weight:600; display:flex; justify-content:space-between; align-items:center; }
-
+/* Analiz tablo renk */
 .score-high{background:#D1FAE5;color:#065F46;font-weight:700;text-align:center;border-radius:5px;padding:3px 6px}
 .score-mid{background:#FEF3C7;color:#92400E;font-weight:700;text-align:center;border-radius:5px;padding:3px 6px}
 .score-low{background:#FEE2E2;color:#991B1B;font-weight:700;text-align:center;border-radius:5px;padding:3px 6px}
 
-textarea.fc { resize: vertical; min-height: 40px; font-family: inherit; }
+/* Duyuru/hata kutusu */
+.alert{padding:12px 16px;border-radius:var(--radius);font-size:13px;margin-bottom:14px;
+  display:flex;align-items:flex-start;gap:9px;border:1px solid transparent}
+.alert-info{background:#DBEAFE;color:#1e40af;border-color:#BFDBFE}
+.alert-warn{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.alert-err{background:#FEE2E2;color:#991B1B;border-color:#FECACA}
+.alert-ok{background:#D1FAE5;color:#065F46;border-color:#A7F3D0}
+
+/* Spinner */
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);
+  border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* Grafik konteynerleri */
+.chart-box{position:relative;height:300px;margin-top:8px}
+.chart-box-tall{position:relative;height:380px;margin-top:8px}
+
+/* Grafik zoom kontrol paneli */
+.chart-zoom-bar{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:8px;padding:6px 10px;background:#F8FAFC;border-radius:8px;border:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.chart-zoom-bar span{font-size:12px;font-weight:600;color:var(--muted)}
+.chart-zoom-btns{display:flex;align-items:center;gap:6px}
+.chart-zoom-btns button{background:#fff;border:1px solid var(--border);border-radius:6px;
+  width:26px;height:26px;cursor:pointer;font-size:14px;font-weight:700;color:var(--primary);
+  display:flex;align-items:center;justify-content:center;transition:.15px}
+.chart-zoom-btns button:hover{background:var(--primary);color:#fff}
+.chart-zoom-btns .zoom-val{font-size:11px;font-weight:700;color:var(--dark);min-width:36px;text-align:center}
+
+/* Toplu Sınıf Sonuç Tablosu */
+.sonuc-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.sinif-ozet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:18px}
+.sinif-ozet-card{background:linear-gradient(135deg,#EEF2FF,#fff);border:1px solid #C7D2FE;
+  border-radius:10px;padding:14px 16px;text-align:center}
+.sinif-ozet-card .soc-sinif{font-size:14px;font-weight:800;color:var(--primary);margin-bottom:6px}
+.sinif-ozet-card .soc-ort{font-size:28px;font-weight:800;color:var(--dark)}
+.sinif-ozet-card .soc-lbl{font-size:11px;color:var(--muted);font-weight:600}
+.sinif-ozet-card .soc-bar{height:6px;background:#E2E8F0;border-radius:3px;margin-top:8px;overflow:hidden}
+.sinif-ozet-card .soc-fill{height:100%;border-radius:3px;transition:width .6s}
+
+/* AI Yorum Kutusu */
+.ai-yorum-box{background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border:2px solid #C7D2FE;
+  border-radius:12px;padding:20px 22px;margin-top:18px}
+.ai-yorum-box .ay-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.ai-yorum-box .ay-icon{background:var(--primary);color:#fff;width:36px;height:36px;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ai-yorum-box .ay-title{font-weight:700;color:var(--dark);font-size:14px}
+.ai-yorum-box .ay-sub{font-size:11px;color:var(--muted)}
+.ai-yorum-content{font-size:13px;line-height:1.75;color:var(--text)}
+.ai-yorum-content b{color:var(--primary)}
+
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
+
+/* *** YENİ: Senaryo inline düzenleme satırı *** */
+.sen-edit-row td { background:#EEF2FF !important; }
+.sen-edit-inp { width:100%;padding:5px 8px;border:1.5px solid var(--primary);border-radius:6px;font-size:12px;color:var(--dark);background:#fff;outline:none; }
+
+/* *** YENİ: Branş rozeti ***  */
+.brans-tag { background:#EDE9FE;color:#5b21b6;padding:3px 9px;border-radius:12px;font-size:11px;font-weight:700; }
+
+/* =========================================
+   MOBİL (RESPONSIVE) TASARIM DÜZENLEMELERİ
+============================================ */
+.mobile-btn { display: none; background: none; border: none; font-size: 22px; color: var(--dark); cursor: pointer; margin-right: 12px; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1040; transition: opacity 0.3s; opacity: 0; pointer-events: none;}
+.sidebar-overlay.active { display: block; opacity: 1; pointer-events: auto;}
+
+@media (max-width: 900px) {
+  .g2, .g3 { grid-template-columns: 1fr; }
+}
 
 @media (max-width: 768px) {
-  .auth-box { flex-direction: column; max-height: 95vh; overflow-y: auto; }
-  .auth-left, .auth-right { padding: 30px 20px; }
-  .sidebar { position: fixed; left: -260px; top: 0; bottom: 0; z-index: 1050; transition: left 0.3s ease; }
+  .auth-box { flex-direction: column; min-height: auto; max-height: 95vh; overflow-y: auto; border-radius: 12px; }
+  .auth-left { padding: 30px 20px; text-align: center;}
+  .auth-left h1 { font-size: 26px; }
+  .auth-right { padding: 30px 20px; }
+  .mobile-btn { display: block; }
+  .sidebar { position: fixed; left: -260px; top: 0; bottom: 0; z-index: 1050; transition: left 0.3s ease; box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
   .sidebar.open { left: 0; }
-  .mobile-btn { display: block; background:none; border:none; font-size:22px; cursor:pointer; margin-right:12px; }
+  .topbar { padding: 10px 15px; height: auto; min-height: 60px; flex-wrap: wrap; gap: 10px; }
   .pcont { padding: 15px; }
+  .card { padding: 16px; margin-bottom: 14px;}
+  .hide-m { display: none !important; }
+  .tabs { padding-bottom: 5px; flex-wrap: nowrap; overflow-x: auto; margin-bottom: 15px;}
+  .tab-btn { padding: 8px 12px; font-size: 12px; }
+  .ph h2 { font-size: 20px; }
+  .pdf-wrap { padding: 10px; }
+  .pdf-doc { transform-origin: top left !important; }
+  .ct { flex-direction: column; align-items: flex-start; gap: 8px;}
+  .ct > div { display: flex; flex-wrap: wrap; gap: 8px; width: 100%;}
+  .ct button { margin-top: 5px; }
+}
+
+@media (max-width: 480px) {
+  .auth-title { font-size: 20px; }
+  .auth-left h1 { font-size: 22px; }
+  .stat-card { padding: 20px 15px; }
+  .stat-val { font-size: 30px; }
 }
 </style>
 </head>
 <body>
 
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1040;"></div>
+<!-- MOBİL SİDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
 <!-- ===================== GİRİŞ EKRANI ===================== -->
 <div class="auth-wrap" id="authScreen">
   <div class="auth-box">
     <div class="auth-left">
       <h1>Dargeçit Sınav Analiz Platformu</h1>
-      <p>Yeni Maarif Modeli'ne tam uyumlu, ölçme-değerlendirme sistemi. (Verileriniz güvenle korunmaktadır.)</p>
+      <p>Yeni Maarif Modeli'ne (Ünite · Tema · Öğrenme Çıktısı) tam uyumlu, yapay zeka destekli ölçme-değerlendirme sistemi.</p>
       <ul class="auth-feat">
-        <li><i class="fa-solid fa-layer-group"></i> Branş ve Senaryo Eşleştirme</li>
-        <li><i class="fa-solid fa-pen-to-square"></i> Satır İçi (Kelime Kelime) Senaryo Düzenleme</li>
-        <li><i class="fa-solid fa-table-list"></i> Sabit Başlıklı (Kaymayan) Puanlama Tablosu</li>
-        <li><i class="fa-solid fa-cloud-arrow-up"></i> Güvenli Manuel Bulut Yedekleme</li>
+        <li><i class="fa-solid fa-robot"></i> Gemini Flash ile Otomatik Senaryo Çözümleme</li>
+        <li><i class="fa-solid fa-table-list"></i> Manuel Puan Düzenlemeli Not Girişi</li>
+        <li><i class="fa-solid fa-chart-pie"></i> Sütun · Daire · Karşılaştırma Grafikleri</li>
+        <li><i class="fa-solid fa-file-pdf"></i> A4 Ölçeklendirmeli Zümre Raporu (PDF)</li>
+        <li><i class="fa-solid fa-cloud-arrow-up"></i> Supabase Bulut + Tarayıcı Yerel Depolama</li>
       </ul>
     </div>
 
-    <!-- GİRİŞ -->
+    <!-- GİRİŞ FORMU -->
     <div class="auth-right" id="loginForm">
       <h2 class="auth-title">Sisteme Giriş</h2>
+      <p class="auth-sub">Öğretmen veya yönetici hesabınızla erişin.</p>
       <div class="fg"><label>Kullanıcı Adı</label><input class="fc" id="loginUser" placeholder="Örn: admin veya ahmet_hoca"></div>
       <div class="fg"><label>Şifre</label><input class="fc" type="password" id="loginPass" placeholder="••••••••"></div>
       <button class="btn btn-primary btn-full" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> Sisteme Gir</button>
@@ -197,27 +280,43 @@ textarea.fc { resize: vertical; min-height: 40px; font-family: inherit; }
       <div class="auth-sw">Hesabınız yok mu? <a onclick="showReg()">Öğretmen Kaydı Oluştur</a></div>
     </div>
 
-    <!-- KAYIT -->
-    <div class="auth-right" id="regForm" style="display:none; padding:30px 50px;">
+    <!-- KAYIT FORMU -->
+    <div class="auth-right" id="regForm" style="display:none; padding:20px 35px; overflow-y:auto; max-height:95vh;">
       <h2 class="auth-title">Öğretmen Kaydı</h2>
-      <div class="fg" style="margin-bottom:12px;"><label>Adı Soyadı</label><input class="fc" id="regAdSoyad" placeholder="Örn: Ahmet Yılmaz"></div>
-      <div class="g2" style="margin-bottom:12px;">
-        <div class="fg" style="margin:0;"><label>Okulunuz</label>
-          <select class="fc" id="regOkul" onchange="if(this.value==='diger'){document.getElementById('fgRegDiger').style.display='block';}else{document.getElementById('fgRegDiger').style.display='none';}">
-          </select>
-        </div>
-        <div class="fg" style="margin:0;"><label>Branşınız</label><select class="fc" id="regBrans"></select></div>
+      <p class="auth-sub">Kurumunuzu ve branşınızı seçerek kayıt oluşturun.</p>
+      <div class="fg" style="margin-bottom:10px;"><label>Adı Soyadı <span style="color:var(--danger)">*</span></label><input class="fc" id="regAdSoyad" placeholder="Örn: Ahmet Yılmaz"></div>
+      <div class="fg" style="margin-bottom:10px;"><label>Branş <span style="color:var(--danger)">*</span></label>
+        <select class="fc" id="regBrans">
+          <option value="">-- Branş Seçin --</option>
+        </select>
       </div>
-      <div class="fg" id="fgRegDiger" style="display:none; margin-bottom:12px;"><label>Kendi Okulunuzu Yazın</label><input class="fc" id="regOkulDiger"></div>
-      <div class="fg" style="margin-bottom:12px;"><label>Kullanıcı Adı</label><input class="fc" id="regUser"></div>
-      <div class="fg" style="margin-bottom:16px;"><label>Şifre</label><input class="fc" type="password" id="regPass"></div>
+      <div class="fg" style="margin-bottom:10px;"><label>Okulunuz <span style="color:var(--danger)">*</span></label>
+        <select class="fc" id="regOkul" onchange="if(this.value==='diger'){document.getElementById('fgRegDiger').style.display='block';}else{document.getElementById('fgRegDiger').style.display='none';}">
+          <option>Alayurt Ortaokulu</option>
+          <option>Altıyol İmam Hatip Ortaokulu</option>
+          <option>Anadolu Kız İmam Hatip Lisesi</option>
+          <option>Atatürk Ortaokulu</option>
+          <option>Dargeçit Anadolu İmam Hatip Lisesi</option>
+          <option>Dargeçit Anadolu Lisesi</option>
+          <option>Dargeçit Ilısu Anadolu Lisesi</option>
+          <option>Dargeçit İmam Hatip Ortaokulu</option>
+          <option>Gazi Ortaokulu</option>
+          <option>Ilısu Ortaokulu</option>
+          <option>Karabayır İmam Hatip Ortaokulu</option>
+          <option>Kılavuz Ortaokulu</option>
+          <option value="diger">Yeni Okul Ekle (Diğer)...</option>
+        </select>
+      </div>
+      <div class="fg" id="fgRegDiger" style="display:none; margin-bottom:10px;"><label>Kendi Okulunuzu Yazın</label><input class="fc" id="regOkulDiger" placeholder="Tam Okul Adı"></div>
+      <div class="fg" style="margin-bottom:10px;"><label>Kullanıcı Adı <span style="color:var(--danger)">*</span></label><input class="fc" id="regUser" placeholder="ahmet_matematik"></div>
+      <div class="fg" style="margin-bottom:10px;"><label>Şifre <span style="color:var(--danger)">*</span></label><input class="fc" type="password" id="regPass" placeholder="••••••••"></div>
+      <div class="fg" style="margin-bottom:10px;"><label>E-posta <span style="color:var(--muted);font-weight:400">(İsteğe bağlı)</span></label><input class="fc" type="email" id="regEmail" placeholder="ahmet@ornek.com"></div>
+      <div class="fg" style="margin-bottom:14px;"><label>Telefon <span style="color:var(--muted);font-weight:400">(İsteğe bağlı)</span></label><input class="fc" type="tel" id="regTel" placeholder="05XX XXX XX XX"></div>
       <button class="btn btn-success btn-full" onclick="doRegister()"><i class="fa-solid fa-user-plus"></i> Kayıt Ol</button>
       <div class="auth-sw" style="margin-top:12px;">Hesabınız var mı? <a onclick="showLogin()">Giriş Yap</a></div>
     </div>
   </div>
 </div>
-
-<div id="obsBannerWrap"></div>
 
 <!-- ===================== ANA UYGULAMA ===================== -->
 <div class="app-layout" id="mainApp" style="display:none">
@@ -225,14 +324,14 @@ textarea.fc { resize: vertical; min-height: 40px; font-family: inherit; }
     <div class="sb-head"><i class="fa-solid fa-chart-line"></i> Dargeçit Analiz</div>
     <div class="nav-menu">
       <a class="nav-item active" onclick="goPage('dashboard',this)"><i class="fa-solid fa-house"></i> Sistem Özeti</a>
-      <a class="nav-item" onclick="goPage('profil',this)"><i class="fa-solid fa-id-card"></i> Profilim</a>
-      <a class="nav-item" id="navAdmin" style="display:none" onclick="goPage('admin',this)"><i class="fa-solid fa-user-shield"></i> Öğretmen Yönetimi</a>
+      <a class="nav-item" id="navAdmin" style="display:none" onclick="goPage('admin',this)"><i class="fa-solid fa-user-shield"></i> Öğretmen Onayları</a>
       <a class="nav-item" id="navOkul" style="display:none" onclick="goPage('okulyon',this)"><i class="fa-solid fa-school-flag"></i> Okul Yönetimi</a>
       <a class="nav-item" id="navBrans" style="display:none" onclick="goPage('bransyon',this)"><i class="fa-solid fa-book-open"></i> Branş Yönetimi</a>
       <a class="nav-item" onclick="goPage('ogrenci',this)"><i class="fa-solid fa-users"></i> Öğrenci Yönetimi</a>
       <a class="nav-item" onclick="goPage('senaryo',this)"><i class="fa-solid fa-layer-group"></i> Senaryo Havuzu</a>
       <a class="nav-item" onclick="goPage('sinav',this)"><i class="fa-solid fa-file-pen"></i> Sınav Not Girişi</a>
       <a class="nav-item" onclick="goPage('analiz',this)"><i class="fa-solid fa-magnifying-glass-chart"></i> Analiz & Raporlar</a>
+      <a class="nav-item" onclick="goPage('profil',this)"><i class="fa-solid fa-user-pen"></i> Profilim</a>
     </div>
   </div>
 
@@ -242,12 +341,9 @@ textarea.fc { resize: vertical; min-height: 40px; font-family: inherit; }
         <button class="mobile-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
         <span class="badge bg-b" id="lblOkul" style="font-size:13px;padding:9px 14px"><i class="fa-solid fa-school"></i> Okul</span>
       </div>
-      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-        <!-- BULUT İŞLEMLERİ: MANUEL VE GÜVENLİ -->
-        <button class="btn btn-outline btn-sm" onclick="fetchFromCloud()" style="border-color:var(--info); color:var(--info);"><i class="fa-solid fa-cloud-arrow-down"></i> Buluttan Çek</button>
-        <button class="btn btn-primary btn-sm" onclick="saveAll()"><i class="fa-solid fa-cloud-arrow-up"></i> Tarayıcı+Bulut Kaydet</button>
-        
-        <div style="text-align:right; border-left:1px solid #ddd; padding-left:10px; margin-left:5px;">
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
+        <button class="btn btn-outline btn-sm" onclick="saveAll()"><i class="fa-solid fa-cloud-arrow-up"></i> <span class="hide-m">Buluta Kaydet</span></button>
+        <div style="text-align:right">
           <div style="font-weight:700;font-size:14px;color:var(--dark)" id="lblUser"></div>
           <div style="font-size:11px;color:var(--muted);font-weight:600" id="lblRole"></div>
         </div>
@@ -259,842 +355,2089 @@ textarea.fc { resize: vertical; min-height: 40px; font-family: inherit; }
 
       <!-- DASHBOARD -->
       <div class="page active" id="page-dashboard">
-        <div class="ph"><h2>Sistem Özeti</h2><p>Bulunduğunuz okula ait istatistikler</p></div>
+        <div class="ph"><h2>Sistem Özeti</h2><p>Kurumunuza ait genel istatistikler</p></div>
         <div class="g3">
           <div class="stat-card"><div class="stat-icon" style="color:var(--primary)"><i class="fa-solid fa-user-graduate"></i></div><div class="stat-val" id="statOgr">0</div><div class="stat-lbl">Kayıtlı Öğrenci</div></div>
-          <div class="stat-card"><div class="stat-icon" style="color:var(--secondary)"><i class="fa-solid fa-cubes"></i></div><div class="stat-val" id="statSen">0</div><div class="stat-lbl">Havuzdaki Senaryo</div></div>
-          <div class="stat-card"><div class="stat-icon" style="color:var(--warning)"><i class="fa-solid fa-file-signature"></i></div><div class="stat-val" id="statSin">0</div><div class="stat-lbl">Puanlanmış Sınav</div></div>
+          <div class="stat-card"><div class="stat-icon" style="color:var(--secondary)"><i class="fa-solid fa-cubes"></i></div><div class="stat-val" id="statSen">0</div><div class="stat-lbl">Oluşturulan Senaryo</div></div>
+          <div class="stat-card"><div class="stat-icon" style="color:var(--warning)"><i class="fa-solid fa-file-signature"></i></div><div class="stat-val" id="statSin">0</div><div class="stat-lbl">Uygulanan Sınav</div></div>
         </div>
-        <div class="card"><div class="ct">Son İşlemler</div><div id="dashLog" style="font-size:13px;color:var(--muted);line-height:2"></div></div>
-      </div>
-
-      <!-- PROFIL -->
-      <div class="page" id="page-profil">
-        <div class="ph"><h2>Profil Ayarlarım</h2></div>
-        <div class="card" style="max-width:700px">
-          <div class="g2">
-            <div class="fg"><label>Adı Soyadı</label><input class="fc" id="profAdSoyad"></div>
-            <div class="fg"><label>Kullanıcı Adı</label><input class="fc" id="profUser"></div>
-          </div>
-          <div class="g2">
-            <div class="fg"><label>Yeni Şifre</label><input class="fc" type="text" id="profPass"></div>
-            <div class="fg"><label>Branş</label><select class="fc" id="profBrans"></select></div>
-          </div>
-          <button class="btn btn-success" onclick="saveProfile()"><i class="fa-solid fa-floppy-disk"></i> Profili Kaydet</button>
-        </div>
-      </div>
-
-      <!-- ADMİN YÖNETİM -->
-      <div class="page" id="page-admin">
-        <div class="ph"><h2>Öğretmen Yönetimi Paneli</h2></div>
         <div class="card">
-          <div class="tr-wrap"><table><thead><tr><th>Ad Soyad</th><th>Kullanıcı Adı</th><th>Okul</th><th>Branş</th><th>Durum</th><th>İşlemler</th></tr></thead><tbody id="adminBody"></tbody></table></div>
+          <div class="ct">Son İşlemler</div>
+          <div id="dashLog" style="font-size:13px;color:var(--muted);line-height:2">Henüz işlem yok.</div>
+        </div>
+      </div>
+
+      <!-- ADMİN -->
+      <div class="page" id="page-admin">
+        <div class="ph"><h2><i class="fa-solid fa-user-shield" style="color:var(--primary)"></i> Öğretmen Yönetim Paneli</h2><p>Kayıt olan öğretmenleri onaylayın, düzenleyin, izinleri yönetin veya silin.</p></div>
+        <div class="card">
+          <div class="ct">
+            <span>Sistemdeki Öğretmenler (<span id="adminOgretmenSay">0</span>)</span>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <input class="fc" id="adminSearch" placeholder="Ara..." style="width:180px;padding:7px 11px" oninput="renderAdmin()">
+              <button class="btn btn-info btn-sm" onclick="exportOgretmenXl()"><i class="fa-solid fa-file-excel"></i> Excel'e Aktar</button>
+            </div>
+          </div>
+          <div class="tr-wrap">
+            <table>
+              <thead><tr><th>Ad Soyad</th><th>Kullanıcı Adı</th><th>Okul</th><th>Branş</th><th>İletişim</th><th>Durum</th><th>İzinler</th><th>İşlemler</th></tr></thead>
+              <tbody id="adminBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Öğretmen Verisi Görüntüle Modal -->
+        <div id="adminVeriModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:2000;overflow-y:auto;padding:30px 15px">
+          <div style="background:#fff;border-radius:16px;max-width:900px;margin:0 auto;padding:30px;box-shadow:0 25px 50px rgba(0,0,0,0.3)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:14px">
+              <h3 style="font-size:18px;font-weight:700;color:var(--dark)" id="veriModalBaslik">Öğretmen Verileri</h3>
+              <button class="btn btn-outline btn-sm" onclick="document.getElementById('adminVeriModal').style.display='none'"><i class="fa-solid fa-xmark"></i> Kapat</button>
+            </div>
+            <div id="veriModalIcerik"></div>
+          </div>
+        </div>
+        <!-- Öğretmen Düzenle Modal -->
+        <div id="adminDuzModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:2000;overflow-y:auto;padding:30px 15px">
+          <div style="background:#fff;border-radius:16px;max-width:540px;margin:0 auto;padding:30px;box-shadow:0 25px 50px rgba(0,0,0,0.3)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:14px">
+              <h3 style="font-size:18px;font-weight:700;color:var(--dark)"><i class="fa-solid fa-user-pen"></i> Öğretmen Düzenle</h3>
+              <button class="btn btn-outline btn-sm" onclick="document.getElementById('adminDuzModal').style.display='none'"><i class="fa-solid fa-xmark"></i> Kapat</button>
+            </div>
+            <input type="hidden" id="duzIdx">
+            <div class="fg"><label>Ad Soyad</label><input class="fc" id="duzAdSoyad"></div>
+            <div class="fg"><label>Branş</label><select class="fc" id="duzBrans"></select></div>
+            <div class="fg"><label>Okul</label><select class="fc" id="duzOkul"></select></div>
+            <div class="fg"><label>E-posta</label><input class="fc" id="duzEmail" type="email"></div>
+            <div class="fg"><label>Telefon</label><input class="fc" id="duzTel" type="tel"></div>
+            <div class="fg"><label>Yeni Şifre <span style="color:var(--muted);font-weight:400">(boş bırakılırsa değişmez)</span></label><input class="fc" id="duzSifre" type="password" placeholder="••••••••"></div>
+            <div class="fg"><label>Rol</label>
+              <select class="fc" id="duzRol">
+                <option value="Öğretmen">Öğretmen</option>
+                <option value="Süper Yönetici">Süper Yönetici</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:10px">
+              <button class="btn btn-success btn-full" onclick="adminDuzKaydet()"><i class="fa-solid fa-floppy-disk"></i> Kaydet</button>
+              <button class="btn btn-outline" onclick="document.getElementById('adminDuzModal').style.display='none'">İptal</button>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- ÖĞRENCİ -->
       <div class="page" id="page-ogrenci">
-        <div class="ph"><h2>Öğrenci Yönetimi</h2></div>
-        <div id="ogrIzinUyari" class="alert alert-err" style="display:none;"><i class="fa-solid fa-ban"></i> Yönetici tarafından öğrenci ekleme izniniz kısıtlanmıştır.</div>
-        <div id="ogrEklemeAlanlari">
-          <div class="card">
-            <div class="ct">Öğrenci Ekle / Düzenle (Manuel)</div>
-            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
-              <input type="hidden" id="mOldNo">
-              <div class="fg" style="margin:0;flex:1"><label>Okul No</label><input class="fc" id="mNo" placeholder="Örn: 100"></div>
-              <div class="fg" style="margin:0;flex:2"><label>Adı Soyadı</label><input class="fc" id="mAds"></div>
-              <div class="fg" style="margin:0;flex:1"><label>Sınıf/Şube</label><input class="fc" id="mSinif" placeholder="Örn: 6/A"></div>
-              <button class="btn btn-success" id="btnOgrKaydet" style="height:43px;" onclick="addOgrManuel()">Ekle</button>
-              <button class="btn btn-outline" id="btnOgrIptal" style="height:43px; display:none;" onclick="cancelOgrEdit()">İptal</button>
+        <div class="ph"><h2>Öğrenci Yönetimi</h2><p>Excel ile toplu yükle veya tek tek manuel ekle. Mükerrer no engellenir.</p></div>
+        <div class="tabs">
+          <button class="tab-btn active" onclick="swTab('togr-xl',this)"><i class="fa-solid fa-file-excel"></i> Excel ile Yükle</button>
+          <button class="tab-btn" onclick="swTab('togr-m',this)"><i class="fa-solid fa-keyboard"></i> Manuel Ekle</button>
+        </div>
+        <div class="tc active" id="togr-xl">
+          <div class="g2">
+            <div class="card"><div class="ct">1. Boş Şablon İndir</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Sisteme uygun Excel taslağını indirin, doldurun.</p><button class="btn btn-primary btn-full" onclick="dlTemplate('ogrenci')"><i class="fa-solid fa-download"></i> Öğrenci Şablonu İndir</button></div>
+            <div class="card"><div class="ct">2. Doldurulmuş Excel Yükle</div>
+              <div class="upbox" onclick="document.getElementById('fileOgr').click()">
+                <input type="file" id="fileOgr" accept=".xlsx,.xls" style="display:none" onchange="xlUpload(this,'ogrenci')">
+                <i class="fa-solid fa-cloud-arrow-up"></i><p>Tıklayıp Excel Seçin<br><small>Sütunlar: Okul No · Adı Soyadı · Sınıf · Okul (isteğe bağlı)</small></p>
+              </div>
             </div>
           </div>
-          <div class="card">
-            <div class="ct">Excel İle Toplu Öğrenci Yükle</div>
-            <div style="display:flex; gap:15px;">
-              <button class="btn btn-outline" onclick="dlTemplate('ogrenci')">Boş Şablon İndir</button>
-              <button class="btn btn-primary" onclick="document.getElementById('fileOgr').click()">Doldurulmuş Excel Yükle</button>
-              <input type="file" id="fileOgr" accept=".xlsx,.xls" style="display:none" onchange="xlUpload(this,'ogrenci')">
+        </div>
+        <div class="tc" id="togr-m">
+          <div class="card"><div class="ct">Tekli Öğrenci Ekle</div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+              <div class="fg" style="margin:0;flex:1;min-width:110px"><label>Okul No</label><input class="fc" id="mNo" placeholder="1001"></div>
+              <div class="fg" style="margin:0;flex:2;min-width:140px"><label>Adı Soyadı</label><input class="fc" id="mAds" placeholder="Ali Veli"></div>
+              <div class="fg" style="margin:0;flex:1;min-width:90px"><label>Sınıf</label><input class="fc" id="mSinif" placeholder="6/A"></div>
+              <!-- YENİ: Okul alanı manuel öğrenci eklerken -->
+              <div class="fg" style="margin:0;flex:2;min-width:180px"><label>Okul <span style="color:var(--muted);font-weight:400">(İsteğe bağlı)</span></label>
+                <select class="fc" id="mOkul">
+                  <option value="">-- Otomatik (kendi okulun) --</option>
+                </select>
+              </div>
+              <button class="btn btn-success" style="height:43px;width:100%;margin-top:10px;" onclick="addOgrManuel()"><i class="fa-solid fa-plus"></i> Ekle</button>
             </div>
           </div>
         </div>
         <div class="card">
           <div class="ct">
             <span>Kayıtlı Öğrenciler (<span id="ogrC">0</span>)</span>
-            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-              <select class="fc" id="delSinifSelect" style="width:130px; padding:6px;"></select>
-              <button class="btn btn-warning btn-sm" id="btnSinifSil" onclick="delSinif()"><i class="fa-solid fa-eraser"></i> Sınıfı Sil</button>
-              <button class="btn btn-danger btn-sm" id="btnOgrSil" onclick="clearOgr()"><i class="fa-solid fa-trash-can"></i> Tüm Okulu Sil</button>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <select class="fc" id="ogrOkulFil" style="width:200px;padding:7px 11px" onchange="filterOgr()">
+                <option value="">Tüm Okullar</option>
+              </select>
+              <input class="fc" id="ogrSearch" placeholder="Ara..." style="width:160px;padding:7px 11px" oninput="filterOgr()">
+              <button class="btn btn-danger btn-sm" onclick="clearOgr()"><i class="fa-solid fa-trash-can"></i> Tümünü Sil</button>
             </div>
           </div>
-          <div class="tr-wrap"><table><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th><th>İşlem</th></tr></thead><tbody id="ogrBody"></tbody></table></div>
+          <div class="tr-wrap"><table><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th><th>Okul</th><th>İşlem</th></tr></thead><tbody id="ogrBody"></tbody></table></div>
         </div>
       </div>
 
-      <!-- SENARYO HAVUZU (BRANŞ FİLTRELİ VE KELİME KELİME DÜZENLEMELİ) -->
+      <!-- SENARYO -->
       <div class="page" id="page-senaryo">
-        <div class="ph"><h2>Senaryo Havuzu</h2><p>Senaryolarınızı branşınıza göre ekleyin ve kelime kelime düzenleyin.</p></div>
-        <div id="sablonIzinUyari" class="alert alert-err" style="display:none;"><i class="fa-solid fa-ban"></i> Excel şablonu yükleme izniniz kısıtlanmıştır.</div>
-
+        <div class="ph"><h2>Senaryo Havuzu</h2><p>Yapay zeka ile metni çözümle, puanları düzenle, havuza kaydet.</p></div>
         <div class="tabs">
-          <button class="tab-btn active" onclick="swTab('tsen-m',this)"><i class="fa-solid fa-pen-to-square"></i> Senaryo Oluştur / Düzenle</button>
-          <button class="tab-btn" onclick="swTab('tsen-ai',this)"><i class="fa-solid fa-wand-magic-sparkles"></i> Yapay Zeka Çözümle</button>
-          <button class="tab-btn" id="tabSenXlBtn" onclick="swTab('tsen-xl',this)"><i class="fa-solid fa-file-excel"></i> Excel'den Yükle</button>
+          <button class="tab-btn active" onclick="swTab('tsen-ai',this)"><i class="fa-solid fa-wand-magic-sparkles"></i> Yapay Zeka ile Çözümle</button>
+          <button class="tab-btn" onclick="swTab('tsen-m',this)"><i class="fa-solid fa-table-list"></i> Manuel Tablo</button>
+          <button class="tab-btn" onclick="swTab('tsen-xl',this)"><i class="fa-solid fa-file-excel"></i> Excel'den Yükle</button>
         </div>
 
-        <!-- İNTERAKTİF DÜZENLEME TABLOSU -->
-        <div class="tc active" id="tsen-m">
+        <!-- AI SEKMESİ -->
+        <div class="tc active" id="tsen-ai">
           <div class="card">
-            <div class="ct">Manuel Senaryo Ekleme / Düzenleme Alanı</div>
-            <div class="g3" style="margin-bottom:14px">
-              <div class="fg" style="margin:0"><label>Senaryo Hangi Branşa Ait?</label><select class="fc" id="mSenBrans"></select></div>
-              <div class="fg" style="margin:0"><label>Sınav Adı</label><input class="fc" id="mSenSinav" placeholder="Örn: 6.Sınıf 2.Dönem 2.Ortak"></div>
-              <div class="fg" style="margin:0"><label>Senaryo Adı</label><input class="fc" id="mSenSen" placeholder="Örn: Senaryo 4"></div>
+            <div class="ct">Metni Yapıştır — Gemini Analiz Etsin</div>
+            <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> PDF veya Word belgeden kopyalayıp yapıştırın. Ünite, konu, kazanım ve soru sayısı gibi bilgiler otomatik ayrıştırılır.</div>
+            <div class="g2" style="margin-bottom:14px">
+              <div class="fg" style="margin:0"><label>Sınav / Senaryo Adı (Havuza kaydedilecek isim)</label><input class="fc" id="aiSenAdi" placeholder="Örn: 6.Sınıf Matematik 2.Dönem 2.Ortak - Senaryo 4"></div>
+              <!-- YENİ: Branş seçimi AI sekmesinde -->
+              <div class="fg" style="margin:0"><label>Branş <span style="color:var(--danger)">*</span> <small style="color:var(--muted)">(senaryonun ait olduğu branş)</small></label>
+                <select class="fc" id="aiBrans">
+                  <option value="">-- Branş Seçin --</option>
+                </select>
+              </div>
             </div>
-            
-            <div class="tr-wrap" style="max-height:500px;">
+            <div class="fg"><label>Kopyalanan Metin</label>
+              <textarea class="fc" id="aiMetin" rows="9" style="resize:vertical" placeholder="Ünite/Tema, Konu, Öğrenme Çıktıları, Soru Sayısı içeren metni buraya yapıştırın...&#10;&#10;Örnek:&#10;İŞLEMLERLE CEBİRSEL DÜŞÜNME&#10;Cebirsel İfadeler&#10;MAT.6.2.1. Gerçek yaşam durumlarında bilinen niceliklerden...  1&#10;MAT.6.2.3. Cebirsel ifadeler içeren durumlardaki... 2"></textarea>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-primary" id="btnAi" onclick="aiCoz()"><i class="fa-solid fa-robot"></i> Çözümle → Tabloya Aktar</button>
+              <button class="btn btn-outline" onclick="swTab('tsen-m',document.querySelectorAll('#page-senaryo .tab-btn')[1])"><i class="fa-solid fa-eye"></i> Manuel Tabloya Geç</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MANUEL TABLO -->
+        <div class="tc" id="tsen-m">
+          <div class="card">
+            <div class="ct">Manuel Senaryo Tablosu</div>
+            <div class="g2" style="margin-bottom:14px">
+              <div class="fg" style="margin:0"><label>Sınav Adı</label><input class="fc" id="mSenSinav" placeholder="6.Sınıf Matematik 2.Dönem 2.Ortak"></div>
+              <div class="fg" style="margin:0"><label>Senaryo Adı</label><input class="fc" id="mSenSen" placeholder="Senaryo 4"></div>
+            </div>
+            <!-- YENİ: Branş seçimi Manuel tabloda -->
+            <div class="fg" style="margin-bottom:14px">
+              <label>Branş <span style="color:var(--danger)">*</span> <small style="color:var(--muted)">(senaryonun ait olduğu branş)</small></label>
+              <select class="fc" id="mSenBrans" style="max-width:320px">
+                <option value="">-- Branş Seçin --</option>
+              </select>
+            </div>
+            <div class="tr-wrap" style="margin-bottom:16px;max-height:400px;overflow-y:auto">
               <table id="mSenTable">
-                <thead><tr><th>No</th><th>Ünite/Tema</th><th>Konu</th><th>Öğrenme Çıktısı (Kazanım)</th><th>Süreç Bileşeni</th><th>Max Puan</th><th>Sil</th></tr></thead>
+                <thead><tr><th>No</th><th>Ünite/Tema</th><th>Konu</th><th>Öğrenme Çıktısı (Kazanım)</th><th>Süreç Bileşeni</th><th>Max Puan</th><th></th></tr></thead>
                 <tbody id="mSenBody"></tbody>
               </table>
             </div>
-            <div style="display:flex;gap:10px;margin-top:10px;">
-              <button class="btn btn-outline" onclick="addMSenRow()"><i class="fa-solid fa-plus"></i> Yeni Soru (Satır) Ekle</button>
-              <button class="btn btn-success" onclick="saveMSen()"><i class="fa-solid fa-floppy-disk"></i> Havuza Kaydet / Güncelle</button>
-              <button class="btn btn-warning" onclick="temizleSenaryoForm()"><i class="fa-solid fa-broom"></i> Formu Temizle</button>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-outline" onclick="addMSenRow()"><i class="fa-solid fa-plus"></i> Satır Ekle</button>
+              <button class="btn btn-success" onclick="saveMSen()"><i class="fa-solid fa-floppy-disk"></i> Havuza Kaydet</button>
             </div>
-            <div style="margin-top:10px; font-size:12px; color:var(--muted)">* Havuzdaki bir senaryoyu düzenlemek için aşağıdaki listeden "Düzenle"ye basın. Hücrelerin içine tıklayıp kelimeleri doğrudan değiştirebilirsiniz.</div>
           </div>
         </div>
 
-        <div class="tc" id="tsen-ai">
-          <div class="card">
-            <div class="fg"><label>Branş</label><select class="fc" id="aiSenBrans"></select></div>
-            <div class="fg"><label>Sınav/Senaryo Adı</label><input class="fc" id="aiSenAdi"></div>
-            <div class="fg"><label>Kopyalanan Metin (Kazanımlar)</label><textarea class="fc" id="aiMetin" rows="6"></textarea></div>
-            <button class="btn btn-primary" id="btnAi" onclick="aiCoz()">Çözümle ve Düzenleme Tablosuna Aktar</button>
-          </div>
-        </div>
-
+        <!-- EXCEL -->
         <div class="tc" id="tsen-xl">
-          <div class="card">
-            <div class="fg"><label>Branş</label><select class="fc" id="xlSenBrans"></select></div>
-            <div class="fg"><label>Senaryo Adı</label><input class="fc" id="xlSenAdi"></div>
-            <div style="display:flex; gap:10px;">
-              <button class="btn btn-outline" onclick="dlTemplate('senaryo')">Şablon İndir</button>
-              <button class="btn btn-primary" onclick="document.getElementById('fileSen').click()">Excel Seç ve Yükle</button>
-              <input type="file" id="fileSen" accept=".xlsx,.xls" style="display:none" onchange="xlUpload(this,'senaryo')">
+          <div class="g2">
+            <div class="card"><div class="ct">1. Şablon İndir</div><button class="btn btn-primary btn-full" onclick="dlTemplate('senaryo')"><i class="fa-solid fa-download"></i> Boş Senaryo Şablonu İndir</button></div>
+            <div class="card"><div class="ct">2. Doldurulmuş Senaryo Yükle</div>
+              <div class="fg"><label>Havuza Eklenecek Senaryo Adı</label><input class="fc" id="xlSenAdi" placeholder="Örn: 6.Sınıf Mat Senaryo 4"></div>
+              <!-- YENİ: Branş seçimi Excel yükle sekmesinde -->
+              <div class="fg"><label>Branş <span style="color:var(--danger)">*</span></label>
+                <select class="fc" id="xlSenBrans">
+                  <option value="">-- Branş Seçin --</option>
+                </select>
+              </div>
+              <div class="upbox" onclick="document.getElementById('fileSen').click()">
+                <input type="file" id="fileSen" accept=".xlsx,.xls" style="display:none" onchange="xlUpload(this,'senaryo')">
+                <i class="fa-solid fa-upload"></i><p>Excel Seçin</p>
+              </div>
             </div>
           </div>
         </div>
 
+        <!-- YENİ: Havuz üst filtresi -->
         <div class="card">
           <div class="ct">
-            <span>Havuzdaki Senaryolarınız</span>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <label style="font-size:12px; font-weight:600;">Branş Filtresi:</label>
-              <select class="fc" id="havuzBransFiltre" style="width:150px; padding:6px;" onchange="renderSen()"></select>
+            <span><i class="fa-solid fa-database"></i> Havuzdaki Senaryolar</span>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <select class="fc" id="senBransFil" style="width:200px;padding:7px 11px" onchange="renderSen()">
+                <option value="">Tüm Branşlar</option>
+              </select>
+              <input class="fc" id="senSearch" placeholder="Ara..." style="width:160px;padding:7px 11px" oninput="renderSen()">
             </div>
           </div>
           <div id="senList"></div>
         </div>
       </div>
 
-      <!-- SINAV NOT GİRİŞİ (SABİT BAŞLIKLI TABLO) -->
+      <!-- SINAV NOT GİRİŞİ -->
       <div class="page" id="page-sinav">
-        <div class="ph"><h2>Sınav Not Girişi</h2><p>Öğrencilerin sınav sonuçlarını işleyin. Üst başlıklar siz aşağı kaydırdıkça sabit kalır.</p></div>
-        <div id="notSablonUyari" class="alert alert-err" style="display:none;"><i class="fa-solid fa-ban"></i> Excel ile not yükleme izniniz kısıtlanmıştır.</div>
-
+        <div class="ph"><h2>Sınav Not Girişi</h2><p>Öğrenci puanlarını sisteme işleyin. Notlar öğrenci adıyla eşleştirilir.</p></div>
         <div class="tabs">
-          <button class="tab-btn active" onclick="swTab('tnot-m',this)"><i class="fa-solid fa-keyboard"></i> Tablo Üzerinden Puanla</button>
-          <button class="tab-btn" id="tabNotXlBtn" onclick="swTab('tnot-xl',this)"><i class="fa-solid fa-file-excel"></i> Excel İle Toplu Not Yükle</button>
+          <button class="tab-btn active" onclick="swTab('tnot-m',this)"><i class="fa-solid fa-keyboard"></i> Tablo Üzerinden Gir</button>
+          <button class="tab-btn" onclick="swTab('tnot-xl',this)"><i class="fa-solid fa-file-excel"></i> Excel Şablonu ile Toplu Yükle</button>
         </div>
 
         <div class="tc active" id="tnot-m">
           <div class="card">
-            <div class="g3" style="margin-bottom:14px">
-              <div class="fg" style="margin:0"><label>1. Branş Seçin</label><select class="fc" id="mnBrans" onchange="updateSenaryoListesi('mnSen')"></select></div>
-              <div class="fg" style="margin:0"><label>2. Uygulanan Senaryo</label><select class="fc" id="mnSen" onchange="buildNotTable()"></select></div>
-              <div class="fg" style="margin:0"><label>3. Sınıf / Şube</label><select class="fc" id="mnSinif" onchange="buildNotTable()"></select></div>
+            <div class="g2" style="margin-bottom:14px">
+              <!-- YENİ: Branş filtresi + Senaryo seçici -->
+              <div class="fg" style="margin:0">
+                <label>Branş Filtrele <small style="color:var(--muted)">(senaryo listesini daraltır)</small></label>
+                <select class="fc" id="mnBransFil" onchange="initSinavSenaryolar()">
+                  <option value="">Tüm Branşlar</option>
+                </select>
+              </div>
+              <div class="fg" style="margin:0"><label>Uygulanan Senaryo</label><select class="fc" id="mnSen" onchange="buildNotTable()"></select></div>
             </div>
-            
-            <!-- STICKY HEADER TABLOSU BURADA -->
-            <div id="notTableWrap" class="tr-wrap"></div>
-            
-            <div style="display:flex;gap:10px;align-items:center;margin-top:14px">
-              <button class="btn btn-success" onclick="saveNot()"><i class="fa-solid fa-floppy-disk"></i> Puanları Kaydet</button>
+            <div class="fg" style="margin-bottom:14px"><label>Sınıf / Şube Filtrele</label><select class="fc" id="mnSinif" onchange="buildNotTable()"></select></div>
+            <div id="notTableWrap" class="tr-wrap" style="max-height:480px;overflow-y:auto;margin-bottom:14px"></div>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <button class="btn btn-success" onclick="saveNot()"><i class="fa-solid fa-check-double"></i> Notları Veritabanına İşle</button>
               <span id="notSaveMsg" style="font-size:13px;color:var(--secondary);font-weight:600"></span>
             </div>
           </div>
         </div>
 
         <div class="tc" id="tnot-xl">
-           <div class="card">
-             <div class="g3">
-                <div class="fg"><label>Branş</label><select class="fc" id="xlNotBrans" onchange="updateSenaryoListesi('xlNotSen')"></select></div>
-                <div class="fg"><label>Senaryo</label><select class="fc" id="xlNotSen"></select></div>
-                <div class="fg"><label>Sınıf</label><select class="fc" id="xlNotSinif"></select></div>
-             </div>
-             <button class="btn btn-outline" onclick="dlNotTemplate()">Bu Sınıf ve Senaryoya Özel Şablon İndir</button>
-             <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
-             <p style="font-size:13px; margin-bottom:10px;">Puanlanmış excel dosyasını yükleyin:</p>
-             <button class="btn btn-primary" onclick="document.getElementById('fileNot').click()">Puanlanmış Excel Yükle</button>
-             <input type="file" id="fileNot" accept=".xlsx,.xls" style="display:none" onchange="xlUpload(this,'not')">
-           </div>
+          <div class="g2">
+            <div class="card"><div class="ct">1. Sınıfa Özel Şablon Üret</div>
+              <div class="fg"><label>Senaryo</label><select class="fc" id="xlNotSen"></select></div>
+              <div class="fg"><label>Sınıf</label><select class="fc" id="xlNotSinif"></select></div>
+              <button class="btn btn-primary btn-full" onclick="dlNotTemplate()"><i class="fa-solid fa-download"></i> Şablonu İndir</button>
+            </div>
+            <div class="card"><div class="ct">2. Puanlanmış Excel Yükle</div>
+              <div class="fg"><label>Hangi Senaryo'ya Ait?</label><select class="fc" id="xlNotSenUp"></select></div>
+              <div class="upbox" onclick="document.getElementById('fileNot').click()">
+                <input type="file" id="fileNot" accept=".xlsx,.xls" style="display:none" onchange="xlUpload(this,'not')">
+                <i class="fa-solid fa-file-import"></i><p>Puanlanmış Excel'i Yükle</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- ANALİZ KISMI (MEVCUT GİBİ ÇALIŞIR) -->
+      <!-- ANALİZ -->
       <div class="page" id="page-analiz">
-         <div class="ph"><h2>Detaylı Analiz & Raporlar</h2></div>
-         <div class="card">
-           <div style="display:flex; gap:15px; align-items:flex-end; flex-wrap:wrap;">
-             <div class="fg" style="margin:0;flex:1"><label>Branş</label><select class="fc" id="anBrans" onchange="updateSenaryoListesi('anSec'); document.getElementById('anizKap').style.display='none';"></select></div>
-             <div class="fg" style="margin:0;flex:2"><label>Analiz Edilecek Sınav/Senaryo</label><select class="fc" id="anSec" onchange="buildAnaliz()"></select></div>
-             <div class="fg" style="margin:0;flex:1"><label>Baraj (%)</label><input type="number" class="fc" id="anBaraj" value="50" onchange="buildAnaliz()"></div>
-           </div>
-         </div>
-         <div id="anizKap" style="display:none">
-            <div class="tabs">
-              <button class="tab-btn active" onclick="swTab('tan-ozet',this)"><i class="fa-solid fa-table"></i> Sonuç Tablosu</button>
-              <button class="tab-btn" onclick="swTab('tan-toplu',this)"><i class="fa-solid fa-list-ol"></i> Toplu Sınıf Sonuçları</button>
-              <button class="tab-btn" onclick="swTab('tan-graf',this)"><i class="fa-solid fa-chart-pie"></i> Grafikler</button>
+        <div class="ph"><h2>Detaylı Analiz & Raporlar</h2><p>Kazanım bazlı başarı, çeldirici tespiti, zümre raporu.</p></div>
+        <div class="card" style="margin-bottom:14px">
+          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end">
+            <div class="fg" style="margin:0;flex:2;min-width:220px"><label>Analiz Edilecek Sınav</label><select class="fc" id="anSec" onchange="buildAnaliz()"></select></div>
+            <div class="fg" style="margin:0;flex:1;min-width:130px"><label>Başarı Barajı (%)</label><input type="number" class="fc" id="anBaraj" value="50" min="0" max="100" onchange="buildAnaliz()"></div>
+            <div class="fg" style="margin:0;flex:1;min-width:130px"><label>Sınıf Filtre</label><select class="fc" id="anSinif" onchange="buildAnaliz()"><option value="">Tümü</option></select></div>
+          </div>
+        </div>
+
+        <div id="anizKap" style="display:none">
+          <div class="tabs">
+            <button class="tab-btn active" onclick="swTab('tan-ozet',this)"><i class="fa-solid fa-table"></i> Sonuç Tablosu</button>
+            <button class="tab-btn" onclick="swTab('tan-toplu',this)"><i class="fa-solid fa-list-ol"></i> Toplu Sınıf Sonuçları</button>
+            <button class="tab-btn" onclick="swTab('tan-graf',this)"><i class="fa-solid fa-chart-pie"></i> Grafikler</button>
+            <button class="tab-btn" onclick="swTab('tan-manuel',this)"><i class="fa-solid fa-pen-to-square"></i> Manuel Analiz Düzenle</button>
+            <button class="tab-btn" onclick="swTab('tan-pdf',this)"><i class="fa-solid fa-file-pdf"></i> AI Rapor (PDF)</button>
+          </div>
+
+          <!-- SONUÇ TABLOSU -->
+          <div class="tc active" id="tan-ozet">
+            <div class="card">
+              <div class="ct"><span>Öğrenci × Soru Analiz Tablosu</span>
+                <div>
+                  <button class="btn btn-info btn-sm" onclick="exportAnalizXl()"><i class="fa-solid fa-file-excel"></i> Excel'e Aktar</button>
+                  <button class="btn btn-outline btn-sm" onclick="swTab('tan-graf',document.querySelectorAll('#page-analiz .tab-btn')[2]);setTimeout(printCharts,400)"><i class="fa-solid fa-print"></i> Yazdır</button>
+                </div>
+              </div>
+              <div id="anOzetWrap" class="tr-wrap"></div>
+              <div id="anIstatWrap" style="margin-top:16px"></div>
             </div>
-            
-            <div class="tc active" id="tan-ozet">
+          </div>
+
+          <!-- TOPLU SINIF SONUÇLARI -->
+          <div class="tc" id="tan-toplu">
+            <div class="card">
+              <div class="ct">
+                <span><i class="fa-solid fa-ranking-star"></i> Toplu Sınıf & Öğrenci Başarı Tablosu</span>
+                <button class="btn btn-info btn-sm" onclick="exportTopluXl()"><i class="fa-solid fa-file-excel"></i> Excel'e Aktar</button>
+              </div>
+              <div id="sinifOzetGrid" class="sinif-ozet-grid"></div>
+              <div class="g2" style="margin-bottom:18px">
+                <div class="card" style="margin-bottom:0">
+                  <div class="chart-zoom-bar">
+                    <span><i class="fa-solid fa-chart-bar"></i> Öğrenci Başarı Grafiği</span>
+                    <div class="chart-zoom-btns">
+                      <button onclick="zoomChart('topluBar',-50)">−</button>
+                      <span class="zoom-val" id="zvTopluBar">300px</span>
+                      <button onclick="zoomChart('topluBar',+50)">+</button>
+                    </div>
+                  </div>
+                  <div id="topluBarWrap" style="overflow-x:auto">
+                    <div style="position:relative;height:300px;min-width:300px" id="topluBarContainer">
+                      <canvas id="cTopluBar"></canvas>
+                    </div>
+                  </div>
+                </div>
+                <div class="card" style="margin-bottom:0">
+                  <div class="chart-zoom-bar">
+                    <span><i class="fa-solid fa-chart-pie"></i> Soru Bazlı Başarı Grafiği</span>
+                    <div class="chart-zoom-btns">
+                      <button onclick="zoomChart('topluSoru',-50)">−</button>
+                      <span class="zoom-val" id="zvTopluSoru">300px</span>
+                      <button onclick="zoomChart('topluSoru',+50)">+</button>
+                    </div>
+                  </div>
+                  <div id="topluSoruWrap" style="overflow-x:auto">
+                    <div style="position:relative;height:300px;min-width:300px" id="topluSoruContainer">
+                      <canvas id="cTopluSoru"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-bottom:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <button class="btn btn-primary" id="btnTopluYorum" onclick="genTopluYorum()">
+                  <i class="fa-solid fa-brain"></i> AI ile Otomatik Yorum Yaz
+                </button>
+                <span style="font-size:12px;color:var(--muted)">Veriler analiz edilerek pedagojik değerlendirme yapılır</span>
+              </div>
+              <div id="topluYorumBox" style="display:none"></div>
+              <div class="ct" style="margin-top:10px">Tüm Öğrenciler — Başarı Sıralaması</div>
+              <div id="topluTblWrap" class="tr-wrap"></div>
+            </div>
+          </div>
+
+          <!-- GRAFİKLER -->
+          <div class="tc" id="tan-graf">
+            <div class="g2">
               <div class="card">
-                <div class="ct">Öğrenci × Soru Analiz Tablosu <button class="btn btn-info btn-sm" onclick="exportAnalizXl()">Excel'e Aktar</button></div>
-                <div id="anOzetWrap" class="tr-wrap"></div>
+                <div class="chart-zoom-bar">
+                  <span>Kazanım Başarı Sütun Grafiği</span>
+                  <div class="chart-zoom-btns">
+                    <button onclick="zoomChart('bar',-50)">−</button>
+                    <span class="zoom-val" id="zvBar">300px</span>
+                    <button onclick="zoomChart('bar',+50)">+</button>
+                  </div>
+                </div>
+                <div id="barWrap" style="overflow-x:auto"><div style="position:relative;height:300px" id="barContainer"><canvas id="cBar"></canvas></div></div>
+              </div>
+              <div class="card">
+                <div class="chart-zoom-bar">
+                  <span>Başarı Baraj Dağılımı (Daire)</span>
+                  <div class="chart-zoom-btns">
+                    <button onclick="zoomChart('pie',-50)">−</button>
+                    <span class="zoom-val" id="zvPie">300px</span>
+                    <button onclick="zoomChart('pie',+50)">+</button>
+                  </div>
+                </div>
+                <div id="pieWrap" style="overflow-x:auto"><div style="position:relative;height:300px" id="pieContainer"><canvas id="cPie"></canvas></div></div>
               </div>
             </div>
-            
-            <div class="tc" id="tan-toplu">
-               <div class="card">
-                 <div class="ct">Toplu Başarı Sıralaması <button class="btn btn-info btn-sm" onclick="exportTopluXl()">Excel'e Aktar</button></div>
-                 <div id="topluTblWrap" class="tr-wrap"></div>
-               </div>
+            <div class="card">
+              <div class="chart-zoom-bar">
+                <span>Şubeler Arası Karşılaştırma</span>
+                <div class="chart-zoom-btns">
+                  <button onclick="zoomChart('sube',-50)">−</button>
+                  <span class="zoom-val" id="zvSube">380px</span>
+                  <button onclick="zoomChart('sube',+50)">+</button>
+                </div>
+              </div>
+              <div id="subeWrap" style="overflow-x:auto"><div style="position:relative;height:380px" id="subeContainer"><canvas id="cSube"></canvas></div></div>
             </div>
+            <div class="card">
+              <div class="chart-zoom-bar">
+                <span>Kazanım Başarı Yüzde Çizgi Grafiği</span>
+                <div class="chart-zoom-btns">
+                  <button onclick="zoomChart('line',-50)">−</button>
+                  <span class="zoom-val" id="zvLine">300px</span>
+                  <button onclick="zoomChart('line',+50)">+</button>
+                </div>
+              </div>
+              <div id="lineWrap" style="overflow-x:auto"><div style="position:relative;height:300px" id="lineContainer"><canvas id="cLine"></canvas></div></div>
+            </div>
+          </div>
 
-            <div class="tc" id="tan-graf">
-              <div class="g2">
-                <div class="card"><div class="ct">Kazanım Başarı Grafiği</div><div style="height:300px; position:relative;"><canvas id="cBar"></canvas></div></div>
-                <div class="card"><div class="ct">Başarı Dağılımı</div><div style="height:300px; position:relative;"><canvas id="cPie"></canvas></div></div>
+          <!-- MANUEL ANALİZ DÜZENLE -->
+          <div class="tc" id="tan-manuel">
+            <div class="card">
+              <div class="ct"><span><i class="fa-solid fa-pen-to-square"></i> Manuel Puan Düzenleme</span><button class="btn btn-success btn-sm" onclick="saveManuelAnaliz()"><i class="fa-solid fa-floppy-disk"></i> Kaydet</button></div>
+              <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> Tüm puanlar düzenlenebilir. Değiştirip "Kaydet" butonuna basın.</div>
+              <div id="manuelAnWrap" class="tr-wrap" style="max-height:500px;overflow-y:auto"></div>
+            </div>
+          </div>
+
+          <!-- GELİŞMİŞ PDF RAPOR OLUŞTURUCU -->
+          <div class="tc" id="tan-pdf">
+            <div class="card" id="pdfBuilder">
+              <div class="ct">
+                <span><i class="fa-solid fa-file-pdf"></i> PDF Rapor Oluşturucu</span>
+                <button class="btn btn-primary" id="btnPdfOnizle" onclick="pdfOnizleOlustur()">
+                  <i class="fa-solid fa-eye"></i> Önizleme Oluştur
+                </button>
+              </div>
+              <div class="alert alert-info" style="margin-bottom:16px">
+                <i class="fa-solid fa-circle-info"></i>
+                Dahil etmek istediğin bölümleri işaretle. Sırayı değiştirmek için yukarı/aşağı oklarını kullan. "Önizleme Oluştur" ile A4 formatında göster, ardından PDF indir.
+              </div>
+              <div id="pdfBolumListesi" style="margin-bottom:18px"></div>
+              <div style="background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:14px">
+                <div style="font-weight:700;font-size:13px;color:var(--dark);margin-bottom:10px"><i class="fa-solid fa-sliders"></i> Grafik & Yazı Boyutu Ayarları</div>
+                <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center">
+                  <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+                    <span style="color:var(--muted);font-weight:600">Grafik Yükseklik:</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('grafik',-20)">−</button>
+                    <span id="pdfGrafikBoy" style="font-weight:700;color:var(--primary);min-width:40px;text-align:center">180px</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('grafik',+20)">+</button>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+                    <span style="color:var(--muted);font-weight:600">Yazı Boyutu:</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('yazi',-1)">−</button>
+                    <span id="pdfYaziBoy" style="font-weight:700;color:var(--primary);min-width:40px;text-align:center">12px</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('yazi',+1)">+</button>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+                    <span style="color:var(--muted);font-weight:600">Satır Yüksekliği:</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('satir',-1)">−</button>
+                    <span id="pdfSatirBoy" style="font-weight:700;color:var(--primary);min-width:40px;text-align:center">22px</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('satir',+1)">+</button>
+                  </div>
+                </div>
               </div>
             </div>
-         </div>
+            <div id="pdfAlan" style="display:none;margin-top:4px">
+              <div class="pdf-bar">
+                <span style="font-weight:600;color:var(--dark)"><i class="fa-solid fa-magnifying-glass"></i> A4 Önizleme</span>
+                <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+                  <div class="zoom-c">
+                    <button onclick="pdfZoom(-0.05)">−</button>
+                    <span id="zoomVal" style="min-width:42px;text-align:center">0.75</span>
+                    <button onclick="pdfZoom(+0.05)">+</button>
+                  </div>
+                  <button class="btn btn-success" onclick="dlPdf()"><i class="fa-solid fa-download"></i> PDF İndir</button>
+                  <button class="btn btn-outline btn-sm" onclick="document.getElementById('pdfAlan').style.display='none'"><i class="fa-solid fa-arrow-left"></i> Geri</button>
+                </div>
+              </div>
+              <div class="pdf-wrap">
+                <div class="pdf-doc" id="pdfDoc" style="transform:scale(0.75);transform-origin:top left"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
 
-      <!-- OKUL & BRANŞ YÖNETİMİ -->
+      <!-- OKUL YÖNETİMİ -->
       <div class="page" id="page-okulyon">
-        <div class="ph"><h2>Okul Yönetimi</h2></div>
-        <div class="card"><div class="ct">Yeni Okul Ekle</div>
-          <div style="display:flex;gap:12px;align-items:flex-end">
-            <div class="fg" style="margin:0;flex:2"><label>Okul Adı</label><input class="fc" id="yeniOkulAdi"></div>
-            <div class="fg" style="margin:0;flex:1"><label>Türü</label><input class="fc" id="yeniOkulTur" value="Ortaokul"></div>
-            <button class="btn btn-success" style="height:43px;" onclick="addOkul()">Ekle</button>
+        <div class="ph"><h2><i class="fa-solid fa-school-flag" style="color:var(--primary)"></i> Okul Yönetimi</h2><p>İlçeye bağlı okulları ekleyin, düzenleyin veya silin. Bu liste kayıt formunda kullanılır.</p></div>
+        <div class="card">
+          <div class="ct"><span>Yeni Okul Ekle</span></div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+            <div class="fg" style="margin:0;flex:2;min-width:200px"><label>Okul Adı</label><input class="fc" id="yeniOkulAdi" placeholder="Örn: Yeni Köy Ortaokulu"></div>
+            <div class="fg" style="margin:0;flex:1;min-width:150px"><label>Okul Türü</label>
+              <select class="fc" id="yeniOkulTur">
+                <option>Ortaokul</option>
+                <option>Anadolu Lisesi</option>
+                <option>İmam Hatip Ortaokulu</option>
+                <option>İmam Hatip Lisesi</option>
+                <option>İlkokul</option>
+                <option>Diğer</option>
+              </select>
+            </div>
+            <button class="btn btn-success" style="height:43px;margin-top:10px" onclick="addOkul()"><i class="fa-solid fa-plus"></i> Okul Ekle</button>
           </div>
         </div>
-        <div class="card"><div class="tr-wrap"><table><thead><tr><th>Okul Adı</th><th>Tür</th><th>İşlem</th></tr></thead><tbody id="okulBody"></tbody></table></div></div>
+        <div class="card">
+          <div class="ct">
+            <span>Kayıtlı Okullar (<span id="okulCount">0</span>)</span>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input class="fc" id="okulSearch" placeholder="Ara..." style="width:180px;padding:7px 11px" oninput="filterOkul()">
+              <button class="btn btn-info btn-sm" onclick="exportOkulXl()"><i class="fa-solid fa-file-excel"></i> Excel'e Aktar</button>
+            </div>
+          </div>
+          <div class="tr-wrap">
+            <table><thead><tr><th>#</th><th>Okul Adı</th><th>Türü</th><th>Kayıtlı Öğretmen</th><th>İşlem</th></tr></thead>
+            <tbody id="okulBody"></tbody></table>
+          </div>
+        </div>
       </div>
 
+      <!-- BRANŞ YÖNETİMİ -->
       <div class="page" id="page-bransyon">
-        <div class="ph"><h2>Branş Yönetimi</h2></div>
-        <div class="card"><div class="ct">Yeni Branş Ekle</div>
-          <div style="display:flex;gap:12px;align-items:flex-end">
-            <div class="fg" style="margin:0;flex:2"><label>Branş Adı</label><input class="fc" id="yeniBransAdi"></div>
-            <div class="fg" style="margin:0;flex:1"><label>Kategori</label><input class="fc" id="yeniBransKat" value="Genel"></div>
-            <button class="btn btn-success" style="height:43px;" onclick="addBrans()">Ekle</button>
+        <div class="ph"><h2><i class="fa-solid fa-book-open" style="color:var(--secondary)"></i> Branş Yönetimi</h2><p>Sistemde tanımlı branşları yönetin. Öğretmen kayıt formunda seçim olarak listelenir.</p></div>
+        <div class="card">
+          <div class="ct"><span>Yeni Branş Ekle</span></div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+            <div class="fg" style="margin:0;flex:2;min-width:200px"><label>Branş Adı</label><input class="fc" id="yeniBransAdi" placeholder="Örn: Matematik"></div>
+            <div class="fg" style="margin:0;flex:1;min-width:150px"><label>Kategori</label>
+              <select class="fc" id="yeniBransKat">
+                <option>Sayısal</option>
+                <option>Sözel</option>
+                <option>Dil</option>
+                <option>Sosyal</option>
+                <option>Din & Ahlak</option>
+                <option>Beden & Sanat</option>
+                <option>Diğer</option>
+              </select>
+            </div>
+            <button class="btn btn-success" style="height:43px;margin-top:10px" onclick="addBrans()"><i class="fa-solid fa-plus"></i> Branş Ekle</button>
           </div>
         </div>
-        <div class="card"><div class="tr-wrap"><table><thead><tr><th>Branş Adı</th><th>Kategori</th><th>İşlem</th></tr></thead><tbody id="bransBody"></tbody></table></div></div>
+        <div class="card">
+          <div class="ct">
+            <span>Tanımlı Branşlar (<span id="bransCount">0</span>)</span>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input class="fc" id="bransSearch" placeholder="Ara..." style="width:180px;padding:7px 11px" oninput="filterBrans()">
+              <button class="btn btn-info btn-sm" onclick="exportBransXl()"><i class="fa-solid fa-file-excel"></i> Excel'e Aktar</button>
+            </div>
+          </div>
+          <div class="tr-wrap">
+            <table><thead><tr><th>#</th><th>Branş Adı</th><th>Kategori</th><th>Renk</th><th>İşlem</th></tr></thead>
+            <tbody id="bransBody"></tbody></table>
+          </div>
+          <div style="margin-top:14px">
+            <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> Branşlar öğretmen kayıt formuna otomatik yansır. Varsayılan branşlar silinmez, yalnızca eklenenler silinebilir.</div>
+          </div>
+        </div>
       </div>
 
-    </div>
-  </div>
-</div>
+      <!-- PROFİL SAYFASI -->
+      <div class="page" id="page-profil">
+        <div class="ph"><h2><i class="fa-solid fa-user-pen" style="color:var(--primary)"></i> Profilim</h2><p>Kişisel bilgilerinizi ve şifrenizi güncelleyebilirsiniz.</p></div>
+        <div class="g2">
+          <div class="card">
+            <div class="ct">Kişisel Bilgiler</div>
+            <div class="fg"><label>Ad Soyad <span style="color:var(--danger)">*</span></label><input class="fc" id="profAdSoyad"></div>
+            <div class="fg"><label>Branş <span style="color:var(--danger)">*</span></label><select class="fc" id="profBrans"></select></div>
+            <div class="fg"><label>Okul</label><input class="fc" id="profOkul" disabled style="background:#F1F5F9;color:var(--muted)"></div>
+            <div class="fg"><label>Kullanıcı Adı</label><input class="fc" id="profUser" disabled style="background:#F1F5F9;color:var(--muted)"></div>
+            <div class="fg"><label>E-posta <span style="color:var(--muted);font-weight:400">(İsteğe bağlı)</span></label><input class="fc" type="email" id="profEmail" placeholder="ornek@mail.com"></div>
+            <div class="fg"><label>Telefon <span style="color:var(--muted);font-weight:400">(İsteğe bağlı)</span></label><input class="fc" type="tel" id="profTel" placeholder="05XX XXX XX XX"></div>
+            <button class="btn btn-primary btn-full" onclick="profilKaydet()"><i class="fa-solid fa-floppy-disk"></i> Bilgileri Güncelle</button>
+          </div>
+          <div class="card">
+            <div class="ct">Şifre Değiştir</div>
+            <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> Güvenliğiniz için güçlü bir şifre kullanın.</div>
+            <div class="fg"><label>Mevcut Şifre</label><input class="fc" type="password" id="profSifreMevcut" placeholder="••••••••"></div>
+            <div class="fg"><label>Yeni Şifre</label><input class="fc" type="password" id="profSifreYeni" placeholder="••••••••"></div>
+            <div class="fg"><label>Yeni Şifre (Tekrar)</label><input class="fc" type="password" id="profSifreYeni2" placeholder="••••••••"></div>
+            <button class="btn btn-warning btn-full" onclick="sifreDegistir()"><i class="fa-solid fa-key"></i> Şifreyi Güncelle</button>
+            <div id="profSifreMsg" style="margin-top:12px;font-size:13px;font-weight:600;text-align:center"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct"><i class="fa-solid fa-shield-halved" style="color:var(--warning)"></i> Hesap İzinlerim</div>
+          <div id="profIzinler" style="display:flex;gap:10px;flex-wrap:wrap"></div>
+        </div>
+      </div>
 
-<!-- ================= YÖNETİCİ DÜZENLEME MODALI ================= -->
-<div class="admin-modal" id="adminEditModal">
-  <div class="am-box">
-    <div style="font-size:18px; font-weight:700; margin-bottom:15px; display:flex; justify-content:space-between;">Öğretmen Düzenle <button onclick="closeAdminEdit()" style="border:none;background:none;font-size:18px;cursor:pointer">X</button></div>
-    <input type="hidden" id="aeOldUser">
-    <div class="g2"><div class="fg"><label>Adı Soyadı</label><input class="fc" id="aeAdSoyad"></div><div class="fg"><label>Kullanıcı Adı</label><input class="fc" id="aeUser"></div></div>
-    <div class="g2"><div class="fg"><label>Okul</label><select class="fc" id="aeOkul"></select></div><div class="fg"><label>Branş</label><select class="fc" id="aeBrans"></select></div></div>
-    <div class="g2"><div class="fg"><label>Şifre</label><input class="fc" id="aePass"></div><div class="fg"><label>Durum</label><select class="fc" id="aeDurum"><option>Onaylı</option><option>Beklemede</option><option>Reddedildi</option></select></div></div>
-    <div style="background:#f8f9fa; padding:10px; border:1px solid #ddd; margin-bottom:15px;">
-      <div class="cb-wrap"><input type="checkbox" id="aeIzinOgrenci"><label for="aeIzinOgrenci">Öğrenci Ekleme İzni</label></div>
-      <div class="cb-wrap"><input type="checkbox" id="aeIzinSablon"><label for="aeIzinSablon">Excel Şablon Yükleme İzni</label></div>
-    </div>
-    <div style="text-align:right"><button class="btn btn-primary" onclick="adminSaveUser()">Kaydet</button></div>
-  </div>
-</div>
+    </div><!-- /pcont -->
+  </div><!-- /main -->
+</div><!-- /app-layout -->
 
 <script>
+// ===== KONFİGÜRASYON =====
 const GEM_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+const GEM_KEY = 'AIzaSyD6K8QfWs2nVxPZ1RmTkHeLpJqYbXcN4Ew';
 const SUP_URL = 'https://smlpeljbtkvvtspvizuy.supabase.co';
 const SUP_KEY = 'sb_publishable_XX4Vfrk_Bj7IzWs-LHN3qg_Wh-TGtVD';
 const DBK = 'dargecit_v15';
+
 let supa = null;
 try { if(typeof supabase !== 'undefined') supa = window.supabase.createClient(SUP_URL, SUP_KEY); } catch(e){}
 
-let app = { 
-  user:null, role:null, okul:null, adSoyad:null, userObj: null, 
-  isObserving: false, realAdminApp: null, 
-  d:{ ogrenciler:[], senaryolar:{}, sinavlar:{} }, charts:{}, logs:[] 
-};
+// ===== APP STATE =====
+let app = { user:null, role:null, okul:null, adSoyad:null, brans:null, d:{ ogrenciler:[], senaryolar:{}, sinavlar:{} }, charts:{}, logs:[] };
 
-const VARSAYILAN_OKULLAR = [{ad:'Alayurt Ortaokulu', tur:'Ortaokul'}, {ad:'Gazi Ortaokulu', tur:'Ortaokul'}];
-const VARSAYILAN_BRANSLAR = [{ad:'Matematik', kat:'Sayısal'},{ad:'Türkçe', kat:'Sözel'}];
-
-// =================== VERİ KAYBINA KARŞI GÜVENLİ GETDB ===================
-function getDB(){ 
-  let d = localStorage.getItem(DBK); 
-  let db = d ? JSON.parse(d) : {users:[], okulData:{}, okullar:[], branslar:[]};
-  
-  if(!db.okulData) db.okulData = {};
-  if(!db.users) db.users = [];
-  
-  // Eğer okullar veya branşlar DİZİSİ TAMAMEN BOŞSA varsayılanları ekle, VARSA ASLA EZME!
-  if(!db.okullar || db.okullar.length === 0) db.okullar = [...VARSAYILAN_OKULLAR];
-  if(!db.branslar || db.branslar.length === 0) db.branslar = [...VARSAYILAN_BRANSLAR];
-  return db; 
+// ===== MOBİL MENU =====
+function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+function closeSidebar() {
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('active');
 }
 
-function setDB(db){ localStorage.setItem(DBK, JSON.stringify(db)); }
-function addLog(msg){ app.logs.unshift((new Date()).toLocaleTimeString('tr')+" — "+msg); let el=document.getElementById('dashLog'); if(el) el.innerHTML=app.logs.slice(0,5).map(l=>'<div>'+l+'</div>').join(''); }
+// ===== DB HELPERS =====
+function getDB(){ try{ let d=localStorage.getItem(DBK); if(!d) return {users:[],okulData:{}}; let p=JSON.parse(d); if(!p.okulData) p.okulData={}; if(!p.users) p.users=[]; return p; } catch(e){ return {users:[],okulData:{}}; } }
+function setDB(db){ try{ localStorage.setItem(DBK,JSON.stringify(db)); }catch(e){ console.error('localStorage kayıt hatası:',e); } }
+function errMsg(id,msg){ let e=document.getElementById(id); if(e){ e.textContent=msg; } }
+function addLog(msg){ app.logs.unshift((new Date()).toLocaleTimeString('tr')+" — "+msg); let el=document.getElementById('dashLog'); if(el) el.innerHTML=app.logs.slice(0,8).map(l=>'<div>'+l+'</div>').join(''); }
 
-// Sadece butona basınca buluttan veri çekilir. Otomatik girişlerde ezmeyi önlemek için.
-async function fetchFromCloud() {
-  if(!supa) { alert("Bulut bağlantısı yok."); return; }
-  if(!confirm("Buluttaki veriler tarayıcınıza indirilecek. Mevcut kaydedilmemiş işlemleriniz üzerine yazılabilir. Emin misiniz?")) return;
-  
+// ===== BULUT =====
+async function fetchCloud() {
+  if(!supa) return null;
   try {
     let {data, error} = await supa.from('okul_verileri').select('json_data').eq('id',1).single();
     if(error) throw error;
     if(data && data.json_data) {
-       let cloudDb = data.json_data;
-       if(!cloudDb.users) cloudDb.users = [];
-       if(!cloudDb.okulData) cloudDb.okulData = {};
-       setDB(cloudDb);
-       alert("Veriler buluttan başarıyla çekildi. Sayfa yenileniyor.");
-       location.reload();
-    } else { alert("Bulutta henüz veri yok."); }
-  } catch(e) { alert("Bulut veri çekme hatası: " + e.message); }
-}
-
-async function saveAll(){
-  let db = getDB();
-  db.okulData[app.okul] = app.d; 
-  setDB(db); // Önce yereli kesin garantiye al
-  
-  if(supa){
-    try{
-      let {error} = await supa.from('okul_verileri').upsert({id:1, json_data:db});
-      if(error) throw error;
-      addLog('Buluta yedeklendi.');
-      alert("Tüm veriler tarayıcıya VE buluta kaydedildi ✓");
-    }catch(e){ 
-      alert("Bulut bağlantı hatası, ancak veriler TARAYICIYA güvenle kaydedildi."); 
+       let d = data.json_data;
+       if(!d.users) d = { users:[], okulData: d };
+       return d;
     }
-  } else {
-    alert("Veriler tarayıcınıza güvenle kaydedildi.");
-  }
+  } catch(e) { console.error("Bulut veri çekme hatası:", e); }
+  return null;
 }
 
-// =================== AUTH ===================
+// ===== AUTH =====
 function showLogin(){ document.getElementById('loginForm').style.display='flex'; document.getElementById('regForm').style.display='none'; }
-function showReg(){ 
-  document.getElementById('loginForm').style.display='none'; document.getElementById('regForm').style.display='flex'; 
-  syncOkulSelect(); 
-  document.getElementById('regBrans').innerHTML = getDB().branslar.map(b=>`<option value="${b.ad}">${b.ad}</option>`).join('');
-}
+function showReg(){ document.getElementById('loginForm').style.display='none'; document.getElementById('regForm').style.display='flex'; }
 
-function doRegister(){
-  let sel=document.getElementById('regOkul').value, o=sel==='diger'?document.getElementById('regOkulDiger').value.trim():sel;
-  let u=document.getElementById('regUser').value.trim(), p=document.getElementById('regPass').value.trim();
-  let ads=document.getElementById('regAdSoyad').value.trim(), brans=document.getElementById('regBrans').value;
-  if(!u||!p||!o||!ads) return alert('Eksik alan!');
-  
+async function doRegister(){
+  let sel=document.getElementById('regOkul').value;
+  let o=sel==='diger' ? document.getElementById('regOkulDiger').value.trim() : sel;
+  let u=document.getElementById('regUser').value.trim();
+  let p=document.getElementById('regPass').value.trim();
+  let ads=document.getElementById('regAdSoyad').value.trim();
+  let brans=document.getElementById('regBrans').value.trim();
+  let email=document.getElementById('regEmail').value.trim();
+  let tel=document.getElementById('regTel').value.trim();
+
+  if(!u||!p||!o||!ads||!brans){ alert('Ad Soyad, Branş, Okul, Kullanıcı Adı ve Şifre zorunludur.'); return; }
+
+  let btn = document.querySelector('#regForm button');
+  let oldHtml = btn.innerHTML;
+  if(supa) { btn.innerHTML='<span class="spin"></span> Buluta Bağlanıyor...'; btn.disabled=true; }
+
+  let cloudDb = await fetchCloud();
+  if(cloudDb) setDB(cloudDb);
+
   let db=getDB();
-  if(db.users.find(x=>x.username===u)) return alert('Kullanıcı adı alınmış.');
-  db.users.push({username:u, password:p, okul:o, rol:'Öğretmen', durum:'Onaylı', adSoyad: ads, brans: brans, izin_sablon: true, izin_ogrenci: true});
+  if(db.users.find(x=>x.username===u)){ 
+      alert('Bu kullanıcı adı sistemde kayıtlı. Lütfen farklı bir kullanıcı adı seçin.');
+      if(supa) { btn.innerHTML=oldHtml; btn.disabled=false; }
+      return;
+  }
+
+  db.users.push({username:u,password:p,okul:o,rol:'Öğretmen',durum:'Onaylı', adSoyad: ads, brans: brans, email: email, tel: tel, izinler:{sablon:true, ogrenciEkle:true}});
   if(!db.okulData[o]) db.okulData[o]={ogrenciler:[],senaryolar:{},sinavlar:{}};
-  setDB(db); alert('Kayıt başarılı! Giriş yapabilirsiniz.'); showLogin();
+  setDB(db);
+
+  if(supa) {
+     try { await supa.from('okul_verileri').upsert({id:1, json_data:db}); } catch(e){}
+  }
+
+  if(supa) { btn.innerHTML=oldHtml; btn.disabled=false; }
+  alert('Kayıt başarılı! Giriş ekranına yönlendiriliyorsunuz.');
+  document.getElementById('loginUser').value=u;
+  document.getElementById('loginPass').value=p;
+  showLogin();
 }
 
-function doLogin(){
+async function doLogin(){
   let u=document.getElementById('loginUser').value.trim(), p=document.getElementById('loginPass').value.trim();
-  if(!u||!p) return;
+  if(!u||!p){ errMsg('loginErr','Kullanıcı adı ve şifre gerekli.'); return; }
+
+  let btn = document.querySelector('#loginForm button');
+  let oldHtml = btn.innerHTML;
+  if(supa) { btn.innerHTML='<span class="spin"></span> Buluta Bağlanıyor...'; btn.disabled=true; }
+
+  let cloudDb = await fetchCloud();
+  if(cloudDb) setDB(cloudDb);
+
+  if(supa) { btn.innerHTML=oldHtml; btn.disabled=false; }
+
   let db=getDB();
   if(u==='admin' && p==='Saracaksan.47'){
-    app.userObj = {username:u, okul:'İlçe MEM', rol:'Süper Yönetici', adSoyad:'Sistem Yöneticisi', izin_sablon:true, izin_ogrenci:true};
-    app.user=u; app.role='Süper Yönetici'; app.okul='İlçe MEM'; app.adSoyad='Sistem Yöneticisi'; app.isObserving = false;
+    app.user=u; app.role='Süper Yönetici'; app.okul='İlçe MEM'; app.adSoyad='Sistem Yöneticisi'; app.brans='Tümü';
     if(!db.okulData['İlçe MEM']) db.okulData['İlçe MEM']={ogrenciler:[],senaryolar:{},sinavlar:{}};
-    bootApp(db); return;
+    setDB(db); bootApp(db); return;
   }
+
   let f=db.users.find(x=>x.username===u&&x.password===p);
-  if(!f) return document.getElementById('loginErr').textContent='Hatalı giriş.';
-  if(f.durum!=='Onaylı') return document.getElementById('loginErr').textContent='Hesap durumunuz: '+f.durum;
-  if(f.izin_sablon === undefined) f.izin_sablon = true;
-  if(f.izin_ogrenci === undefined) f.izin_ogrenci = true;
-  
-  app.userObj = f; app.user=f.username; app.role=f.rol; app.okul=f.okul; app.adSoyad=f.adSoyad||f.username; app.isObserving = false;
+  if(!f){ errMsg('loginErr','Hatalı kullanıcı adı veya şifre.'); return; }
+  if(f.durum==='Beklemede'){ errMsg('loginErr','Hesabınız onay bekliyor.'); return; }
+  if(f.durum==='Reddedildi'){ errMsg('loginErr','Hesabınız engellendi.'); return; }
+
+  app.user=f.username; app.role=f.rol; app.okul=f.okul; app.adSoyad=f.adSoyad || f.username; app.brans=f.brans||'';
   bootApp(db);
 }
 
 function bootApp(db){
   if(!db.okulData[app.okul]) db.okulData[app.okul]={ogrenciler:[],senaryolar:{},sinavlar:{}};
   app.d = db.okulData[app.okul];
+  setDB(db);
   document.getElementById('authScreen').style.display='none';
   document.getElementById('mainApp').style.display='flex';
-  document.getElementById('lblUser').textContent=app.adSoyad;
-  document.getElementById('lblRole').textContent=app.role + (app.userObj.brans ? ` (${app.userObj.brans})` : '');
+  document.getElementById('lblUser').textContent=app.adSoyad || app.user;
+  document.getElementById('lblRole').textContent=app.role+(app.brans?' | '+app.brans:'');
   document.getElementById('lblOkul').innerHTML='<i class="fa-solid fa-school"></i> '+app.okul;
-  
-  let isAdmin = (app.role==='Süper Yönetici' && !app.isObserving);
-  ['navAdmin','navOkul','navBrans'].forEach(id=>document.getElementById(id).style.display=isAdmin?'flex':'none');
-  
-  // Branş listelerini doldur
-  let bransHtml = getDB().branslar.map(b=>`<option value="${b.ad}">${b.ad}</option>`).join('');
-  document.getElementById('mSenBrans').innerHTML = bransHtml;
-  document.getElementById('aiSenBrans').innerHTML = bransHtml;
-  document.getElementById('xlSenBrans').innerHTML = bransHtml;
-  
-  document.getElementById('havuzBransFiltre').innerHTML = '<option value="">Tüm Branşlar</option>' + bransHtml;
-  document.getElementById('mnBrans').innerHTML = '<option value="">-- Branş Seçin --</option>' + bransHtml;
-  document.getElementById('xlNotBrans').innerHTML = '<option value="">-- Branş Seçin --</option>' + bransHtml;
-  document.getElementById('anBrans').innerHTML = '<option value="">-- Branş Seçin --</option>' + bransHtml;
-
-  // Öğretmense varsayılan branşını seçili getir
-  if(app.userObj.brans) {
-      document.getElementById('mSenBrans').value = app.userObj.brans;
-      document.getElementById('havuzBransFiltre').value = app.userObj.brans;
+  if(app.role==='Süper Yönetici') {
+    document.getElementById('navAdmin').style.display='flex';
+    document.getElementById('navOkul').style.display='flex';
+    document.getElementById('navBrans').style.display='flex';
   }
-
-  uygulaIzinler();
   goPage('dashboard');
+  syncBransSelect();
+  syncOkulSelect();
+  addLog('Sisteme giriş yapıldı.');
 }
 
-function uygulaIzinler() {
-  let adm = (app.role === 'Süper Yönetici' && !app.isObserving);
-  let ogrIz = adm || app.userObj.izin_ogrenci;
-  let sabIz = adm || app.userObj.izin_sablon;
+async function saveAll(){
+  // Önce yerel kaydet
+  let db=getDB(); db.okulData[app.okul]=app.d; setDB(db);
 
-  document.getElementById('ogrEklemeAlanlari').style.display = ogrIz ? 'block' : 'none';
-  document.getElementById('ogrIzinUyari').style.display = ogrIz ? 'none' : 'flex';
-  
-  let btnOgrSil = document.getElementById('btnOgrSil'); if(btnOgrSil) btnOgrSil.style.display = ogrIz ? 'inline-flex' : 'none';
-  let btnSinifSil = document.getElementById('btnSinifSil'); if(btnSinifSil) btnSinifSil.style.display = ogrIz ? 'inline-flex' : 'none';
-  let delSinifSelect = document.getElementById('delSinifSelect'); if(delSinifSelect) delSinifSelect.style.display = ogrIz ? 'inline-block' : 'none';
+  let btn = document.querySelector('button[onclick="saveAll()"]');
+  let oldHtml = "";
+  if(btn) { oldHtml = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Kaydediliyor...'; }
 
-  document.getElementById('tabSenXlBtn').style.display = sabIz ? 'inline-block' : 'none';
-  document.getElementById('sablonIzinUyari').style.display = sabIz ? 'none' : 'flex';
-  document.getElementById('tabNotXlBtn').style.display = sabIz ? 'inline-block' : 'none';
-  document.getElementById('notSablonUyari').style.display = sabIz ? 'none' : 'flex';
+  if(supa){
+    try{
+      let cloudDb = await fetchCloud() || getDB();
+      if(!cloudDb.okulData) cloudDb.okulData = {};
+      cloudDb.okulData[app.okul] = app.d;
+      let localDb = getDB();
+      cloudDb.users = localDb.users;
+      if(localDb.okullar) cloudDb.okullar = localDb.okullar;
+      if(localDb.branslar) cloudDb.branslar = localDb.branslar;
+      let {error} = await supa.from('okul_verileri').upsert({id:1,json_data:cloudDb});
+      if(error) throw error;
+      setDB(cloudDb);
+      addLog('Buluta kaydedildi.');
+      alert('Tüm veriler başarıyla buluta kaydedildi ✓');
+    }catch(e){
+      alert('Bulut bağlantı hatası: '+e.message+' (Veriler tarayıcıya kaydedildi)');
+    }
+  } else {
+    alert('Veriler bu tarayıcıya kaydedildi ✓');
+  }
+
+  if(btn) { btn.disabled = false; btn.innerHTML = oldHtml; }
+}
+
+// Sessiz yerel kayıt (her işlemden sonra otomatik çağrılır)
+function localSave(){
+  let db=getDB(); db.okulData[app.okul]=app.d; setDB(db);
 }
 
 function doLogout(){ location.reload(); }
-function toggleSidebar() { document.querySelector('.sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').style.display='block'; }
-function closeSidebar() { document.querySelector('.sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').style.display='none'; }
+
+// ===== NAVİGASYON =====
 function goPage(p, el){
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   if(el) el.classList.add('active');
+  else { let n=document.querySelector('.nav-item[onclick*="\''+p+'\'"]'); if(n) n.classList.add('active'); }
   closeSidebar();
-  if(p==='dashboard'){ document.getElementById('statOgr').textContent=app.d.ogrenciler.length; document.getElementById('statSen').textContent=Object.keys(app.d.senaryolar).length; document.getElementById('statSin').textContent=Object.keys(app.d.sinavlar).length; }
-  else if(p==='profil') renderProfil();
+
+  if(p==='dashboard') refreshDash();
   else if(p==='admin') renderAdmin();
-  else if(p==='ogrenci') renderOgr();
-  else if(p==='senaryo') renderSen();
+  else if(p==='ogrenci') { renderOgr(); syncOgrOkulFil(); }
+  else if(p==='senaryo') { renderSen(); syncSenBransFil(); }
   else if(p==='sinav') initSinav();
+  else if(p==='analiz') initAnaliz();
   else if(p==='okulyon') renderOkulYon();
   else if(p==='bransyon') renderBransYon();
+  else if(p==='profil') renderProfil();
 }
 function swTab(id, btn){
-  let page = btn.closest('.page');
-  page.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); page.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
+  let page = btn.closest('.page, .pcont');
+  if(page){ page.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); page.querySelectorAll('.tc').forEach(t=>t.classList.remove('active')); }
   btn.classList.add('active'); document.getElementById(id).classList.add('active');
 }
 
-// =================== PROFIL & ADMIN ===================
-function renderProfil() {
-  let u = app.userObj;
-  document.getElementById('profAdSoyad').value = u.adSoyad || '';
-  document.getElementById('profUser').value = u.username;
-  document.getElementById('profPass').value = u.password;
-  let b = document.getElementById('profBrans'); b.innerHTML = getDB().branslar.map(x=>`<option value="${x.ad}">${x.ad}</option>`).join(''); b.value = u.brans || '';
-}
-function saveProfile() {
-  if(app.role==='Süper Yönetici' && !app.isObserving) return alert('Süper yönetici değiştirilemez.');
-  let db=getDB(), idx = db.users.findIndex(x=>x.username===app.userObj.username);
-  if(idx > -1) {
-    db.users[idx].adSoyad = document.getElementById('profAdSoyad').value;
-    db.users[idx].username = document.getElementById('profUser').value;
-    db.users[idx].password = document.getElementById('profPass').value;
-    db.users[idx].brans = document.getElementById('profBrans').value;
-    app.userObj = db.users[idx]; app.user = app.userObj.username; app.adSoyad = app.userObj.adSoyad;
-    setDB(db); document.getElementById('lblUser').textContent=app.adSoyad; alert("Profil güncellendi.");
-  }
+// ===== DASHBOARD =====
+function refreshDash(){
+  document.getElementById('statOgr').textContent=app.d.ogrenciler.length;
+  document.getElementById('statSen').textContent=Object.keys(app.d.senaryolar).length;
+  document.getElementById('statSin').textContent=Object.keys(app.d.sinavlar).length;
 }
 
+// ===== ADMİN =====
 function renderAdmin(){
-  let db=getDB(), h='';
-  db.users.forEach(u=>{
-    if(u.username!=='admin') {
-      h+=`<tr><td><b>${u.adSoyad||'—'}</b></td><td>${u.username}</td><td><span class="badge bg-b">${u.okul}</span></td><td>${u.brans||'—'}</td><td>${u.durum}</td>
-      <td><button class="btn btn-outline btn-sm" onclick="adminEditUser('${u.username}')">Düzenle</button></td></tr>`;
-    }
-  }); document.getElementById('adminBody').innerHTML=h||'<tr><td colspan="6">Kayıt yok.</td></tr>';
+  let db=getDB();
+  let q=(document.getElementById('adminSearch')?.value||'').toLowerCase();
+  let users=db.users.filter(u=>u.username!=='admin');
+  if(q) users=users.filter(u=>(u.adSoyad+u.username+u.okul+(u.brans||'')).toLowerCase().includes(q));
+  document.getElementById('adminOgretmenSay').textContent=db.users.filter(u=>u.username!=='admin').length;
+  let h='';
+  users.forEach((u)=>{
+    let realIdx=db.users.findIndex(x=>x.username===u.username);
+    let durumCls=u.durum==='Onaylı'?'bg-g':u.durum==='Reddedildi'?'bg-r':'bg-y';
+    let izinler=u.izinler||{sablon:true,ogrenciEkle:true};
+    h+=`<tr>
+      <td><b>${u.adSoyad||'—'}</b></td>
+      <td><span style="color:var(--primary);font-weight:600">${u.username}</span></td>
+      <td>${u.okul}</td>
+      <td><span class="badge bg-p">${u.brans||'—'}</span></td>
+      <td style="font-size:12px">${u.email?'📧 '+u.email+'<br>':''} ${u.tel?'📞 '+u.tel:''}</td>
+      <td><span class="badge ${durumCls}">${u.durum||'Onaylı'}</span></td>
+      <td>
+        <div style="display:flex;flex-direction:column;gap:4px;font-size:11px">
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
+            <input type="checkbox" ${izinler.sablon?'checked':''} onchange="adminIzinDegistir(${realIdx},'sablon',this.checked)" style="accent-color:var(--primary)">
+            Şablon Yükle
+          </label>
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
+            <input type="checkbox" ${izinler.ogrenciEkle?'checked':''} onchange="adminIzinDegistir(${realIdx},'ogrenciEkle',this.checked)" style="accent-color:var(--primary)">
+            Öğrenci Ekle
+          </label>
+        </div>
+      </td>
+      <td>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <button class="btn btn-success btn-sm" onclick="adminAct(${realIdx},'Onaylı')" style="font-size:11px;padding:4px 8px">✓ Onayla</button>
+          <button class="btn btn-danger btn-sm" onclick="adminAct(${realIdx},'Reddedildi')" style="font-size:11px;padding:4px 8px">✗ Reddet</button>
+          <button class="btn btn-info btn-sm" onclick="adminDuzAc(${realIdx})" style="font-size:11px;padding:4px 8px"><i class="fa-solid fa-pen"></i> Düzenle</button>
+          <button class="btn btn-outline btn-sm" onclick="adminVeriGor('${u.username}')" style="font-size:11px;padding:4px 8px"><i class="fa-solid fa-eye"></i> Veriler</button>
+          <button class="btn btn-danger btn-sm" onclick="adminSil(${realIdx})" style="font-size:11px;padding:4px 8px;background:#7f1d1d"><i class="fa-solid fa-trash"></i> Sil</button>
+        </div>
+      </td>
+    </tr>`;
+  });
+  document.getElementById('adminBody').innerHTML=h||'<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px">Kayıt yok.</td></tr>';
 }
-function adminEditUser(username) {
-  let db = getDB(); let u = db.users.find(x=>x.username===username); if(!u) return;
-  document.getElementById('aeOldUser').value = username;
-  document.getElementById('aeAdSoyad').value = u.adSoyad || '';
-  document.getElementById('aeUser').value = u.username;
-  document.getElementById('aePass').value = u.password;
-  document.getElementById('aeDurum').value = u.durum;
-  document.getElementById('aeOkul').innerHTML = db.okullar.map(o=>`<option>${o.ad}</option>`).join(''); document.getElementById('aeOkul').value = u.okul;
-  document.getElementById('aeBrans').innerHTML = db.branslar.map(b=>`<option>${b.ad}</option>`).join(''); document.getElementById('aeBrans').value = u.brans||'';
-  document.getElementById('aeIzinOgrenci').checked = (u.izin_ogrenci !== false);
-  document.getElementById('aeIzinSablon').checked = (u.izin_sablon !== false);
-  document.getElementById('adminEditModal').classList.add('active');
+
+function adminAct(i,d){
+  let db=getDB(); db.users[i].durum=d; setDB(db);
+  if(supa) saveSistemVerisi();
+  renderAdmin();
+  addLog(`Öğretmen durumu güncellendi: ${db.users[i]?.username} → ${d}`);
 }
-function closeAdminEdit() { document.getElementById('adminEditModal').classList.remove('active'); }
-function adminSaveUser() {
-  let oldU = document.getElementById('aeOldUser').value, db = getDB(), idx = db.users.findIndex(x=>x.username===oldU);
-  if(idx > -1) {
-    db.users[idx].adSoyad = document.getElementById('aeAdSoyad').value;
-    db.users[idx].username = document.getElementById('aeUser').value;
-    db.users[idx].password = document.getElementById('aePass').value;
-    db.users[idx].okul = document.getElementById('aeOkul').value;
-    db.users[idx].brans = document.getElementById('aeBrans').value;
-    db.users[idx].durum = document.getElementById('aeDurum').value;
-    db.users[idx].izin_ogrenci = document.getElementById('aeIzinOgrenci').checked;
-    db.users[idx].izin_sablon = document.getElementById('aeIzinSablon').checked;
-    setDB(db); closeAdminEdit(); renderAdmin(); alert("Kullanıcı güncellendi.");
+
+function adminIzinDegistir(i,izin,deger){
+  let db=getDB();
+  if(!db.users[i].izinler) db.users[i].izinler={sablon:true,ogrenciEkle:true};
+  db.users[i].izinler[izin]=deger;
+  setDB(db);
+  if(supa) saveSistemVerisi();
+  addLog(`İzin güncellendi: ${db.users[i].username} → ${izin}=${deger}`);
+}
+
+function adminSil(i){
+  let db=getDB();
+  let u=db.users[i];
+  if(!u){ return; }
+  if(!confirm(`"${u.adSoyad||u.username}" kullanıcısı sistemden silinsin mi? Bu işlem geri alınamaz!`)) return;
+  db.users.splice(i,1);
+  setDB(db);
+  if(supa) saveSistemVerisi();
+  renderAdmin();
+  addLog(`Öğretmen silindi: ${u.username}`);
+}
+
+function adminDuzAc(i){
+  let db=getDB(); let u=db.users[i];
+  if(!u) return;
+  document.getElementById('duzIdx').value=i;
+  document.getElementById('duzAdSoyad').value=u.adSoyad||'';
+  document.getElementById('duzEmail').value=u.email||'';
+  document.getElementById('duzTel').value=u.tel||'';
+  document.getElementById('duzSifre').value='';
+  document.getElementById('duzRol').value=u.rol||'Öğretmen';
+  let bSel=document.getElementById('duzBrans');
+  let branslar=getBranslar();
+  bSel.innerHTML=branslar.map(b=>`<option value="${b.ad}" ${u.brans===b.ad?'selected':''}>${b.ad}</option>`).join('');
+  let oSel=document.getElementById('duzOkul');
+  let okullar=getOkullar();
+  oSel.innerHTML=okullar.map(o=>`<option value="${o.ad}" ${u.okul===o.ad?'selected':''}>${o.ad}</option>`).join('');
+  document.getElementById('adminDuzModal').style.display='block';
+}
+
+function adminDuzKaydet(){
+  let i=parseInt(document.getElementById('duzIdx').value);
+  let db=getDB(); let u=db.users[i]; if(!u) return;
+  u.adSoyad=document.getElementById('duzAdSoyad').value.trim();
+  u.brans=document.getElementById('duzBrans').value;
+  u.okul=document.getElementById('duzOkul').value;
+  u.email=document.getElementById('duzEmail').value.trim();
+  u.tel=document.getElementById('duzTel').value.trim();
+  u.rol=document.getElementById('duzRol').value;
+  let yeniSifre=document.getElementById('duzSifre').value.trim();
+  if(yeniSifre) u.password=yeniSifre;
+  db.users[i]=u;
+  setDB(db);
+  if(supa) saveSistemVerisi();
+  document.getElementById('adminDuzModal').style.display='none';
+  renderAdmin();
+  addLog(`Öğretmen düzenlendi: ${u.username}`);
+  alert('Öğretmen bilgileri güncellendi ✓');
+}
+
+function adminVeriGor(username){
+  let db=getDB();
+  let u=db.users.find(x=>x.username===username);
+  if(!u){ alert('Kullanıcı bulunamadı.'); return; }
+  let okulData=db.okulData?.[u.okul];
+  document.getElementById('veriModalBaslik').innerHTML=`<i class="fa-solid fa-eye"></i> ${u.adSoyad||u.username} — Okul Verileri`;
+  let html=`
+    <div class="g3" style="margin-bottom:18px">
+      <div class="stat-card"><div class="stat-icon" style="color:var(--primary);font-size:28px"><i class="fa-solid fa-users"></i></div><div class="stat-val" style="font-size:28px">${okulData?.ogrenciler?.length||0}</div><div class="stat-lbl">Öğrenci</div></div>
+      <div class="stat-card"><div class="stat-icon" style="color:var(--secondary);font-size:28px"><i class="fa-solid fa-cubes"></i></div><div class="stat-val" style="font-size:28px">${Object.keys(okulData?.senaryolar||{}).length}</div><div class="stat-lbl">Senaryo</div></div>
+      <div class="stat-card"><div class="stat-icon" style="color:var(--warning);font-size:28px"><i class="fa-solid fa-file-pen"></i></div><div class="stat-val" style="font-size:28px">${Object.keys(okulData?.sinavlar||{}).length}</div><div class="stat-lbl">Sınav</div></div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="ct">Öğretmen Bilgileri</div>
+      <table style="min-width:unset"><tbody>
+        <tr><td style="padding:8px 12px;font-weight:600;color:var(--muted);width:140px">Ad Soyad</td><td style="padding:8px 12px"><b>${u.adSoyad||'—'}</b></td></tr>
+        <tr><td style="padding:8px 12px;font-weight:600;color:var(--muted)">Kullanıcı Adı</td><td style="padding:8px 12px">${u.username}</td></tr>
+        <tr><td style="padding:8px 12px;font-weight:600;color:var(--muted)">Okul</td><td style="padding:8px 12px">${u.okul}</td></tr>
+        <tr><td style="padding:8px 12px;font-weight:600;color:var(--muted)">Branş</td><td style="padding:8px 12px"><span class="badge bg-p">${u.brans||'—'}</span></td></tr>
+        <tr><td style="padding:8px 12px;font-weight:600;color:var(--muted)">E-posta</td><td style="padding:8px 12px">${u.email||'—'}</td></tr>
+        <tr><td style="padding:8px 12px;font-weight:600;color:var(--muted)">Telefon</td><td style="padding:8px 12px">${u.tel||'—'}</td></tr>
+        <tr><td style="padding:8px 12px;font-weight:600;color:var(--muted)">Durum</td><td style="padding:8px 12px"><span class="badge ${u.durum==='Onaylı'?'bg-g':u.durum==='Reddedildi'?'bg-r':'bg-y'}">${u.durum||'Onaylı'}</span></td></tr>
+      </tbody></table>
+    </div>`;
+  if(Object.keys(okulData?.senaryolar||{}).length){
+    html+=`<div class="card"><div class="ct">Senaryolar</div><ul style="padding:0 14px;list-style:disc;font-size:13px;line-height:2;color:var(--text)">`;
+    Object.keys(okulData.senaryolar).forEach(k=>{ html+=`<li><b>${k}</b> — ${okulData.senaryolar[k].detaylar?.length||0} soru <span class="brans-tag">${okulData.senaryolar[k].brans||'—'}</span></li>`; });
+    html+=`</ul></div>`;
   }
+  document.getElementById('veriModalIcerik').innerHTML=html;
+  document.getElementById('adminVeriModal').style.display='block';
 }
 
-// =================== OKUL VE BRANŞ YÖNETİMİ ===================
-function renderOkulYon(){
-  let db=getDB(); document.getElementById('okulBody').innerHTML = db.okullar.map((o,i)=>`<tr><td><b>${o.ad}</b></td><td>${o.tur}</td><td><button class="btn btn-danger btn-sm" onclick="delOkul(${i})">Sil</button></td></tr>`).join(''); syncOkulSelect();
+function exportOgretmenXl(){
+  if(typeof XLSX==='undefined'){ alert('Excel kütüphanesi yüklenemedi.'); return; }
+  let db=getDB();
+  let rows=db.users.filter(u=>u.username!=='admin').map(u=>({
+    'Ad Soyad':u.adSoyad||'','Kullanıcı Adı':u.username,'Okul':u.okul,'Branş':u.brans||'',
+    'E-posta':u.email||'','Telefon':u.tel||'','Durum':u.durum||'Onaylı','Rol':u.rol||'Öğretmen',
+    'Şablon İzni':(u.izinler?.sablon?'Var':'Yok'),'Öğrenci Ekle İzni':(u.izinler?.ogrenciEkle?'Var':'Yok')
+  }));
+  let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'Öğretmenler');
+  XLSX.writeFile(wb,'Ogretmen_Listesi.xlsx');
 }
-function addOkul(){ let a=document.getElementById('yeniOkulAdi').value, t=document.getElementById('yeniOkulTur').value; if(a){ let db=getDB(); db.okullar.push({ad:a,tur:t}); setDB(db); renderOkulYon(); } }
-function delOkul(i){ let db=getDB(); db.okullar.splice(i,1); setDB(db); renderOkulYon(); }
-function syncOkulSelect(){ let sel=document.getElementById('regOkul'); if(sel) sel.innerHTML=getDB().okullar.map(o=>`<option value="${o.ad}">${o.ad}</option>`).join('')+'<option value="diger">Diğer...</option>'; }
 
-function renderBransYon(){
-  let db=getDB(); document.getElementById('bransBody').innerHTML = db.branslar.map((b,i)=>`<tr><td><b>${b.ad}</b></td><td>${b.kat}</td><td><button class="btn btn-danger btn-sm" onclick="delBrans(${i})">Sil</button></td></tr>`).join('');
+// ===== VARSAYILAN LİSTELER =====
+const VARSAYILAN_OKULLAR = [
+  {ad:'Alayurt Ortaokulu', tur:'Ortaokul'},
+  {ad:'Altıyol İmam Hatip Ortaokulu', tur:'İmam Hatip Ortaokulu'},
+  {ad:'Anadolu Kız İmam Hatip Lisesi', tur:'İmam Hatip Lisesi'},
+  {ad:'Atatürk Ortaokulu', tur:'Ortaokul'},
+  {ad:'Dargeçit Anadolu İmam Hatip Lisesi', tur:'İmam Hatip Lisesi'},
+  {ad:'Dargeçit Anadolu Lisesi', tur:'Anadolu Lisesi'},
+  {ad:'Dargeçit Ilısu Anadolu Lisesi', tur:'Anadolu Lisesi'},
+  {ad:'Dargeçit İmam Hatip Ortaokulu', tur:'İmam Hatip Ortaokulu'},
+  {ad:'Gazi Ortaokulu', tur:'Ortaokul'},
+  {ad:'Ilısu Ortaokulu', tur:'Ortaokul'},
+  {ad:'Karabayır İmam Hatip Ortaokulu', tur:'İmam Hatip Ortaokulu'},
+  {ad:'Kılavuz Ortaokulu', tur:'Ortaokul'},
+];
+
+const VARSAYILAN_BRANSLAR = [
+  {ad:'Matematik', kat:'Sayısal'},
+  {ad:'Fen Bilimleri', kat:'Sayısal'},
+  {ad:'Türkçe', kat:'Sözel'},
+  {ad:'Sosyal Bilgiler', kat:'Sosyal'},
+  {ad:'Din Kültürü ve Ahlak Bilgisi', kat:'Din & Ahlak'},
+  {ad:'İngilizce', kat:'Dil'},
+  {ad:'Arapça', kat:'Dil'},
+  {ad:'Beden Eğitimi', kat:'Beden & Sanat'},
+  {ad:'Müzik', kat:'Beden & Sanat'},
+  {ad:'Görsel Sanatlar', kat:'Beden & Sanat'},
+  {ad:'Bilişim Teknolojileri', kat:'Sayısal'},
+  {ad:'Tarih', kat:'Sosyal'},
+  {ad:'Coğrafya', kat:'Sosyal'},
+  {ad:'Felsefe', kat:'Sözel'},
+  {ad:'Kimya', kat:'Sayısal'},
+  {ad:'Fizik', kat:'Sayısal'},
+  {ad:'Biyoloji', kat:'Sayısal'},
+];
+
+const KAT_RENKLER = {
+  'Sayısal':'bg-b','Sözel':'bg-p','Dil':'bg-g','Sosyal':'bg-y','Din & Ahlak':'bg-r','Beden & Sanat':'bg-g','Diğer':'bg-y'
+};
+
+function getOkullar(){ let db=getDB(); if(!db.okullar) db.okullar=[...VARSAYILAN_OKULLAR]; return db.okullar; }
+function setOkullar(list){ let db=getDB(); db.okullar=list; setDB(db); }
+function getBranslar(){ let db=getDB(); if(!db.branslar) db.branslar=[...VARSAYILAN_BRANSLAR]; return db.branslar; }
+function setBranslar(list){ let db=getDB(); db.branslar=list; setDB(db); }
+
+// ===== OKUL YÖNETİMİ =====
+function renderOkulYon(list){
+  let okullar = list || getOkullar();
+  let db=getDB();
+  document.getElementById('okulCount').textContent=okullar.length;
+  let ogretmenSayisi={};
+  (db.users||[]).forEach(u=>{ ogretmenSayisi[u.okul]=(ogretmenSayisi[u.okul]||0)+1; });
+  let rows = okullar.map((o,i)=>{
+    let varsayilan = VARSAYILAN_OKULLAR.some(v=>v.ad===o.ad);
+    let ogSay = ogretmenSayisi[o.ad] || 0;
+    return `<tr>
+      <td><b>${i+1}</b></td>
+      <td><b>${o.ad}</b>${varsayilan?'':' <span class="badge bg-g" style="font-size:10px">Eklendi</span>'}</td>
+      <td><span class="badge bg-b">${o.tur}</span></td>
+      <td><span class="badge ${ogSay>0?'bg-g':'bg-y'}">${ogSay} öğretmen</span></td>
+      <td>${varsayilan?'<span style="font-size:12px;color:var(--muted)">Varsayılan</span>':
+        `<button class="btn btn-danger btn-sm" onclick="delOkul(${i})"><i class="fa-solid fa-trash"></i></button>`}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('okulBody').innerHTML = rows || '<tr><td colspan="5" style="text-align:center;color:var(--muted)">Kayıt yok.</td></tr>';
+  syncOkulSelect();
 }
-function addBrans(){ let a=document.getElementById('yeniBransAdi').value, k=document.getElementById('yeniBransKat').value; if(a){ let db=getDB(); db.branslar.push({ad:a,kat:k}); setDB(db); renderBransYon(); } }
-function delBrans(i){ let db=getDB(); db.branslar.splice(i,1); setDB(db); renderBransYon(); }
 
-// =================== ÖĞRENCİ ===================
-function renderOgr(){
+function filterOkul(){
+  let q=document.getElementById('okulSearch').value.toLowerCase();
+  renderOkulYon(getOkullar().filter(o=>(o.ad+o.tur).toLowerCase().includes(q)));
+}
+
+function addOkul(){
+  let ad=document.getElementById('yeniOkulAdi').value.trim();
+  let tur=document.getElementById('yeniOkulTur').value;
+  if(!ad){ alert('Okul adı boş olamaz.'); return; }
+  let list=getOkullar();
+  if(list.find(o=>o.ad.toLowerCase()===ad.toLowerCase())){ alert('Bu okul zaten kayıtlı!'); return; }
+  list.push({ad,tur});
+  setOkullar(list);
+  syncOkulSelect();
+  renderOkulYon();
+  saveSistemVerisi();
+  document.getElementById('yeniOkulAdi').value='';
+  addLog('Okul eklendi: '+ad);
+  alert('Okul eklendi: '+ad);
+}
+
+function delOkul(idx){
+  let list=getOkullar();
+  if(!confirm(`"${list[idx].ad}" okulu silinsin mi?`)) return;
+  list.splice(idx,1);
+  setOkullar(list);
+  syncOkulSelect();
+  renderOkulYon();
+  saveSistemVerisi();
+  addLog('Okul silindi.');
+}
+
+function syncOkulSelect(){
+  let list=getOkullar();
+  let opts=list.map(o=>`<option value="${o.ad}">${o.ad}</option>`).join('');
+  let sel=document.getElementById('regOkul');
+  if(sel){ let mevcut=sel.value; sel.innerHTML=opts+'<option value="diger">Yeni Okul Ekle (Diğer)...</option>'; if(mevcut) sel.value=mevcut; }
+  // Öğrenci ekleme okul seçicisi
+  let mOkul=document.getElementById('mOkul');
+  if(mOkul){ mOkul.innerHTML='<option value="">-- Otomatik (kendi okulun) --</option>'+opts; }
+  // Öğrenci filtre
+  let ogrOkul=document.getElementById('ogrOkulFil');
+  if(ogrOkul){ let mev=ogrOkul.value; ogrOkul.innerHTML='<option value="">Tüm Okullar</option>'+opts; if(mev) ogrOkul.value=mev; }
+}
+
+function exportOkulXl(){
+  if(typeof XLSX==='undefined'){ alert('Excel kütüphanesi yüklenemedi.'); return; }
+  let list=getOkullar();
+  let ws=XLSX.utils.aoa_to_sheet([['#','Okul Adı','Türü'],...list.map((o,i)=>[i+1,o.ad,o.tur])]);
+  let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Okullar');
+  XLSX.writeFile(wb,'Okul_Listesi.xlsx');
+}
+
+// ===== BRANŞ YÖNETİMİ =====
+function renderBransYon(list){
+  let branslar = list || getBranslar();
+  document.getElementById('bransCount').textContent=branslar.length;
+  let rows = branslar.map((b,i)=>{
+    let varsayilan = VARSAYILAN_BRANSLAR.some(v=>v.ad===b.ad);
+    let renk = KAT_RENKLER[b.kat] || 'bg-y';
+    return `<tr>
+      <td><b>${i+1}</b></td>
+      <td><b>${b.ad}</b>${varsayilan?'':' <span class="badge bg-g" style="font-size:10px">Eklendi</span>'}</td>
+      <td><span class="badge ${renk}">${b.kat}</span></td>
+      <td><div style="width:16px;height:16px;border-radius:50%;background:${renk==='bg-b'?'#3B82F6':renk==='bg-p'?'#8B5CF6':renk==='bg-g'?'#10B981':renk==='bg-r'?'#EF4444':'#F59E0B'};display:inline-block"></div></td>
+      <td>${varsayilan?'<span style="font-size:12px;color:var(--muted)">Varsayılan</span>':
+        `<button class="btn btn-danger btn-sm" onclick="delBrans(${i})"><i class="fa-solid fa-trash"></i></button>`}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('bransBody').innerHTML = rows || '<tr><td colspan="5" style="text-align:center;color:var(--muted)">Kayıt yok.</td></tr>';
+  syncBransSelect();
+}
+
+function filterBrans(){
+  let q=document.getElementById('bransSearch').value.toLowerCase();
+  renderBransYon(getBranslar().filter(b=>(b.ad+b.kat).toLowerCase().includes(q)));
+}
+
+function addBrans(){
+  let ad=document.getElementById('yeniBransAdi').value.trim();
+  let kat=document.getElementById('yeniBransKat').value;
+  if(!ad){ alert('Branş adı boş olamaz.'); return; }
+  let list=getBranslar();
+  if(list.find(b=>b.ad.toLowerCase()===ad.toLowerCase())){ alert('Bu branş zaten tanımlı!'); return; }
+  list.push({ad,kat});
+  setBranslar(list);
+  renderBransYon();
+  saveSistemVerisi();
+  document.getElementById('yeniBransAdi').value='';
+  addLog('Branş eklendi: '+ad);
+  alert('Branş eklendi: '+ad);
+}
+
+function delBrans(idx){
+  let list=getBranslar();
+  if(!confirm(`"${list[idx].ad}" branşı silinsin mi?`)) return;
+  list.splice(idx,1);
+  setBranslar(list);
+  renderBransYon();
+  saveSistemVerisi();
+  addLog('Branş silindi.');
+}
+
+function exportBransXl(){
+  if(typeof XLSX==='undefined'){ alert('Excel kütüphanesi yüklenemedi.'); return; }
+  let list=getBranslar();
+  let ws=XLSX.utils.aoa_to_sheet([['#','Branş Adı','Kategori'],...list.map((b,i)=>[i+1,b.ad,b.kat])]);
+  let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Branslar');
+  XLSX.writeFile(wb,'Brans_Listesi.xlsx');
+}
+
+async function saveSistemVerisi(){
+  if(!supa) return;
+  try {
+    let cloudDb = await fetchCloud() || getDB();
+    let localDb = getDB();
+    cloudDb.okullar = localDb.okullar;
+    cloudDb.branslar = localDb.branslar;
+    cloudDb.users = localDb.users;
+    await supa.from('okul_verileri').upsert({id:1, json_data:cloudDb});
+  } catch(e){ console.error('Sistem verisi kayıt hatası:', e); }
+}
+
+function syncBransSelect(){
+  let branslar=getBranslar();
+  let opts=branslar.map(b=>`<option value="${b.ad}">${b.ad}</option>`).join('');
+  let optsEmpty='<option value="">-- Branş Seçin --</option>'+opts;
+  ['regBrans','aiBrans','mSenBrans','xlSenBrans'].forEach(id=>{ let el=document.getElementById(id); if(el) el.innerHTML=optsEmpty; });
+  // Sınav sayfasındaki branş filtresi
+  let mnBrans=document.getElementById('mnBransFil');
+  if(mnBrans){ let mev=mnBrans.value; mnBrans.innerHTML='<option value="">Tüm Branşlar</option>'+opts; if(mev) mnBrans.value=mev; }
+  // Senaryo havuzu üst filtresi
+  let senFil=document.getElementById('senBransFil');
+  if(senFil){ let mev=senFil.value; senFil.innerHTML='<option value="">Tüm Branşlar</option>'+opts; if(mev) senFil.value=mev; }
+  let profEl=document.getElementById('profBrans'); if(profEl) profEl.innerHTML=opts;
+  let duzEl=document.getElementById('duzBrans'); if(duzEl) duzEl.innerHTML=opts;
+}
+
+// ===== YENİ: Öğrenci okul filtresi senkron =====
+function syncOgrOkulFil(){
+  let list=getOkullar();
+  let el=document.getElementById('ogrOkulFil');
+  if(!el) return;
+  let mev=el.value;
+  el.innerHTML='<option value="">Tüm Okullar</option>'+list.map(o=>`<option value="${o.ad}">${o.ad}</option>`).join('');
+  if(mev) el.value=mev;
+}
+
+// ===== YENİ: Senaryo branş filtresi senkron =====
+function syncSenBransFil(){
+  syncBransSelect();
+}
+
+// ===== PROFİL =====
+function renderProfil(){
+  syncBransSelect();
+  let db=getDB();
+  let u=db.users.find(x=>x.username===app.user);
+  if(!u && app.user==='admin') {
+    document.getElementById('profAdSoyad').value='Sistem Yöneticisi';
+    document.getElementById('profUser').value='admin';
+    document.getElementById('profOkul').value='İlçe MEM';
+    return;
+  }
+  if(!u) return;
+  document.getElementById('profAdSoyad').value=u.adSoyad||'';
+  document.getElementById('profUser').value=u.username;
+  document.getElementById('profOkul').value=u.okul||'';
+  document.getElementById('profEmail').value=u.email||'';
+  document.getElementById('profTel').value=u.tel||'';
+  let bSel=document.getElementById('profBrans');
+  if(bSel && u.brans){ bSel.value=u.brans; }
+  let izinler=u.izinler||{sablon:true,ogrenciEkle:true};
+  let izinHTML='';
+  izinHTML+=`<div class="badge ${izinler.sablon?'bg-g':'bg-r'}" style="font-size:13px;padding:8px 14px">${izinler.sablon?'✓':'✗'} Şablon Yükleme ${izinler.sablon?'İzni Var':'İzni Yok'}</div>`;
+  izinHTML+=`<div class="badge ${izinler.ogrenciEkle?'bg-g':'bg-r'}" style="font-size:13px;padding:8px 14px">${izinler.ogrenciEkle?'✓':'✗'} Öğrenci Ekleme ${izinler.ogrenciEkle?'İzni Var':'İzni Yok'}</div>`;
+  document.getElementById('profIzinler').innerHTML=izinHTML;
+}
+
+function profilKaydet(){
+  let db=getDB();
+  let idx=db.users.findIndex(x=>x.username===app.user);
+  if(idx<0){ alert('Yönetici profili bu şekilde düzenlenmez.'); return; }
+  let ads=document.getElementById('profAdSoyad').value.trim();
+  let brans=document.getElementById('profBrans').value;
+  let email=document.getElementById('profEmail').value.trim();
+  let tel=document.getElementById('profTel').value.trim();
+  if(!ads){ alert('Ad Soyad boş bırakılamaz.'); return; }
+  db.users[idx].adSoyad=ads;
+  db.users[idx].brans=brans;
+  db.users[idx].email=email;
+  db.users[idx].tel=tel;
+  setDB(db);
+  app.adSoyad=ads; app.brans=brans;
+  document.getElementById('lblUser').textContent=ads;
+  document.getElementById('lblRole').textContent=app.role+(brans?' | '+brans:'');
+  if(supa) saveSistemVerisi();
+  addLog('Profil güncellendi.');
+  alert('Profil bilgileri başarıyla güncellendi ✓');
+}
+
+function sifreDegistir(){
+  let db=getDB();
+  let idx=db.users.findIndex(x=>x.username===app.user);
+  let msg=document.getElementById('profSifreMsg');
+  let mevcut=document.getElementById('profSifreMevcut').value;
+  let yeni=document.getElementById('profSifreYeni').value;
+  let yeni2=document.getElementById('profSifreYeni2').value;
+  if(idx<0){ msg.style.color='var(--muted)'; msg.textContent='Yönetici şifresi bu ekrandan değiştirilemez.'; return; }
+  if(db.users[idx].password!==mevcut){ msg.style.color='var(--danger)'; msg.textContent='Mevcut şifre hatalı!'; return; }
+  if(yeni.length<4){ msg.style.color='var(--danger)'; msg.textContent='Yeni şifre en az 4 karakter olmalıdır.'; return; }
+  if(yeni!==yeni2){ msg.style.color='var(--danger)'; msg.textContent='Yeni şifreler eşleşmiyor!'; return; }
+  db.users[idx].password=yeni;
+  setDB(db);
+  if(supa) saveSistemVerisi();
+  document.getElementById('profSifreMevcut').value='';
+  document.getElementById('profSifreYeni').value='';
+  document.getElementById('profSifreYeni2').value='';
+  msg.style.color='var(--secondary)'; msg.textContent='Şifre başarıyla güncellendi ✓';
+  setTimeout(()=>msg.textContent='',3000);
+  addLog('Şifre değiştirildi.');
+}
+
+// ===== ÖĞRENCİ =====
+function renderOgr(list){
+  let data = list||app.d.ogrenciler;
   document.getElementById('ogrC').textContent=app.d.ogrenciler.length;
-  document.getElementById('ogrBody').innerHTML=app.d.ogrenciler.map(o=>`<tr><td><b>${o.no}</b></td><td>${o.ads}</td><td><span class="badge bg-b">${o.sinif||''}</span></td>
-  <td>
-    <button class="btn btn-outline btn-sm" onclick="editOgr('${o.no}')" title="Düzenle"><i class="fa-solid fa-pen"></i></button>
-    <button class="btn btn-danger btn-sm" onclick="delOgr('${o.no}')" title="Sil"><i class="fa-solid fa-trash"></i></button>
-  </td></tr>`).join('');
-
-  let siniflar = [...new Set(app.d.ogrenciler.map(o=>o.sinif).filter(Boolean))].sort();
-  let delSel = document.getElementById('delSinifSelect');
-  if(delSel) delSel.innerHTML = '<option value="">-- Sınıf Seç --</option>' + siniflar.map(s=>`<option value="${s}">${s}</option>`).join('');
+  document.getElementById('ogrBody').innerHTML=data.map((o,i)=>`<tr>
+    <td><b>${o.no}</b></td>
+    <td>${o.ads}</td>
+    <td><span class="badge bg-b">${o.sinif||''}</span></td>
+    <td><span style="font-size:12px;color:var(--muted)">${o.okul||app.okul||''}</span></td>
+    <td>
+      <button class="btn btn-outline btn-sm" onclick="editOgrSatir('${o.no}')" title="Düzenle"><i class="fa-solid fa-pen"></i></button>
+      <button class="btn btn-danger btn-sm" onclick="delOgr('${o.no}')"><i class="fa-solid fa-trash"></i></button>
+    </td>
+  </tr>`).join('');
 }
 
-function editOgr(no) {
-  let o = app.d.ogrenciler.find(x => String(x.no) === String(no));
-  if(!o) return;
-  document.getElementById('mOldNo').value = o.no;
-  document.getElementById('mNo').value = o.no;
-  document.getElementById('mAds').value = o.ads;
-  document.getElementById('mSinif').value = o.sinif || '';
-  document.getElementById('btnOgrKaydet').textContent = 'Güncelle';
-  document.getElementById('btnOgrKaydet').classList.replace('btn-success', 'btn-primary');
-  document.getElementById('btnOgrIptal').style.display = 'inline-flex';
-  document.getElementById('mNo').focus();
+// YENİ: Öğrenci satır düzenleme
+function editOgrSatir(no){
+  let idx=app.d.ogrenciler.findIndex(o=>String(o.no)===String(no));
+  if(idx<0) return;
+  let o=app.d.ogrenciler[idx];
+  let newAds=prompt('Adı Soyadı:', o.ads);
+  if(newAds===null) return;
+  let newSinif=prompt('Sınıf:', o.sinif||'');
+  if(newSinif===null) return;
+  app.d.ogrenciler[idx].ads=newAds.trim()||o.ads;
+  app.d.ogrenciler[idx].sinif=newSinif.trim();
+  localSave();
+  renderOgr();
+  addLog('Öğrenci güncellendi: '+no);
 }
 
-function cancelOgrEdit() {
-  document.getElementById('mOldNo').value = '';
-  document.getElementById('mNo').value = '';
-  document.getElementById('mAds').value = '';
-  document.getElementById('mSinif').value = '';
-  document.getElementById('btnOgrKaydet').textContent = 'Ekle';
-  document.getElementById('btnOgrKaydet').classList.replace('btn-primary', 'btn-success');
-  document.getElementById('btnOgrIptal').style.display = 'none';
+function filterOgr(){
+  let q=(document.getElementById('ogrSearch')?.value||'').toLowerCase();
+  let okFil=(document.getElementById('ogrOkulFil')?.value||'');
+  let data=app.d.ogrenciler.filter(o=>{
+    let okMatch=!okFil || (o.okul||app.okul||'')=== okFil;
+    let qMatch=!q || (o.no+o.ads+(o.sinif||'')+(o.okul||'')).toLowerCase().includes(q);
+    return okMatch && qMatch;
+  });
+  renderOgr(data);
 }
 
 function addOgrManuel(){
-  if(!(app.role==='Süper Yönetici' && !app.isObserving) && !app.userObj.izin_ogrenci) return alert("Öğrenci ekleme izniniz yok.");
-  let oldNo = document.getElementById('mOldNo') ? document.getElementById('mOldNo').value : '';
-  let no=document.getElementById('mNo').value.trim(), ads=document.getElementById('mAds').value.trim(), s=document.getElementById('mSinif').value.trim();
-  if(!no||!ads) return; 
-  
-  if(oldNo) {
-    let idx = app.d.ogrenciler.findIndex(o => String(o.no) === String(oldNo));
-    if(idx > -1) {
-      if(oldNo !== no && app.d.ogrenciler.find(o=>String(o.no)===String(no))) return alert('Bu numara başka öğrencide var.');
-      app.d.ogrenciler[idx] = {no:no, ads:ads, sinif:s};
-    }
-    cancelOgrEdit();
-  } else {
-    if(app.d.ogrenciler.find(o=>String(o.no)===String(no))) return alert('Numara mevcut.');
-    app.d.ogrenciler.push({no:no, ads:ads, sinif:s}); 
-    document.getElementById('mNo').value=''; document.getElementById('mAds').value=''; document.getElementById('mSinif').value='';
+  if(app.role!=='Süper Yönetici'){
+    let db=getDB(); let u=db.users.find(x=>x.username===app.user);
+    if(u && u.izinler && !u.izinler.ogrenciEkle){ alert('Öğrenci ekleme izniniz bulunmuyor. Yöneticinizle iletişime geçin.'); return; }
   }
-  renderOgr(); saveAll();
+  let no=document.getElementById('mNo').value.trim();
+  let ads=document.getElementById('mAds').value.trim();
+  let sinif=document.getElementById('mSinif').value.trim();
+  let okul=document.getElementById('mOkul').value.trim() || app.okul;
+  if(!no||!ads){ alert('Okul No ve Adı Soyadı zorunlu.'); return; }
+  if(app.d.ogrenciler.find(o=>String(o.no)===String(no))){ alert('Bu okul numarası zaten kayıtlı! (Mükerrer engellendi)'); return; }
+  app.d.ogrenciler.push({no,ads,sinif,okul});
+  renderOgr(); localSave(); addLog('Öğrenci eklendi: '+ads);
+  document.getElementById('mNo').value=''; document.getElementById('mAds').value=''; document.getElementById('mSinif').value='';
 }
 
-function delOgr(no){ if(confirm("Öğrenci silinsin mi?")) { app.d.ogrenciler=app.d.ogrenciler.filter(o=>String(o.no)!==String(no)); renderOgr(); saveAll(); } }
-function clearOgr(){ if(confirm("Bu okuldaki TÜM öğrenciler silinecek. Emin misiniz?")){ app.d.ogrenciler=[]; renderOgr(); saveAll(); } }
-function delSinif(){ 
-  let s = document.getElementById('delSinifSelect').value; 
-  if(!s) return alert('Lütfen silinecek sınıfı seçin.'); 
-  if(confirm(`"${s}" sınıfındaki tüm öğrenciler silinecek. Onaylıyor musunuz?`)) { 
-    app.d.ogrenciler=app.d.ogrenciler.filter(o=>o.sinif!==s); renderOgr(); saveAll(); 
-  } 
+function delOgr(no){ if(!confirm('Öğrenci silinecek?')) return; app.d.ogrenciler=app.d.ogrenciler.filter(o=>String(o.no)!==String(no)); renderOgr(); localSave(); }
+function clearOgr(){ if(!confirm('Tüm öğrenciler silinsin mi?')) return; app.d.ogrenciler=[]; renderOgr(); localSave(); }
+
+// ===== EXCEL ŞABLON =====
+function dlTemplate(t){
+  if(typeof XLSX==='undefined'){ alert('Excel kütüphanesi yüklenemedi.'); return; }
+  let wb=XLSX.utils.book_new(), ws;
+  if(t==='ogrenci'){
+    ws=XLSX.utils.aoa_to_sheet([['Okul No','Adı Soyadı','Sınıf','Okul'],['1001','Ali Veli','6/A',app.okul||''],['1002','Ayşe Kara','6/B',app.okul||'']]);
+    XLSX.utils.book_append_sheet(wb,ws,'Ogrenciler'); XLSX.writeFile(wb,'Ogrenci_Listesi_Sablonu.xlsx');
+  }
+  else if(t==='senaryo'){
+    ws=XLSX.utils.aoa_to_sheet([['Soru No','Ünite/Tema','Konu','Öğrenme Çıktısı (Kazanım)','Süreç Bileşeni','Max Puan'],['1','Cebirsel İfadeler','MAT.6.2.1','Gerçek yaşam...','a) ...','20'],['2','Uzunluk ve Alan','MAT.6.4.1','Uzunluk birimleri...','','20']]);
+    XLSX.utils.book_append_sheet(wb,ws,'Senaryo'); XLSX.writeFile(wb,'Senaryo_Sablonu.xlsx');
+  }
 }
 
-// =================== YENİ: KELİME KELİME DÜZENLENEBİLİR SENARYO HAVUZU ===================
+// ===== EXCEL YÜKLE =====
+function xlUpload(inp, tip){
+  if(!inp.files[0]) return;
+  if(app.role!=='Süper Yönetici'){
+    let db=getDB(); let u=db.users.find(x=>x.username===app.user);
+    if(tip==='ogrenci' && u && u.izinler && !u.izinler.ogrenciEkle){ alert('Öğrenci ekleme izniniz bulunmuyor.'); inp.value=''; return; }
+    if(tip==='senaryo' && u && u.izinler && !u.izinler.sablon){ alert('Şablon/Senaryo yükleme izniniz bulunmuyor.'); inp.value=''; return; }
+  }
+  if(typeof XLSX==='undefined'){ alert('Excel kütüphanesi yüklenemedi.'); return; }
+  let r=new FileReader();
+  r.onload=function(e){
+    try{
+      let wb=XLSX.read(e.target.result,{type:'binary'});
+      let ws=wb.Sheets[wb.SheetNames[0]];
+      let data=XLSX.utils.sheet_to_json(ws);
+      if(tip==='ogrenci'){
+        let ek=0,at=0;
+        data.forEach(row=>{
+          let no=String(row['Okul No']||'').trim();
+          let ads='';
+          if(row['Adı Soyadı']) ads=String(row['Adı Soyadı']).trim();
+          else if(row['Adı']||row['Soyadı']) ads=(String(row['Adı']||'')+' '+String(row['Soyadı']||'')).trim();
+          let sinif=String(row['Sınıf']||'').trim();
+          let okul=String(row['Okul']||'').trim() || app.okul;
+          if(!no){ return; }
+          if(app.d.ogrenciler.find(o=>String(o.no)===no)){ at++; return; }
+          app.d.ogrenciler.push({no,ads,sinif,okul}); ek++;
+        });
+        renderOgr(); localSave(); alert(`${ek} öğrenci eklendi. ${at} mükerrer kayıt engellendi.`); addLog(`Öğrenci Excel yüklendi: +${ek}`);
+      } else if(tip==='senaryo'){
+        let ad=document.getElementById('xlSenAdi').value.trim(); if(!ad){ alert('Senaryo adı girin.'); return; }
+        let brans=document.getElementById('xlSenBrans').value; if(!brans){ alert('Branş seçin.'); return; }
+        if(app.d.senaryolar[ad] && !confirm(`"${ad}" adında senaryo zaten var. Üzerine yaz?`)) return;
+        let detaylar=data.map((row,i)=>({
+          unite:String(row['Ünite/Tema']||row['Unite']||'').trim(),
+          konu:String(row['Konu']||'').trim(),
+          kazanim:String(row['Öğrenme Çıktısı (Kazanım)']||row['Kazanım']||row['kazanim']||'').trim(),
+          surec:String(row['Süreç Bileşeni']||row['Surec']||'').trim(),
+          maxPuan:parseInt(row['Max Puan']||row['maxPuan'])||20
+        })).filter(d=>d.kazanim);
+        app.d.senaryolar[ad]={detaylar, brans}; renderSen(); localSave(); alert('Senaryo eklendi: '+ad); addLog('Senaryo Excel: '+ad);
+      } else if(tip==='not'){
+        let senId=document.getElementById('xlNotSenUp').value; if(!senId){ alert('Senaryo seçin.'); return; }
+        if(!app.d.sinavlar[senId]) app.d.sinavlar[senId]=[];
+        data.forEach(row=>{
+          let no=String(row['Okul No']||'').trim(); if(!no) return;
+          let idx=app.d.sinavlar[senId].findIndex(x=>String(x['Okul No'])===no);
+          if(idx>-1) app.d.sinavlar[senId][idx]=row; else app.d.sinavlar[senId].push(row);
+        });
+        localSave(); alert('Notlar yüklendi!'); addLog('Not Excel yüklendi: '+senId);
+      }
+    }catch(e){ alert('Dosya okuma hatası: '+e.message); }
+    inp.value='';
+  };
+  r.readAsBinaryString(inp.files[0]);
+}
+
+// ===== SENARYO =====
 function renderSen(){
-  let h=''; let f = document.getElementById('havuzBransFiltre').value;
-  Object.keys(app.d.senaryolar).forEach(id=>{
-    let s = app.d.senaryolar[id];
-    if(f && s.brans !== f) return; // Branş filtresi uygulanıyor
-    
+  let bransFil=(document.getElementById('senBransFil')?.value||'');
+  let q=(document.getElementById('senSearch')?.value||'').toLowerCase();
+  let h='';
+  let keys=Object.keys(app.d.senaryolar);
+
+  // Süper Yönetici tüm senaryoları görür; öğretmen kendi branşını + branşsızları
+  if(app.role!=='Süper Yönetici' && app.brans){
+    keys=keys.filter(id=>{
+      let b=app.d.senaryolar[id].brans||'';
+      return !b || b===app.brans;
+    });
+  }
+
+  // Branş filtresi
+  if(bransFil) keys=keys.filter(id=>(app.d.senaryolar[id].brans||'')=== bransFil);
+  // Arama filtresi
+  if(q) keys=keys.filter(id=>id.toLowerCase().includes(q));
+
+  if(!keys.length){ h='<p style="color:var(--muted);font-size:13px;padding:10px 0">Gösterilecek senaryo yok.</p>'; }
+
+  keys.forEach(id=>{
+    let sen=app.d.senaryolar[id];
+    let det=sen.detaylar||[];
+    let bransRozet=sen.brans?`<span class="brans-tag">${sen.brans}</span>`:'';
     h+=`<div style="border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:var(--radius);padding:16px 18px;margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:10px">
-        <div><span class="badge bg-p">${s.brans||'Belirtilmemiş'}</span> <b style="color:var(--primary);font-size:14px">${id}</b> <span style="font-size:12px;color:var(--muted);margin-left:10px">${s.detaylar.length} soru</span></div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-outline btn-sm" onclick="editSen('${id}')"><i class="fa-solid fa-pen"></i> Tabloda Düzenle</button>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <b style="color:var(--primary);font-size:14px">${id}</b>
+          ${bransRozet}
+          <span style="font-size:12px;color:var(--muted)">${det.length} soru</span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-outline btn-sm" onclick="editSen('${id}')"><i class="fa-solid fa-pen"></i> Düzenle</button>
           <button class="btn btn-danger btn-sm" onclick="delSen('${id}')"><i class="fa-solid fa-trash"></i></button>
         </div>
       </div>
-      <div class="tr-wrap"><table style="font-size:12px"><thead><tr><th>#</th><th>Ünite/Tema</th><th>Kazanım</th><th>Süreç Bileşeni</th><th>Max Puan</th></tr></thead><tbody>`;
-    s.detaylar.forEach((x,i)=>{ h+=`<tr><td><b>${i+1}</b></td><td>${x.unite||'—'}</td><td>${x.kazanim}</td><td>${x.surec||'—'}</td><td><b>${x.maxPuan}</b></td></tr>`; });
+      <div class="tr-wrap"><table style="font-size:12px">
+        <thead><tr><th>#</th><th>Ünite/Tema</th><th>Konu</th><th>Kazanım</th><th>Süreç Bileşeni</th><th>Max Puan</th><th>Düzenle</th></tr></thead>
+        <tbody id="senTbody_${id.replace(/[^a-z0-9]/gi,'_')}">`;
+    det.forEach((x,i)=>{
+      let safeId=id.replace(/[^a-z0-9]/gi,'_');
+      h+=`<tr id="senRow_${safeId}_${i}">
+        <td><b>${i+1}</b></td>
+        <td>${x.unite||'—'}</td>
+        <td>${x.konu||'—'}</td>
+        <td>${x.kazanim}</td>
+        <td>${x.surec||'—'}</td>
+        <td><b>${x.maxPuan}</b></td>
+        <td><button class="btn btn-outline btn-sm" style="padding:3px 7px" onclick="editSenSatir('${id}',${i})"><i class="fa-solid fa-pen" style="font-size:10px"></i></button></td>
+      </tr>`;
+    });
     h+=`</tbody></table></div></div>`;
-  }); document.getElementById('senList').innerHTML=h || '<p>Kayıtlı senaryo bulunamadı.</p>';
+  });
+  document.getElementById('senList').innerHTML=h;
 }
 
-function delSen(id){ if(confirm(`"${id}" senaryosu silinsin mi?`)) { delete app.d.senaryolar[id]; renderSen(); saveAll(); } }
+// *** YENİ: Senaryo satır inline düzenleme ***
+function editSenSatir(senId, rowIdx){
+  let sen=app.d.senaryolar[senId];
+  if(!sen || !sen.detaylar || !sen.detaylar[rowIdx]) return;
+  let x=sen.detaylar[rowIdx];
+  let safeId=senId.replace(/[^a-z0-9]/gi,'_');
+  let tr=document.getElementById(`senRow_${safeId}_${rowIdx}`);
+  if(!tr) return;
+
+  // Eğer zaten düzenleme modundaysa kapat
+  if(tr.classList.contains('sen-edit-row')){ renderSen(); return; }
+
+  tr.classList.add('sen-edit-row');
+  tr.innerHTML=`
+    <td><b>${rowIdx+1}</b></td>
+    <td><input class="sen-edit-inp" id="sedit_u_${rowIdx}" value="${x.unite||''}"></td>
+    <td><input class="sen-edit-inp" id="sedit_k_${rowIdx}" value="${x.konu||''}"></td>
+    <td><input class="sen-edit-inp" id="sedit_c_${rowIdx}" value="${x.kazanim||''}" style="width:240px"></td>
+    <td><input class="sen-edit-inp" id="sedit_b_${rowIdx}" value="${x.surec||''}"></td>
+    <td><input type="number" class="sen-edit-inp" id="sedit_p_${rowIdx}" value="${x.maxPuan||20}" style="width:60px"></td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-success btn-sm" style="padding:3px 8px" onclick="saveSenSatir('${senId}',${rowIdx})"><i class="fa-solid fa-check" style="font-size:10px"></i></button>
+      <button class="btn btn-outline btn-sm" style="padding:3px 7px" onclick="renderSen()"><i class="fa-solid fa-xmark" style="font-size:10px"></i></button>
+    </td>
+  `;
+  document.getElementById(`sedit_c_${rowIdx}`).focus();
+}
+
+function saveSenSatir(senId, rowIdx){
+  let sen=app.d.senaryolar[senId];
+  if(!sen || !sen.detaylar) return;
+  sen.detaylar[rowIdx]={
+    unite: document.getElementById(`sedit_u_${rowIdx}`).value.trim(),
+    konu: document.getElementById(`sedit_k_${rowIdx}`).value.trim(),
+    kazanim: document.getElementById(`sedit_c_${rowIdx}`).value.trim(),
+    surec: document.getElementById(`sedit_b_${rowIdx}`).value.trim(),
+    maxPuan: parseInt(document.getElementById(`sedit_p_${rowIdx}`).value)||20
+  };
+  localSave();
+  renderSen();
+  addLog(`Senaryo satırı güncellendi: ${senId} #${rowIdx+1}`);
+}
+
+function delSen(id){ if(!confirm(`"${id}" senaryosu silinsin mi?`)) return; delete app.d.senaryolar[id]; renderSen(); localSave(); }
 
 function editSen(id){
   let s=app.d.senaryolar[id]; if(!s) return;
-  document.getElementById('mSenBrans').value = s.brans || '';
-  document.getElementById('mSenSinav').value = id.split(' - ')[0] || id;
-  document.getElementById('mSenSen').value = id.split(' - ')[1] || '';
-  
+  document.getElementById('mSenSinav').value=id.split(' - ')[0]||id;
+  document.getElementById('mSenSen').value=id.split(' - ').slice(1).join(' - ')||'';
+  // Branş set et
+  let bSel=document.getElementById('mSenBrans');
+  if(bSel && s.brans) bSel.value=s.brans;
   let body=document.getElementById('mSenBody'); body.innerHTML='';
   s.detaylar.forEach((d,i)=>{ body.insertAdjacentHTML('beforeend',mSenRowHTML(i+1,d)); });
-  swTab('tsen-m', document.querySelectorAll('#page-senaryo .tab-btn')[0]);
-  window.scrollTo(0,0);
+  swTab('tsen-m', document.querySelectorAll('#page-senaryo .tab-btn')[1]);
+  addLog('Senaryo düzenleniyor: '+id);
 }
 
-function addMSenRow(d){ let i=document.getElementById('mSenBody').children.length+1; document.getElementById('mSenBody').insertAdjacentHTML('beforeend',mSenRowHTML(i,d||{})); }
+function addMSenRow(d){
+  let i=document.getElementById('mSenBody').children.length+1;
+  document.getElementById('mSenBody').insertAdjacentHTML('beforeend',mSenRowHTML(i,d||{}));
+}
 
 function mSenRowHTML(i,d){
-  // DİKKAT: Textarea ve geniş inputlar kullanarak kelime kelime değiştirmeye izin veriyoruz.
   return `<tr>
     <td><b>${i}</b></td>
-    <td><input type="text" class="fc s-u" value="${d.unite||''}" style="min-width:120px;" placeholder="Ünite/Tema"></td>
-    <td><input type="text" class="fc s-k" value="${d.konu||''}" style="min-width:140px;" placeholder="Konu"></td>
-    <td><textarea class="fc s-c" style="min-width:250px; min-height:50px;" placeholder="Öğrenme Çıktısı">${d.kazanim||''}</textarea></td>
-    <td><textarea class="fc s-b" style="min-width:150px; min-height:50px;" placeholder="Süreç Bileşeni">${d.surec||''}</textarea></td>
+    <td><input type="text" class="fc s-u" value="${d.unite||''}" style="width:120px;padding:6px 8px;font-size:12px" placeholder="Ünite/Tema"></td>
+    <td><input type="text" class="fc s-k" value="${d.konu||''}" style="width:140px;padding:6px 8px;font-size:12px" placeholder="Konu"></td>
+    <td><input type="text" class="fc s-c" value="${d.kazanim||''}" style="width:220px;padding:6px 8px;font-size:12px" placeholder="Öğrenme Çıktısı"></td>
+    <td><input type="text" class="fc s-b" value="${d.surec||''}" style="width:120px;padding:6px 8px;font-size:12px" placeholder="Süreç Bileşeni"></td>
     <td><input type="number" class="ic s-p" value="${d.maxPuan||20}" style="width:65px"></td>
     <td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td>
   </tr>`;
 }
 
 function saveMSen(){
-  let brans=document.getElementById('mSenBrans').value;
   let sinav=document.getElementById('mSenSinav').value.trim(), sen=document.getElementById('mSenSen').value.trim();
-  let ad=(sinav+(sen?' - '+sen:'')).trim(); if(ad.length<3){ alert('Sınav/Senaryo adı girin.'); return; }
-  
+  let brans=document.getElementById('mSenBrans').value;
+  let ad=(sinav+(sen?' - '+sen:'')).trim(); if(ad.length<3){ alert('Sınav ve senaryo adı girin.'); return; }
   let rows=document.querySelectorAll('#mSenBody tr'), detaylar=[];
-  rows.forEach(tr=>{ 
-    let c=tr.querySelector('.s-c').value.trim(); 
-    if(c) detaylar.push({
-      unite:tr.querySelector('.s-u').value.trim(),
-      konu:tr.querySelector('.s-k').value.trim(),
-      kazanim:c,
-      surec:tr.querySelector('.s-b').value.trim(),
-      maxPuan:parseInt(tr.querySelector('.s-p').value)||20
-    }); 
-  });
+  rows.forEach(tr=>{ let c=tr.querySelector('.s-c').value.trim(); if(c) detaylar.push({unite:tr.querySelector('.s-u').value.trim(),konu:tr.querySelector('.s-k').value.trim(),kazanim:c,surec:tr.querySelector('.s-b').value.trim(),maxPuan:parseInt(tr.querySelector('.s-p').value)||20}); });
   if(!detaylar.length){ alert('En az 1 öğrenme çıktısı ekleyin.'); return; }
-  
-  app.d.senaryolar[ad]={brans: brans, detaylar: detaylar}; 
-  renderSen(); saveAll(); alert('Senaryo kaydedildi!'); 
-  temizleSenaryoForm();
+  app.d.senaryolar[ad]={detaylar, brans}; renderSen(); localSave(); alert('Senaryo kaydedildi: '+ad); addLog('Senaryo kaydedildi: '+ad);
 }
 
-function temizleSenaryoForm(){
-  document.getElementById('mSenSinav').value = ''; document.getElementById('mSenSen').value = '';
-  document.getElementById('mSenBody').innerHTML = '';
-}
+// ===== AI SENARYO =====
+async function aiCoz(){
+  let metin=document.getElementById('aiMetin').value.trim();
+  let ad=document.getElementById('aiSenAdi').value.trim();
+  let brans=document.getElementById('aiBrans').value;
+  if(!metin){ alert('Metin boş.'); return; }
+  if(!ad){ alert('Senaryo adı girin.'); return; }
+  if(!brans){ alert('Branş seçin.'); return; }
+  let btn=document.getElementById('btnAi');
+  btn.innerHTML='<span class="spin"></span> Gemini analiz ediyor...'; btn.disabled=true;
 
-// =================== EXCEL YÜKLEME VE İNDİRME ===================
-function dlTemplate(t){
-  let wb=XLSX.utils.book_new(), ws;
-  if(t==='ogrenci'){ ws=XLSX.utils.aoa_to_sheet([['Okul No','Adı Soyadı','Sınıf']]); XLSX.utils.book_append_sheet(wb,ws,'Ogrenciler'); XLSX.writeFile(wb,'Ogrenci_Sablonu.xlsx'); }
-  else if(t==='senaryo'){ ws=XLSX.utils.aoa_to_sheet([['Soru No','Ünite/Tema','Konu','Öğrenme Çıktısı (Kazanım)','Süreç Bileşeni','Max Puan']]); XLSX.utils.book_append_sheet(wb,ws,'Senaryo'); XLSX.writeFile(wb,'Senaryo_Sablonu.xlsx'); }
-}
+  let prompt=`Sen bir MEB sınav uzmanısın. Aşağıdaki metni analiz et. Her bir soru için JSON objesi oluştur. Eğer "Soru Sayısı" veya benzer bir sütunda 2 yazıyorsa, o kazanım için 2 ayrı obje ekle. Sadece saf JSON dizisi döndür, başka hiçbir şey yazma, markdown kullanma.
 
-function xlUpload(inp, tip){
-  if(!inp.files[0]) return;
-  let r=new FileReader();
-  r.onload=function(e){
-    try{
-      let wb=XLSX.read(e.target.result,{type:'binary'}); let data=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-      if(tip==='ogrenci'){
-        data.forEach(row=>{ let no=String(row['Okul No']||'').trim(); if(no && !app.d.ogrenciler.find(o=>String(o.no)===no)) app.d.ogrenciler.push({no:no, ads:String(row['Adı Soyadı']||'').trim(), sinif:String(row['Sınıf']||'').trim()}); }); 
-        renderOgr(); saveAll(); alert("Öğrenciler eklendi.");
-      } else if(tip==='senaryo'){
-        let ad=document.getElementById('xlSenAdi').value.trim(); let brans=document.getElementById('xlSenBrans').value;
-        if(!ad) return alert("Senaryo adını girin.");
-        let detaylar=data.map(row=>({unite:row['Ünite/Tema']||'',konu:row['Konu']||'',kazanim:row['Öğrenme Çıktısı (Kazanım)']||'',surec:row['Süreç Bileşeni']||'',maxPuan:parseInt(row['Max Puan'])||20})).filter(d=>d.kazanim);
-        app.d.senaryolar[ad]={brans:brans, detaylar:detaylar}; renderSen(); saveAll(); alert("Senaryo yüklendi.");
-      } else if(tip==='not'){
-        let senId=document.getElementById('xlNotSenUp').value; if(!senId) return alert("Senaryo seçmediniz.");
-        if(!app.d.sinavlar[senId]) app.d.sinavlar[senId]=[];
-        data.forEach(row=>{ let no=String(row['Okul No']||'').trim(); if(!no) return; let idx=app.d.sinavlar[senId].findIndex(x=>String(x['Okul No'])===no); if(idx>-1) app.d.sinavlar[senId][idx]=row; else app.d.sinavlar[senId].push(row); }); 
-        saveAll(); alert("Notlar yüklendi!");
-      }
-    }catch(e){ alert('Hata: '+e.message); }
-    inp.value='';
-  }; r.readAsBinaryString(inp.files[0]);
-}
+Format:
+[{"unite":"Ünite veya Tema adı","konu":"Konu başlığı","kazanim":"Öğrenme çıktısı tam metni","surec":"Süreç bileşeni varsa (yoksa boş string)"}]
 
-// =================== YENİ: BRANŞ VE SENARYO EŞLEŞTİRME (NOT GİRİŞİ) ===================
-function initSinav(){
-  let siniflar=[...new Set(app.d.ogrenciler.map(o=>o.sinif).filter(Boolean))].sort();
-  ['mnSinif','xlNotSinif'].forEach(id=>{ let el=document.getElementById(id); if(el){ el.innerHTML='<option value="">Tüm Sınıflar</option>'; siniflar.forEach(s=>el.innerHTML+=`<option>${s}</option>`); } });
-  
-  if(app.userObj.brans) { document.getElementById('mnBrans').value = app.userObj.brans; updateSenaryoListesi('mnSen'); }
-}
+Metin:
+${metin}`;
 
-function updateSenaryoListesi(targetSelectId) {
-  // Branşı al (Eğer Not girişi ise mnBrans, Analiz ise anBrans vs.)
-  let bransId = targetSelectId==='mnSen'?'mnBrans' : targetSelectId==='xlNotSen'?'xlNotBrans' : targetSelectId==='anSec'?'anBrans' : null;
-  let secilenBrans = bransId ? document.getElementById(bransId).value : '';
-  
-  let el = document.getElementById(targetSelectId); el.innerHTML = '<option value="">-- Senaryo Seçin --</option>';
-  
-  Object.keys(app.d.senaryolar).forEach(k=>{
-    let s = app.d.senaryolar[k];
-    if(!secilenBrans || s.brans === secilenBrans) {
-      el.innerHTML += `<option value="${k}">${k}</option>`;
-    }
-  });
-  
-  // Excel not yükleme select'ini de güncelle
-  if(targetSelectId==='xlNotSen') {
-     let el2 = document.getElementById('xlNotSenUp'); el2.innerHTML = el.innerHTML;
+  try{
+    let res=await fetch(`${GEM_URL}?key=${GEM_KEY}`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json'}})
+    });
+    if(!res.ok){ let err=await res.json(); throw new Error('HTTP '+res.status+': '+(err.error?.message||JSON.stringify(err))); }
+    let data=await res.json();
+    if(data.error) throw new Error(data.error.message);
+    let raw=data.candidates?.[0]?.content?.parts?.[0]?.text||'[]';
+    let parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    if(!Array.isArray(parsed)||!parsed.length) throw new Error('Gemini boş veya hatalı JSON döndürdü.');
+
+    let body=document.getElementById('mSenBody'); body.innerHTML='';
+    parsed.forEach((item,i)=>{ body.insertAdjacentHTML('beforeend',mSenRowHTML(i+1,item)); });
+    document.getElementById('mSenSinav').value=ad;
+    document.getElementById('mSenSen').value='';
+    // Branşı Manuel tabloya aktar
+    let mBrans=document.getElementById('mSenBrans');
+    if(mBrans) mBrans.value=brans;
+    swTab('tsen-m', document.querySelectorAll('#page-senaryo .tab-btn')[1]);
+    alert(`Gemini ${parsed.length} soru çözümledi! Puanları düzenleyip "Havuza Kaydet"e basın.`);
+    addLog('AI senaryo çözümlendi: '+ad);
+  }catch(e){
+    alert('Gemini Hatası: '+e.message+'\n\nManuel tablo sekmesinden kendiniz ekleyebilirsiniz.');
+    console.error(e);
   }
+  btn.innerHTML='<i class="fa-solid fa-robot"></i> Çözümle → Tabloya Aktar'; btn.disabled=false;
 }
 
-// =================== SABİT BAŞLIKLI PUANLAMA TABLOSU ===================
-function buildNotTable(){
-  let senId=document.getElementById('mnSen').value, sinif=document.getElementById('mnSinif').value;
-  let wrap=document.getElementById('notTableWrap'); wrap.innerHTML=''; if(!senId) return;
-  
-  let det=app.d.senaryolar[senId]?.detaylar||[]; let ogr=sinif?app.d.ogrenciler.filter(o=>o.sinif===sinif):app.d.ogrenciler; let mevcut=app.d.sinavlar[senId]||[];
+// ===== SINAV NOT GİRİŞİ =====
 
-  // TR-WRAP ve THEAD TH CSS ayarlarıyla başlık sabit kalır (sticky)
+// YENİ: Branş filtresine göre senaryo listesini güncelle
+function initSinavSenaryolar(){
+  let bransFil=document.getElementById('mnBransFil')?.value||'';
+  let keys=Object.keys(app.d.senaryolar);
+  if(bransFil) keys=keys.filter(k=>(app.d.senaryolar[k].brans||'')=== bransFil);
+  else if(app.role!=='Süper Yönetici' && app.brans){
+    keys=keys.filter(k=>{ let b=app.d.senaryolar[k].brans||''; return !b || b===app.brans; });
+  }
+  let mnSen=document.getElementById('mnSen');
+  if(mnSen){ mnSen.innerHTML='<option value="">-- Senaryo seçin --</option>'; keys.forEach(k=>{ let bTag=app.d.senaryolar[k].brans?` [${app.d.senaryolar[k].brans}]`:''; mnSen.innerHTML+=`<option>${k}${bTag}</option>`; }); }
+  buildNotTable();
+}
+
+function initSinav(){
+  syncBransSelect();
+  // Öğretmenin branşını varsayılan seç
+  let mnBrans=document.getElementById('mnBransFil');
+  if(mnBrans && app.brans && app.role!=='Süper Yönetici') mnBrans.value=app.brans;
+
+  let allKeys=Object.keys(app.d.senaryolar);
+  ['xlNotSen','xlNotSenUp'].forEach(id=>{ let el=document.getElementById(id); if(el){ el.innerHTML='<option value="">-- Senaryo seçin --</option>'; allKeys.forEach(k=>el.innerHTML+=`<option>${k}</option>`); } });
+
+  let siniflar=[...new Set(app.d.ogrenciler.map(o=>o.sinif).filter(Boolean))].sort();
+  ['mnSinif','xlNotSinif'].forEach(id=>{ let el=document.getElementById(id); if(el){ el.innerHTML='<option value="">Tümü</option>'; siniflar.forEach(s=>el.innerHTML+=`<option>${s}</option>`); } });
+
+  initSinavSenaryolar();
+}
+
+function buildNotTable(){
+  // Senaryo ismi seçicide [Branş] eki olabilir, kırp
+  let rawSen=(document.getElementById('mnSen')?.value||'').replace(/\s*\[.*?\]\s*$/,'').trim();
+  let sinif=document.getElementById('mnSinif').value;
+  let wrap=document.getElementById('notTableWrap'); wrap.innerHTML='';
+  if(!rawSen || !app.d.senaryolar[rawSen]) return;
+  let senId=rawSen;
+  let det=app.d.senaryolar[senId]?.detaylar||[];
+  let ogr=sinif?app.d.ogrenciler.filter(o=>o.sinif===sinif):app.d.ogrenciler;
+  let mevcut=app.d.sinavlar[senId]||[];
+
   let head='<table id="notTbl"><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
   det.forEach((k,i)=>head+=`<th>Soru ${i+1}<br><small style="font-weight:400;font-size:10px">(Max:${k.maxPuan})</small></th>`);
-  head+='<th>Toplam</th></tr></thead><tbody>';
+  head+='<th>Toplam</th><th>%</th></tr></thead><tbody>';
 
   let body='';
   ogr.forEach(o=>{
-    let ex=mevcut.find(x=>String(x['Okul No'])===String(o.no)); let maxTop=det.reduce((a,k)=>a+k.maxPuan,0);
-    body+=`<tr data-no="${o.no}" data-ads="${o.ads}" data-sinif="${o.sinif||''}"><td><b>${o.no}</b></td><td>${o.ads}</td><td>${o.sinif||''}</td>`;
-    let totVal=0;
+    let ex=mevcut.find(x=>String(x['Okul No'])===String(o.no));
+    let maxTop=det.reduce((a,k)=>a+k.maxPuan,0);
+    body+=`<tr data-no="${o.no}" data-ads="${o.ads}" data-sinif="${o.sinif||''}" data-senid="${senId}">`;
+    body+=`<td><b>${o.no}</b></td><td>${o.ads}</td><td>${o.sinif||''}</td>`;
     det.forEach((k,i)=>{
-      let col=`Soru ${i+1} [Max:${k.maxPuan}]`; let v=(ex&&ex[col]!=null)?ex[col]:'';
+      let col=`Soru ${i+1} [Max:${k.maxPuan}]`;
+      let v=(ex&&ex[col]!=null)?ex[col]:'';
       body+=`<td><input type="number" class="ic ni" data-col="${col}" data-max="${k.maxPuan}" min="0" max="${k.maxPuan}" value="${v}" oninput="calcRow(this)"></td>`;
-      if(v) totVal+=parseFloat(v);
     });
-    body+=`<td class="row-top"><b>${totVal}</b></td></tr>`;
+    let totVal=det.reduce((s,k,i)=>{let c=`Soru ${i+1} [Max:${k.maxPuan}]`;return s+((ex&&ex[c]!=null)?parseFloat(ex[c])||0:0);},0);
+    let pct=maxTop?Math.round(totVal/maxTop*100):0;
+    body+=`<td class="row-top"><b>${totVal}</b></td><td class="row-pct"><span class="badge ${pct>=70?'bg-g':pct>=50?'bg-y':'bg-r'}">%${pct}</span></td></tr>`;
   });
   wrap.innerHTML=head+body+'</tbody></table>';
 }
 
 function calcRow(inp){
-  let tr=inp.closest('tr'); let inputs=tr.querySelectorAll('.ni'); let tot=0;
+  let tr=inp.closest('tr');
+  let inputs=tr.querySelectorAll('.ni');
+  let rawSen=(document.getElementById('mnSen')?.value||'').replace(/\s*\[.*?\]\s*$/,'').trim();
+  let det=app.d.senaryolar[rawSen]?.detaylar||[];
+  let maxTop=det.reduce((a,k)=>a+k.maxPuan,0);
+  let tot=0;
   inputs.forEach(i=>{ let v=parseFloat(i.value)||0; let mx=parseFloat(i.dataset.max)||20; if(v>mx){i.value=mx;v=mx;} tot+=v; });
-  let topEl=tr.querySelector('.row-top'); if(topEl) topEl.innerHTML='<b>'+tot+'</b>';
+  let pct=maxTop?Math.round(tot/maxTop*100):0;
+  let topEl=tr.querySelector('.row-top'); let pctEl=tr.querySelector('.row-pct');
+  if(topEl) topEl.innerHTML='<b>'+tot+'</b>';
+  if(pctEl) pctEl.innerHTML=`<span class="badge ${pct>=70?'bg-g':pct>=50?'bg-y':'bg-r'}">%${pct}</span>`;
 }
 
 function saveNot(){
-  let senId=document.getElementById('mnSen').value; if(!senId) return alert('Senaryo seçin.');
+  let rawSen=(document.getElementById('mnSen')?.value||'').replace(/\s*\[.*?\]\s*$/,'').trim();
+  if(!rawSen){ alert('Senaryo seçin.'); return; }
+  let senId=rawSen;
   if(!app.d.sinavlar[senId]) app.d.sinavlar[senId]=[];
   let trows=document.querySelectorAll('#notTbl tbody tr');
   trows.forEach(tr=>{
-    let no=tr.dataset.no, ads=tr.dataset.ads, sinif=tr.dataset.sinif; let row={'Okul No':no,'Adı Soyadı':ads,'Sınıf':sinif};
+    let no=tr.dataset.no, ads=tr.dataset.ads, sinif=tr.dataset.sinif;
+    let row={'Okul No':no,'Adı Soyadı':ads,'Sınıf':sinif};
     tr.querySelectorAll('.ni').forEach(inp=>{ row[inp.dataset.col]=parseFloat(inp.value)||0; });
     let idx=app.d.sinavlar[senId].findIndex(x=>String(x['Okul No'])===String(no));
     if(idx>-1) app.d.sinavlar[senId][idx]=row; else app.d.sinavlar[senId].push(row);
   });
-  saveAll(); document.getElementById('notSaveMsg').textContent='Puanlar kaydedildi ✓'; setTimeout(()=>document.getElementById('notSaveMsg').textContent='',3000);
+  localSave();
+  let msg=document.getElementById('notSaveMsg'); msg.textContent='Notlar kaydedildi ✓';
+  setTimeout(()=>msg.textContent='',3000);
+  addLog('Notlar kaydedildi: '+senId);
 }
 
 function dlNotTemplate(){
-  let senId=document.getElementById('xlNotSen').value, sinif=document.getElementById('xlNotSinif').value; if(!senId) return alert('Senaryo seçin.');
-  let det=app.d.senaryolar[senId]?.detaylar||[]; let ogr=sinif?app.d.ogrenciler.filter(o=>o.sinif===sinif):app.d.ogrenciler;
+  let rawSen=document.getElementById('xlNotSen').value, sinif=document.getElementById('xlNotSinif').value;
+  if(!rawSen){ alert('Senaryo seçin.'); return; }
+  let det=app.d.senaryolar[rawSen]?.detaylar||[];
+  let ogr=sinif?app.d.ogrenciler.filter(o=>o.sinif===sinif):app.d.ogrenciler;
   let hdr=['Okul No','Adı Soyadı','Sınıf']; det.forEach((k,i)=>hdr.push(`Soru ${i+1} [Max:${k.maxPuan}]`));
   let rows=[hdr]; ogr.forEach(o=>{ let r=[o.no,o.ads,o.sinif||'']; det.forEach(()=>r.push('')); rows.push(r); });
-  let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),'Notlar'); XLSX.writeFile(wb,`NotSablonu_${senId.substring(0,30)}.xlsx`);
+  let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),'Notlar');
+  XLSX.writeFile(wb,`NotSablonu_${rawSen.substring(0,30)}.xlsx`);
 }
 
-// =================== BASİT ANALİZ ===================
-function initAnaliz() { 
-  if(app.userObj.brans) { document.getElementById('anBrans').value = app.userObj.brans; updateSenaryoListesi('anSec'); } 
+// ===== ANALİZ =====
+let anState={senId:null,data:null,det:null};
+function initAnaliz(){
+  let el=document.getElementById('anSec'); el.innerHTML='<option value="">-- Sınav seçin --</option>';
+  Object.keys(app.d.sinavlar).forEach(k=>el.innerHTML+=`<option>${k}</option>`);
+  document.getElementById('anizKap').style.display='none';
 }
 function buildAnaliz(){
-  let senId=document.getElementById('anSec').value; if(!senId||!app.d.sinavlar[senId]){ document.getElementById('anizKap').style.display='none'; return; }
-  let det=app.d.senaryolar[senId]?.detaylar; if(!det) return alert('Senaryo detayı yok.');
+  let senId=document.getElementById('anSec').value;
+  let baraj=parseFloat(document.getElementById('anBaraj').value)||50;
+  let sinifFil=document.getElementById('anSinif').value;
+  if(!senId||!app.d.sinavlar[senId]){ document.getElementById('anizKap').style.display='none'; return; }
+  let det=app.d.senaryolar[senId]?.detaylar;
+  if(!det){ alert('Bu sınava ait senaryo bulunamadı.'); return; }
+  let rawData=app.d.sinavlar[senId];
+  let siniflar=[...new Set(rawData.map(r=>r['Sınıf']||'').filter(Boolean))].sort();
+  let anSinifEl=document.getElementById('anSinif'); anSinifEl.innerHTML='<option value="">Tümü</option>'; siniflar.forEach(s=>anSinifEl.innerHTML+=`<option>${s}</option>`); anSinifEl.value=sinifFil;
+  let data=sinifFil?rawData.filter(r=>r['Sınıf']===sinifFil):rawData;
+  anState={senId,data,det,baraj,rawData};
   document.getElementById('anizKap').style.display='block';
-  
-  let data=app.d.sinavlar[senId]; let maxTop=det.reduce((a,k)=>a+k.maxPuan,0); let baraj=document.getElementById('anBaraj').value||50;
-  
-  // Ozet Tablo
-  let h='<table style="font-size:11px;"><thead><tr><th>No</th><th>Ad Soyad</th><th>Sınıf</th>';
-  det.forEach((k,i)=>h+=`<th>S${i+1}</th>`); h+='<th>Top</th></tr></thead><tbody>';
-  data.forEach(r=>{
-    h+=`<tr><td>${r['Okul No']}</td><td>${r['Adı Soyadı']}</td><td>${r['Sınıf']}</td>`;
-    let t=0; det.forEach((k,i)=>{ let v=parseFloat(r[`Soru ${i+1} [Max:${k.maxPuan}]`])||0; t+=v; h+=`<td>${v}</td>`; });
-    h+=`<td><b>${t}</b></td></tr>`;
-  }); h+='</tbody></table>'; document.getElementById('anOzetWrap').innerHTML=h;
-  
-  // Toplu Tablo
-  let th='<table style="font-size:12px;"><thead><tr><th>No</th><th>Ad Soyad</th><th>Sınıf</th><th>Yüzlük Not</th><th>Durum</th></tr></thead><tbody>';
-  let sirali = data.map(r=>{ let t=det.reduce((s,k,i)=>s+(parseFloat(r[`Soru ${i+1} [Max:${k.maxPuan}]`])||0),0); return {r, yuzluk:Math.round(t/maxTop*100)}; }).sort((a,b)=>b.yuzluk-a.yuzluk);
-  sirali.forEach(o=>{ th+=`<tr><td>${o.r['Okul No']}</td><td>${o.r['Adı Soyadı']}</td><td>${o.r['Sınıf']}</td><td><b>${o.yuzluk}</b></td><td>${o.yuzluk>=baraj?'Başarılı':'Zayıf'}</td></tr>`; });
-  th+='</tbody></table>'; document.getElementById('topluTblWrap').innerHTML=th;
+  drawOzetTable(data,det,baraj);
+  drawGraphs(data,det,baraj);
+  drawManuelTable(data,det);
+  drawTopluSonuclar(data,det,baraj);
+  addLog('Analiz görüntülendi: '+senId);
 }
 
-// AI YARDIMCISI (STANDART KALDI)
-async function aiCoz(){
-  let metin=document.getElementById('aiMetin').value.trim(); let ad=document.getElementById('aiSenAdi').value.trim();
-  if(!metin || !ad) return alert('Sınav adı ve metin girin.');
-  let apiKey = getGeminiKey(); if(!apiKey) return;
-  document.getElementById('btnAi').innerHTML='Çözümleniyor...';
-  
-  let prompt=`Sadece JSON dizisi döndür: [{"unite":"","konu":"","kazanim":"","surec":"","maxPuan":20}]\nMetin:\n${metin}`;
-  try{
-    let res=await fetch(`${GEM_URL}?key=${apiKey}`,{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json'}})});
-    let data=await res.json();
-    let parsed=JSON.parse(data.candidates[0].content.parts[0].text.replace(/```json|```/g,'').trim());
-    let body=document.getElementById('mSenBody'); body.innerHTML='';
-    parsed.forEach((item,i)=>{ body.insertAdjacentHTML('beforeend',mSenRowHTML(i+1,item)); });
-    document.getElementById('mSenSinav').value=ad; document.getElementById('mSenBrans').value=document.getElementById('aiSenBrans').value;
-    swTab('tsen-m', document.querySelectorAll('#page-senaryo .tab-btn')[0]);
-  }catch(e){ alert('Hata: '+e.message); }
-  document.getElementById('btnAi').innerHTML='Çözümle ve Düzenleme Tablosuna Aktar';
+function qKey(k,i){ return `Soru ${i+1} [Max:${k.maxPuan}]`; }
+
+function drawOzetTable(data,det,baraj){
+  let maxTop=det.reduce((a,k)=>a+k.maxPuan,0);
+  let h='<table><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
+  det.forEach((k,i)=>h+=`<th>Soru ${i+1}<br><small style="font-weight:400;font-size:10px">${k.kazanim.substring(0,20)}...</small></th>`);
+  h+='<th>Toplam</th><th>%</th></tr></thead><tbody>';
+
+  let soruToplam=det.map(()=>0);
+  let pie={basarili:0,orta:0,zayif:0};
+  let subeler={};
+
+  data.forEach(r=>{
+    let tot=0;
+    h+=`<tr><td><b>${r['Okul No']}</b></td><td>${r['Adı Soyadı']||''}</td><td><span class="badge bg-b">${r['Sınıf']||''}</span></td>`;
+    det.forEach((k,i)=>{
+      let col=qKey(k,i); let v=parseFloat(r[col])||0; soruToplam[i]+=v; tot+=v;
+      let pct2=k.maxPuan?v/k.maxPuan*100:0;
+      let cls=pct2>=70?'score-high':pct2>=40?'score-mid':'score-low';
+      h+=`<td><span class="${cls}">${v}</span></td>`;
+    });
+    let pct=maxTop?Math.round(tot/maxTop*100):0;
+    if(pct>=baraj+20) pie.basarili++; else if(pct>=baraj) pie.orta++; else pie.zayif++;
+    let sb=r['Sınıf']||''; if(sb){ if(!subeler[sb]){subeler[sb]={t:0,n:0};} subeler[sb].t+=pct; subeler[sb].n++; }
+    h+=`<td><b>${tot}/${maxTop}</b></td><td><span class="badge ${pct>=baraj?'bg-g':pct>=50?'bg-y':'bg-r'}">%${pct}</span></td></tr>`;
+  });
+  h+='</tbody></table>';
+  document.getElementById('anOzetWrap').innerHTML=h;
+
+  let soruPct=soruToplam.map((t,i)=>data.length?Math.round(t/data.length/det[i].maxPuan*100):0);
+  let is='<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">';
+  det.forEach((k,i)=>{
+    let p=soruPct[i];
+    is+=`<div style="background:${p>=baraj?'#D1FAE5':p>=baraj/2?'#FEF3C7':'#FEE2E2'};border-radius:8px;padding:10px 14px;font-size:12px;min-width:130px">
+      <div style="font-weight:700;margin-bottom:3px">Soru ${i+1}</div>
+      <div style="font-size:11px;color:#555;margin-bottom:4px">${k.kazanim.substring(0,30)}...</div>
+      <div style="font-size:20px;font-weight:800">${p}%</div>
+      <div style="font-size:11px">${p>=baraj?'✓ Başarılı':'✗ Zayıf'}</div>
+    </div>`;
+  });
+  is+='</div>';
+  document.getElementById('anIstatWrap').innerHTML=is;
+  anState.soruPct=soruPct; anState.pie=pie; anState.subeler=subeler;
 }
+
+// ===== GRAFİK ZOOM =====
+const chartHeights={bar:300,pie:300,sube:380,line:300,topluBar:300,topluSoru:300};
+function zoomChart(name,delta){
+  chartHeights[name]=Math.max(150,Math.min(700,(chartHeights[name]||300)+delta));
+  let h=chartHeights[name]+'px';
+  let zvEl=document.getElementById('zv'+name.charAt(0).toUpperCase()+name.slice(1));
+  if(zvEl) zvEl.textContent=h;
+  let cont=document.getElementById(name+'Container');
+  if(cont){ cont.style.height=h; }
+  if(app.charts[name]){ app.charts[name].resize(); }
+}
+
+function drawGraphs(data,det,baraj){
+  let soruPct=anState.soruPct||[];
+  let labels=det.map((k,i)=>'S'+(i+1));
+  let colors=soruPct.map(p=>p>=baraj?'#10B981':p>=baraj/2?'#F59E0B':'#EF4444');
+  if(app.charts.bar){app.charts.bar.destroy();}
+  app.charts.bar=new Chart(document.getElementById('cBar'),{type:'bar',data:{labels,datasets:[{label:'Başarı %',data:soruPct,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`%${c.raw}`}}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}},x:{ticks:{font:{size:11}}}}}});
+  let pie=anState.pie||{};
+  if(app.charts.pie){app.charts.pie.destroy();}
+  app.charts.pie=new Chart(document.getElementById('cPie'),{type:'doughnut',data:{labels:[`Çok İyi (>%${baraj+20})`,`Geçti (>%${baraj})`,`Kaldı (<%${baraj})`],datasets:[{data:[pie.basarili||0,pie.orta||0,pie.zayif||0],backgroundColor:['#10B981','#0EA5E9','#EF4444'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+  let subeler=anState.subeler||{}; let sbIsim=Object.keys(subeler); let sbDeger=sbIsim.map(s=>Math.round(subeler[s].t/subeler[s].n));
+  if(app.charts.sube){app.charts.sube.destroy();}
+  if(sbIsim.length){ app.charts.sube=new Chart(document.getElementById('cSube'),{type:'bar',data:{labels:sbIsim,datasets:[{label:'Şube Başarısı %',data:sbDeger,backgroundColor:sbDeger.map(v=>v>=baraj?'#10B981':'#EF4444'),borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}}}}}); }
+  if(app.charts.line){app.charts.line.destroy();}
+  app.charts.line=new Chart(document.getElementById('cLine'),{type:'line',data:{labels,datasets:[{label:'Başarı %',data:soruPct,borderColor:'#4F46E5',backgroundColor:'rgba(79,70,229,0.1)',fill:true,tension:.3,pointBackgroundColor:colors,pointRadius:6,pointHoverRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}}}}});
+}
+
+function drawManuelTable(data,det){
+  let h='<table id="manuelAnTbl"><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
+  det.forEach((k,i)=>h+=`<th>Soru ${i+1}<br><small style="font-size:10px;font-weight:400">(Max:${k.maxPuan})</small></th>`);
+  h+='</tr></thead><tbody>';
+  data.forEach(r=>{
+    h+=`<tr data-no="${r['Okul No']}"><td><b>${r['Okul No']}</b></td><td>${r['Adı Soyadı']||''}</td><td>${r['Sınıf']||''}</td>`;
+    det.forEach((k,i)=>{ let col=qKey(k,i); let v=parseFloat(r[col])||0; h+=`<td><input type="number" class="ic man-ic" data-col="${col}" data-max="${k.maxPuan}" min="0" max="${k.maxPuan}" value="${v}"></td>`; });
+    h+='</tr>';
+  });
+  h+='</tbody></table>';
+  document.getElementById('manuelAnWrap').innerHTML=h;
+}
+
+function saveManuelAnaliz(){
+  let senId=anState.senId; if(!senId) return;
+  let rows=document.querySelectorAll('#manuelAnTbl tbody tr');
+  rows.forEach(tr=>{
+    let no=tr.dataset.no; let idx=app.d.sinavlar[senId].findIndex(x=>String(x['Okul No'])===String(no));
+    if(idx<0) return;
+    tr.querySelectorAll('.man-ic').forEach(inp=>{ let v=parseFloat(inp.value)||0; let mx=parseFloat(inp.dataset.max)||20; app.d.sinavlar[senId][idx][inp.dataset.col]=Math.min(v,mx); });
+  });
+  localSave(); buildAnaliz(); alert('Manuel düzenleme kaydedildi ve analiz yenilendi ✓');
+}
+
+function exportAnalizXl(){
+  let senId=anState.senId; if(!senId) return;
+  let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(app.d.sinavlar[senId]),'Analiz');
+  XLSX.writeFile(wb,`Analiz_${senId.substring(0,30)}.xlsx`);
+}
+
+// ===== TOPLU SINIF SONUÇLARI =====
+function drawTopluSonuclar(data,det,baraj){
+  let maxTop=det.reduce((a,k)=>a+k.maxPuan,0);
+  let ogrSonuc=data.map(r=>{ let tot=det.reduce((s,k,i)=>s+(parseFloat(r[qKey(k,i)])||0),0); let pct=maxTop?Math.round(tot/maxTop*100):0; return {no:r['Okul No'],ads:r['Adı Soyadı']||'',sinif:r['Sınıf']||'',tot,maxTop,pct,yukl:Math.round(pct)}; });
+  ogrSonuc.sort((a,b)=>b.pct-a.pct);
+  let subeMap={};
+  ogrSonuc.forEach(o=>{ if(!o.sinif) return; if(!subeMap[o.sinif]) subeMap[o.sinif]={t:0,n:0,basarili:0,zayif:0}; subeMap[o.sinif].t+=o.pct; subeMap[o.sinif].n++; if(o.pct>=baraj) subeMap[o.sinif].basarili++; else subeMap[o.sinif].zayif++; });
+  let kartHTML='';
+  Object.keys(subeMap).sort().forEach(sb=>{ let s=subeMap[sb]; let ort=Math.round(s.t/s.n); let color=ort>=baraj?'#10B981':ort>=(baraj/2)?'#F59E0B':'#EF4444'; kartHTML+=`<div class="sinif-ozet-card"><div class="soc-sinif">${sb}</div><div class="soc-ort" style="color:${color}">${ort}%</div><div class="soc-lbl">Sınıf Ortalaması</div><div style="font-size:11px;color:var(--muted);margin-top:4px"><span style="color:#10B981;font-weight:700">${s.basarili} başarılı</span> / <span style="color:#EF4444;font-weight:700">${s.zayif} başarısız</span></div><div class="soc-bar"><div class="soc-fill" style="width:${ort}%;background:${color}"></div></div></div>`; });
+  document.getElementById('sinifOzetGrid').innerHTML=kartHTML;
+  let barLabels=ogrSonuc.map(o=>o.ads.split(' ').pop()); let barData=ogrSonuc.map(o=>o.yukl); let barColors=ogrSonuc.map(o=>o.pct>=baraj?'#10B981':o.pct>=(baraj/2)?'#F59E0B':'#EF4444');
+  if(app.charts.topluBar){app.charts.topluBar.destroy();}
+  let minW=Math.max(300,ogrSonuc.length*28); document.getElementById('topluBarContainer').style.minWidth=minW+'px';
+  app.charts.topluBar=new Chart(document.getElementById('cTopluBar'),{type:'bar',data:{labels:barLabels,datasets:[{label:'Yüzlük Puan',data:barData,backgroundColor:barColors,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`Puan: ${c.raw} | ${c.raw>=baraj?'✓ Başarılı':'✗ Başarısız'}`}}},scales:{y:{min:0,max:100},x:{ticks:{font:{size:10},maxRotation:45}}}}});
+  let soruData=det.map((k,i)=>{ let vals=data.map(r=>parseFloat(r[qKey(k,i)])||0); return vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length/k.maxPuan*100):0; }); let soruColors=soruData.map(p=>p>=baraj?'#10B981':p>=(baraj/2)?'#F59E0B':'#EF4444');
+  if(app.charts.topluSoru){app.charts.topluSoru.destroy();}
+  app.charts.topluSoru=new Chart(document.getElementById('cTopluSoru'),{type:'bar',data:{labels:det.map((k,i)=>`S${i+1}`),datasets:[{label:'Soru Başarı %',data:soruData,backgroundColor:soruColors,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{title:([c])=>det[c.dataIndex]?.kazanim?.substring(0,50)+'…'||'',label:c=>`Ortalama: %${c.raw}`}}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}}}}});
+  let tblH=`<table><thead><tr><th>Sıra</th><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th><th>Toplam</th><th>Yüzlük Not</th><th>Başarı Durumu</th></tr></thead><tbody>`;
+  ogrSonuc.forEach((o,idx)=>{ let durum=o.pct>=baraj?'<span class="badge bg-g">✓ Başarılı</span>':'<span class="badge bg-r">✗ Başarısız</span>'; let notCls=o.pct>=70?'score-high':o.pct>=50?'score-mid':'score-low'; tblH+=`<tr><td><b>#${idx+1}</b></td><td>${o.no}</td><td><b>${o.ads}</b></td><td><span class="badge bg-b">${o.sinif}</span></td><td>${o.tot}/${o.maxTop}</td><td><span class="${notCls}">${o.yukl}</span></td><td>${durum}</td></tr>`; });
+  tblH+='</tbody></table>'; document.getElementById('topluTblWrap').innerHTML=tblH;
+  document.getElementById('topluYorumBox').style.display='none'; document.getElementById('topluYorumBox').innerHTML='';
+}
+
+function exportTopluXl(){
+  let {data,det,baraj}=anState; if(!data) return;
+  let maxTop=det.reduce((a,k)=>a+k.maxPuan,0);
+  let rows=data.map(r=>{ let tot=det.reduce((s,k,i)=>s+(parseFloat(r[qKey(k,i)])||0),0); let pct=maxTop?Math.round(tot/maxTop*100):0; return {'Okul No':r['Okul No'],'Adı Soyadı':r['Adı Soyadı'],'Sınıf':r['Sınıf']||'','Toplam Puan':tot,'Max Puan':maxTop,'Yüzlük Not':pct,'Başarı Durumu':pct>=baraj?'Başarılı':'Başarısız'}; }).sort((a,b)=>b['Yüzlük Not']-a['Yüzlük Not']);
+  let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'Toplu Sonuçlar'); XLSX.writeFile(wb,`TopluSonuclar_${anState.senId?.substring(0,25)||'Sinav'}.xlsx`);
+}
+
+async function genTopluYorum(){
+  let {data,det,baraj,senId}=anState; if(!data||!det){ alert('Önce bir sınav seçin.'); return; }
+  let btn=document.getElementById('btnTopluYorum'); btn.innerHTML='<span class="spin"></span> Analiz yapılıyor...'; btn.disabled=true;
+  let maxTop=det.reduce((a,k)=>a+k.maxPuan,0);
+  let ogrSonuc=data.map(r=>{ let tot=det.reduce((s,k,i)=>s+(parseFloat(r[qKey(k,i)])||0),0); let pct=maxTop?Math.round(tot/maxTop*100):0; return {ads:r['Adı Soyadı']||'',sinif:r['Sınıf']||'',tot,pct}; });
+  let soruOzetObj=det.map((k,i)=>{ let vals=data.map(r=>parseFloat(r[qKey(k,i)])||0); let sOrt=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length/k.maxPuan*100):0; return {soru:i+1,kazanim:k.kazanim.substring(0,80),ort:sOrt,durum:sOrt>=baraj?'Başarılı':'Zayıf'}; });
+  let subeMap={}; ogrSonuc.forEach(o=>{ if(!o.sinif) return; if(!subeMap[o.sinif]){subeMap[o.sinif]={t:0,n:0};} subeMap[o.sinif].t+=o.pct; subeMap[o.sinif].n++; });
+  let subeOzet=Object.keys(subeMap).map(sb=>({sinif:sb,ort:Math.round(subeMap[sb].t/subeMap[sb].n)}));
+  let algoritmikYorum=olusturAlgoritmikYorum(ogrSonuc,soruOzetObj,subeOzet,baraj,maxTop,det);
+  gosterYorum(algoritmikYorum,'Algoritmik Analiz & Değerlendirme');
+  btn.innerHTML='<i class="fa-solid fa-brain"></i> AI ile Otomatik Yorum Yaz'; btn.disabled=false;
+}
+
+function olusturAlgoritmikYorum(ogrSonuc,soruOzet,subeOzet,baraj,maxTop,det){
+  let toplam=ogrSonuc.length; let basarili=ogrSonuc.filter(o=>o.pct>=baraj).length; let ort=toplam?Math.round(ogrSonuc.reduce((s,o)=>s+o.pct,0)/toplam):0;
+  let basariOrani=Math.round(basarili/toplam*100); let zayifSorular=soruOzet.filter(s=>s.ort<baraj); let gucluSorular=soruOzet.filter(s=>s.ort>=baraj+20);
+  let genel=''; if(ort>=70) genel=`Sınav genel itibarıyla <b>başarılı</b> geçmiştir. Sınıf ortalaması %${ort} ile barajın belirgin üzerindedir.`; else if(ort>=baraj) genel=`Sınav <b>kabul edilebilir</b> bir düzeyde tamamlanmıştır. Sınıf ortalaması %${ort} ile başarı barajını geçmiştir; ancak gelişime açık alanlar mevcuttur.`; else genel=`Sınav sonuçları <b>endişe verici</b> bir tablo ortaya koymaktadır. Sınıf ortalaması %${ort} ile başarı barajının (%${baraj}) altında kalmış, öğrencilerin %${100-basariOrani}'i hedefi yakalayamamıştır.`;
+  let kazanimYorum=''; if(zayifSorular.length){ kazanimYorum+=`<br><br><b>⚠ Zayıf Kazanımlar:</b><br>`; zayifSorular.forEach(s=>kazanimYorum+=`• Soru ${s.soru} (%${s.ort}): "${s.kazanim}" — Tekrar çalışması önerilir.<br>`); }
+  if(gucluSorular.length){ kazanimYorum+=`<br><b>✓ Güçlü Kazanımlar:</b><br>`; gucluSorular.forEach(s=>kazanimYorum+=`• Soru ${s.soru} (%${s.ort}): "${s.kazanim}"<br>`); }
+  let subeYorum=''; if(subeOzet.length>1){ let enIyi=subeOzet.reduce((a,b)=>a.ort>b.ort?a:b); let enKotu=subeOzet.reduce((a,b)=>a.ort<b.ort?a:b); subeYorum=`<br><br><b>📊 Şube Karşılaştırması:</b><br>En başarılı: <b>${enIyi.sinif}</b> (%${enIyi.ort}) — En düşük: <b>${enKotu.sinif}</b> (%${enKotu.ort})<br>`; if(enIyi.ort-enKotu.ort>15) subeYorum+=`<span style="color:#EF4444">⚠ Şubeler arası ${enIyi.ort-enKotu.ort} puanlık fark tespit edildi.</span><br>`; }
+  let oneriler=`<br><br><b>🎯 Öneriler:</b><br>`; if(zayifSorular.length) oneriler+=`• Zayıf kazanımlarda tekrar dersi veya ek çalışma kağıdı hazırlanması önerilir.<br>`; if(100-basariOrani>30) oneriler+=`• Başarısız öğrenci oranı yüksek (%${100-basariOrani}). Bireysel destek planı oluşturulabilir.<br>`; oneriler+=`• Güçlü kazanımlarda zenginleştirici etkinliklerle üst düzey düşünme becerileri geliştirilebilir.<br>`;
+  return genel+kazanimYorum+subeYorum+oneriler;
+}
+
+function gosterYorum(html,baslik){
+  let box=document.getElementById('topluYorumBox'); box.style.display='block';
+  box.innerHTML=`<div class="ai-yorum-box"><div class="ay-header"><div class="ay-icon"><i class="fa-solid fa-brain"></i></div><div><div class="ay-title">${baslik}</div><div class="ay-sub">Sınav verileri üzerinden otomatik üretilmiştir</div></div></div><div class="ai-yorum-content">${html.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<b>$1</b>')}</div></div>`;
+}
+
+// ===================================================
+// GELİŞMİŞ PDF RAPOR OLUŞTURUCU
+// ===================================================
+
+let pdfAyarlar = { grafik: 180, yazi: 12, satir: 22 };
+let zoomLevel = 0.75;
+
+const PDF_BOLUMLER = [
+  { id:'kapak',     label:'Kapak Sayfası (Okul / Sınav Adı)',  icon:'fa-file',           varsayilan:true },
+  { id:'istatistik',label:'İstatistiksel Özet (Ort · SS · Min · Max)', icon:'fa-calculator', varsayilan:true },
+  { id:'sinifkart', label:'Şube Özet Kartları',                icon:'fa-school',         varsayilan:true },
+  { id:'ogrenciTbl',label:'Öğrenci Sonuç Tablosu (Sıralı)',   icon:'fa-table',          varsayilan:true },
+  { id:'soruTbl',   label:'Soru / Kazanım Başarı Tablosu',     icon:'fa-list-check',     varsayilan:true },
+  { id:'grafBar',   label:'Kazanım Başarı Sütun Grafiği',      icon:'fa-chart-bar',      varsayilan:true },
+  { id:'grafPie',   label:'Başarı Dağılımı Daire Grafiği',     icon:'fa-chart-pie',      varsayilan:true },
+  { id:'grafSube',  label:'Şubeler Arası Karşılaştırma Grafiği',icon:'fa-chart-column',  varsayilan:true },
+  { id:'grafLine',  label:'Kazanım Çizgi Grafiği',             icon:'fa-chart-line',     varsayilan:false},
+  { id:'grafYorum', label:'Grafik Altı Otomatik Yorumlar',     icon:'fa-comment-dots',   varsayilan:true },
+  { id:'konuAnaliz',label:'Konu Bazlı Derinlemeli Analiz',     icon:'fa-magnifying-glass-chart', varsayilan:true },
+  { id:'aiYorum',   label:'Yapay Zeka Pedagojik Yorumu',       icon:'fa-brain',          varsayilan:true },
+  { id:'eylemPlan', label:'Zümre Eylem Planı Önerileri',       icon:'fa-list-check',     varsayilan:true },
+];
+
+let pdfBolumSira = PDF_BOLUMLER.map(b=>b.id);
+
+function initPdfBuilder(){ renderBolumListesi(); }
+
+function renderBolumListesi(){
+  let html='';
+  pdfBolumSira.forEach((id,idx)=>{
+    let b=PDF_BOLUMLER.find(x=>x.id===id); if(!b) return;
+    let checked=b.varsayilan?'checked':'';
+    html+=`<div id="pblm_${id}" style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border:1px solid var(--border);border-radius:8px;margin-bottom:6px">
+      <input type="checkbox" id="pchk_${id}" ${checked} style="width:16px;height:16px;accent-color:var(--primary);cursor:pointer">
+      <i class="fa-solid ${b.icon}" style="color:var(--primary);width:16px"></i>
+      <label for="pchk_${id}" style="flex:1;font-size:13px;font-weight:500;cursor:pointer;color:var(--dark)">${b.label}</label>
+      <div style="display:flex;gap:4px">
+        <button class="btn btn-outline btn-sm" onclick="pdfBolumTasi('${id}',-1)" style="padding:4px 8px" title="Yukarı">▲</button>
+        <button class="btn btn-outline btn-sm" onclick="pdfBolumTasi('${id}',+1)" style="padding:4px 8px" title="Aşağı">▼</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('pdfBolumListesi').innerHTML=html;
+}
+
+function pdfBolumTasi(id, yon){
+  let idx=pdfBolumSira.indexOf(id); if(idx<0) return;
+  let yeniIdx=idx+yon;
+  if(yeniIdx<0||yeniIdx>=pdfBolumSira.length) return;
+  let tmp=pdfBolumSira[idx]; pdfBolumSira[idx]=pdfBolumSira[yeniIdx]; pdfBolumSira[yeniIdx]=tmp;
+  renderBolumListesi();
+}
+
+function pdfAyar(tip, delta){
+  if(tip==='grafik'){ pdfAyarlar.grafik=Math.max(80,Math.min(350,pdfAyarlar.grafik+delta)); document.getElementById('pdfGrafikBoy').textContent=pdfAyarlar.grafik+'px'; }
+  else if(tip==='yazi'){ pdfAyarlar.yazi=Math.max(8,Math.min(18,pdfAyarlar.yazi+delta)); document.getElementById('pdfYaziBoy').textContent=pdfAyarlar.yazi+'px'; }
+  else if(tip==='satir'){ pdfAyarlar.satir=Math.max(14,Math.min(40,pdfAyarlar.satir+delta)); document.getElementById('pdfSatirBoy').textContent=pdfAyarlar.satir+'px'; }
+}
+
+async function pdfOnizleOlustur(){
+  let {data,det,baraj,senId}=anState;
+  if(!data||!det){ alert('Önce Analiz & Raporlar sayfasından bir sınav seçin.'); return; }
+
+  let btn=document.getElementById('btnPdfOnizle');
+  btn.innerHTML='<span class="spin"></span> Oluşturuluyor...'; btn.disabled=true;
+
+  let seciliBolumler=pdfBolumSira.filter(id=>{ let el=document.getElementById('pchk_'+id); return el&&el.checked; });
+
+  let maxTop=det.reduce((a,k)=>a+k.maxPuan,0);
+  let ogrSonuc=data.map(r=>{ let tot=det.reduce((s,k,i)=>s+(parseFloat(r[qKey(k,i)])||0),0); let pct=maxTop?Math.round(tot/maxTop*100):0; return {no:r['Okul No'],ads:r['Adı Soyadı']||'',sinif:r['Sınıf']||'',tot,maxTop,pct}; }).sort((a,b)=>b.pct-a.pct);
+
+  let vals=ogrSonuc.map(o=>o.pct);
+  let ort=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;
+  let variance=vals.length?vals.reduce((s,v)=>s+Math.pow(v-ort,2),0)/vals.length:0;
+  let ss=Math.round(Math.sqrt(variance));
+  let enYuksek=Math.max(...vals); let enDusuk=Math.min(...vals);
+  let medyan=[...vals].sort((a,b)=>a-b)[Math.floor(vals.length/2)]||0;
+  let basarili=ogrSonuc.filter(o=>o.pct>=baraj).length;
+
+  let subeMap={}; ogrSonuc.forEach(o=>{ if(!o.sinif) return; if(!subeMap[o.sinif]) subeMap[o.sinif]={t:0,n:0,bas:0}; subeMap[o.sinif].t+=o.pct; subeMap[o.sinif].n++; if(o.pct>=baraj) subeMap[o.sinif].bas++; });
+
+  let soruStat=det.map((k,i)=>{ let vs=data.map(r=>parseFloat(r[qKey(k,i)])||0); let so=vs.length?Math.round(vs.reduce((a,b)=>a+b,0)/vs.length/k.maxPuan*100):0; return {no:i+1,kazanim:k.kazanim,unite:k.unite||'',konu:k.konu||'',maxPuan:k.maxPuan,basariPct:so}; });
+
+  let soruOzetObj=soruStat.map(s=>({soru:s.no,kazanim:s.kazanim,ort:s.basariPct,durum:s.basariPct>=baraj?'Başarılı':'Zayıf'}));
+  let subeOzet=Object.keys(subeMap).map(sb=>({sinif:sb,ort:Math.round(subeMap[sb].t/subeMap[sb].n)}));
+  let yorumMetni=olusturAlgoritmikYorum(ogrSonuc,soruOzetObj,subeOzet,baraj,maxTop,det);
+
+  let fs=pdfAyarlar.yazi; let rh=pdfAyarlar.satir; let gh=pdfAyarlar.grafik;
+  let stil=`font-family:'Arial',sans-serif;font-size:${fs}px;color:#000;`;
+  let thStil=`background:#1E293B;color:#fff;padding:6px 8px;font-size:${fs-1}px;font-weight:700;text-align:left;border:1px solid #ccc;`;
+  let tdStil=`padding:5px 8px;border:1px solid #ddd;height:${rh}px;vertical-align:middle;`;
+  let h2Stil=`font-size:${fs+4}px;font-weight:800;color:#1E293B;border-left:5px solid #4F46E5;padding-left:12px;margin:20px 0 10px;`;
+  let h3Stil=`font-size:${fs+2}px;font-weight:700;color:#4F46E5;margin:16px 0 8px;`;
+
+  let html=`<div style="${stil}">`;
+
+  for(let bolumId of seciliBolumler){
+    switch(bolumId){
+      case 'kapak':
+        html+=`<div style="text-align:center;border-bottom:3px solid #1E293B;padding-bottom:20px;margin-bottom:24px">
+          <div style="font-size:${fs-1}px;font-weight:600;color:#555;margin-bottom:6px">T.C. MİLLİ EĞİTİM BAKANLIĞI</div>
+          <h1 style="font-size:${fs+8}px;font-weight:800;margin-bottom:6px">${app.okul}</h1>
+          <h2 style="font-size:${fs+4}px;font-weight:700;color:#4F46E5;margin-bottom:4px">${senId}</h2>
+          <p style="font-size:${fs}px;color:#555">Sınav Analiz · İstatistik · Zümre Raporu</p>
+          <p style="font-size:${fs-1}px;color:#777;margin-top:4px">Başarı Barajı: %${baraj} &nbsp;|&nbsp; Toplam Öğrenci: ${data.length} &nbsp;|&nbsp; Soru Sayısı: ${det.length}</p>
+        </div>`; break;
+
+      case 'istatistik':
+        html+=`<h2 style="${h2Stil}">İstatistiksel Özet</h2>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
+          <tr><td style="${tdStil}background:#EEF2FF"><b>Sınıf Ortalaması</b></td><td style="${tdStil}font-weight:700;color:#4F46E5">%${ort}</td>
+          <td style="${tdStil}background:#EEF2FF"><b>Standart Sapma</b></td><td style="${tdStil}font-weight:700">±${ss}</td></tr>
+          <tr><td style="${tdStil}background:#EEF2FF"><b>En Yüksek</b></td><td style="${tdStil}color:#10B981;font-weight:700">%${enYuksek}</td>
+          <td style="${tdStil}background:#EEF2FF"><b>En Düşük</b></td><td style="${tdStil}color:#EF4444;font-weight:700">%${enDusuk}</td></tr>
+          <tr><td style="${tdStil}background:#EEF2FF"><b>Medyan</b></td><td style="${tdStil}font-weight:700">%${medyan}</td>
+          <td style="${tdStil}background:#EEF2FF"><b>Başarı Oranı</b></td><td style="${tdStil}font-weight:700">${basarili}/${data.length} (%${Math.round(basarili/data.length*100)})</td></tr>
+        </table>`; break;
+
+      case 'sinifkart':
+        if(Object.keys(subeMap).length>0){
+          html+=`<h2 style="${h2Stil}">Şube Bazlı Sonuçlar</h2>
+          <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
+            <thead><tr><th style="${thStil}">Şube</th><th style="${thStil}">Öğrenci</th><th style="${thStil}">Ortalama</th><th style="${thStil}">Başarılı</th><th style="${thStil}">Başarısız</th><th style="${thStil}">Durum</th></tr></thead><tbody>`;
+          Object.keys(subeMap).sort().forEach(sb=>{ let s=subeMap[sb]; let so=Math.round(s.t/s.n); html+=`<tr><td style="${tdStil}font-weight:700">${sb}</td><td style="${tdStil}text-align:center">${s.n}</td><td style="${tdStil}text-align:center;font-weight:700;color:${so>=baraj?'#10B981':'#EF4444'}">${so}%</td><td style="${tdStil}text-align:center;color:#10B981;font-weight:700">${s.bas}</td><td style="${tdStil}text-align:center;color:#EF4444;font-weight:700">${s.n-s.bas}</td><td style="${tdStil}text-align:center">${so>=baraj?'✓ Başarılı':'✗ Zayıf'}</td></tr>`; });
+          html+='</tbody></table>';
+        } break;
+
+      case 'ogrenciTbl':
+        html+=`<h2 style="${h2Stil}">Öğrenci Sonuç Tablosu</h2>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
+          <thead><tr><th style="${thStil}">Sıra</th><th style="${thStil}">Okul No</th><th style="${thStil}">Adı Soyadı</th><th style="${thStil}">Sınıf</th><th style="${thStil}">Toplam</th><th style="${thStil}">Yüzlük</th><th style="${thStil}">Durum</th></tr></thead><tbody>`;
+        ogrSonuc.forEach((o,i)=>{ let c=o.pct>=baraj?'#D1FAE5':o.pct>=50?'#FEF3C7':'#FEE2E2'; let tc=o.pct>=baraj?'#065F46':o.pct>=50?'#92400E':'#991B1B'; html+=`<tr style="background:${i%2===0?'#fff':'#F8FAFC'}"><td style="${tdStil}text-align:center;font-weight:700">${i+1}</td><td style="${tdStil}">${o.no}</td><td style="${tdStil}font-weight:600">${o.ads}</td><td style="${tdStil}text-align:center">${o.sinif}</td><td style="${tdStil}text-align:center">${o.tot}/${o.maxTop}</td><td style="${tdStil}text-align:center;background:${c};color:${tc};font-weight:800">${o.pct}%</td><td style="${tdStil}text-align:center;background:${c};color:${tc};font-size:11px;font-weight:700">${o.pct>=baraj?'✓ Başarılı':'✗ Başarısız'}</td></tr>`; });
+        html+='</tbody></table>'; break;
+
+      case 'soruTbl':
+        html+=`<h2 style="${h2Stil}">Soru / Kazanım Başarı Tablosu</h2>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
+          <thead><tr><th style="${thStil}">#</th><th style="${thStil}">Ünite/Tema</th><th style="${thStil}">Kazanım</th><th style="${thStil}">Max</th><th style="${thStil}">Başarı %</th><th style="${thStil}">Değerlendirme</th></tr></thead><tbody>`;
+        soruStat.forEach((s,i)=>{ let c=s.basariPct>=baraj?'#D1FAE5':s.basariPct>=50?'#FEF3C7':'#FEE2E2'; let tc=s.basariPct>=baraj?'#065F46':s.basariPct>=50?'#92400E':'#991B1B'; html+=`<tr style="background:${i%2===0?'#fff':'#F8FAFC'}"><td style="${tdStil}text-align:center;font-weight:700">${s.no}</td><td style="${tdStil}font-size:${fs-1}px">${s.unite||'—'}</td><td style="${tdStil}font-size:${fs-1}px">${s.kazanim.substring(0,70)}${s.kazanim.length>70?'…':''}</td><td style="${tdStil}text-align:center">${s.maxPuan}</td><td style="${tdStil}text-align:center;background:${c};color:${tc};font-weight:800">${s.basariPct}%</td><td style="${tdStil}background:${c};color:${tc};font-size:${fs-1}px;font-weight:700">${s.basariPct>=baraj+20?'Çok İyi':s.basariPct>=baraj?'Yeterli':s.basariPct>=30?'Geliştirilmeli':'Başarısız'}</td></tr>`; });
+        html+='</tbody></table>'; break;
+
+      case 'grafBar': html+=`<h2 style="${h2Stil}">Kazanım Başarı Sütun Grafiği</h2>`+pdfGrafikHTML('cBar',gh,'%90','inline'); break;
+      case 'grafPie': html+=`<h2 style="${h2Stil}">Başarı Dağılımı</h2>`+pdfGrafikHTML('cPie',gh,'45%','inline'); break;
+      case 'grafSube': if(Object.keys(subeMap).length>1){ html+=`<h2 style="${h2Stil}">Şubeler Arası Karşılaştırma</h2>`+pdfGrafikHTML('cSube',gh,'%90','inline'); } break;
+      case 'grafLine': html+=`<h2 style="${h2Stil}">Kazanım Başarı Çizgi Grafiği</h2>`+pdfGrafikHTML('cLine',gh,'%90','inline'); break;
+
+      case 'grafYorum':
+        html+=`<h2 style="${h2Stil}">Grafik Yorumları</h2>`;
+        let enKotSoru=soruStat.reduce((a,b)=>a.basariPct<b.basariPct?a:b);
+        let enIyiSoru=soruStat.reduce((a,b)=>a.basariPct>b.basariPct?a:b);
+        html+=`<div style="background:#EEF2FF;border-left:4px solid #4F46E5;padding:10px 14px;margin-bottom:10px;border-radius:0 6px 6px 0;font-size:${fs}px"><b>📊 Kazanım Grafiği:</b><br>En başarılı: Soru ${enIyiSoru.no} (%${enIyiSoru.basariPct}). En düşük: Soru ${enKotSoru.no} (%${enKotSoru.basariPct}). ${soruStat.filter(s=>s.basariPct<baraj).length} kazanım baraj altında.</div>`;
+        let basariliPct=Math.round(basarili/data.length*100);
+        html+=`<div style="background:#F0FDF4;border-left:4px solid #10B981;padding:10px 14px;margin-bottom:10px;border-radius:0 6px 6px 0;font-size:${fs}px"><b>🟢 Dağılım:</b><br>%${basariliPct} başarı barajını aştı. ${ort>=baraj?`Sınıf ortalaması (%${ort}) baraj üzerinde.`:`Sınıf ortalaması (%${ort}) baraj altında — müdahale gerekli.`}</div>`;
+        break;
+
+      case 'konuAnaliz':
+        html+=`<h2 style="${h2Stil}">Konu Bazlı Derinlemeli Analiz</h2>`;
+        let uniteMap={};
+        soruStat.forEach(s=>{ let u=s.unite||'Genel'; if(!uniteMap[u]) uniteMap[u]=[]; uniteMap[u].push(s); });
+        Object.keys(uniteMap).forEach(u=>{
+          let sorular=uniteMap[u]; let uOrt=Math.round(sorular.reduce((a,s)=>a+s.basariPct,0)/sorular.length);
+          let uRenk=uOrt>=baraj?'#D1FAE5':uOrt>=50?'#FEF3C7':'#FEE2E2'; let uTC=uOrt>=baraj?'#065F46':uOrt>=50?'#92400E':'#991B1B';
+          html+=`<div style="background:${uRenk};border-radius:6px;padding:10px 14px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b style="color:${uTC};font-size:${fs+1}px">${u}</b><span style="background:#fff;color:${uTC};border-radius:20px;padding:2px 10px;font-weight:700;font-size:${fs}px">${uOrt}%</span></div>`;
+          sorular.forEach(s=>{ html+=`<div style="font-size:${fs-1}px;color:#333;padding:2px 0">• <b>Soru ${s.no}:</b> ${s.kazanim.substring(0,80)}… — <b style="color:${uTC}">${s.basariPct}%</b></div>`; });
+          html+='</div>';
+        }); break;
+
+      case 'aiYorum':
+        html+=`<h2 style="${h2Stil}">Pedagojik Değerlendirme & Yorum</h2>
+        <div style="background:#EEF2FF;border:2px solid #C7D2FE;border-radius:8px;padding:14px 16px;font-size:${fs}px;line-height:1.8">${yorumMetni.replace(/<b>/g,'<b style="color:#1E293B">').replace(/\n/g,'<br>')}</div>`; break;
+
+      case 'eylemPlan':
+        html+=`<h2 style="${h2Stil}">Zümre Eylem Planı Önerileri</h2>`;
+        let eylemler=[];
+        soruStat.filter(s=>s.basariPct<baraj).forEach(s=>{ eylemler.push(`<b>Soru ${s.no} — ${s.kazanim.substring(0,50)}:</b> Ek etkinlik önerilir. Başarı: %${s.basariPct}.`); });
+        if(eylemler.length){ html+=`<ol style="padding-left:18px;line-height:2;font-size:${fs}px">`; eylemler.forEach(e=>html+=`<li style="margin-bottom:6px">${e}</li>`); html+=`</ol>`; }
+        else{ html+=`<div style="background:#D1FAE5;border-radius:8px;padding:12px 16px;font-size:${fs}px;color:#065F46"><b>✓ Tüm kazanımlar başarı barajını geçmiştir.</b></div>`; }
+        break;
+    }
+  }
+
+  // İmza bloğu
+  html += `<div style="margin-top:50px;display:flex;justify-content:space-between;align-items:flex-end;font-size:${fs+1}px;padding:0 20px">
+    <div><b style="color:#4F46E5">Kurum:</b> ${app.okul}<br><b style="color:#4F46E5">Tarih:</b> ${new Date().toLocaleDateString('tr-TR')}</div>
+    <div style="text-align:center;width:220px">
+      <b style="font-size:${fs+2}px">${app.adSoyad||app.user}</b><br>
+      <span style="color:#555;font-size:${fs-1}px">Branş Öğretmeni${app.brans?' — '+app.brans:''}</span><br>
+      <div style="border-bottom:1px dashed #000;margin-top:40px"></div>
+      <div style="font-size:${fs-2}px;margin-top:5px;color:#777">(İmza)</div>
+    </div>
+  </div>`;
+
+  html+='</div>';
+  document.getElementById('pdfDoc').innerHTML=html;
+  document.getElementById('pdfDoc').style.transform=`scale(${zoomLevel})`;
+  document.getElementById('pdfAlan').style.display='block';
+  document.getElementById('zoomVal').textContent=zoomLevel.toFixed(2);
+  btn.innerHTML='<i class="fa-solid fa-eye"></i> Önizleme Oluştur'; btn.disabled=false;
+}
+
+function pdfGrafikHTML(canvasId, h, w, display){
+  try{
+    let canvas=document.getElementById(canvasId);
+    if(!canvas) return `<p style="color:#999;font-size:11px">[Grafik mevcut değil — önce Grafikler sekmesini açın]</p>`;
+    let img=canvas.toDataURL('image/png');
+    return `<img src="${img}" style="width:${w};height:${h}px;display:${display};margin-bottom:12px;border:1px solid #eee;border-radius:4px">`;
+  }catch(e){ return `<p style="color:#999;font-size:11px">[Grafik alınamadı]</p>`; }
+}
+
+function pdfZoom(val){
+  zoomLevel=Math.max(0.3,Math.min(1.5,zoomLevel+val));
+  document.getElementById('pdfDoc').style.transform=`scale(${zoomLevel})`;
+  document.getElementById('zoomVal').textContent=zoomLevel.toFixed(2);
+}
+
+function dlPdf(){
+  if(typeof html2pdf==='undefined'){ alert('PDF kütüphanesi yüklenemedi.'); return; }
+  let el=document.getElementById('pdfDoc');
+  let ot=el.style.transform; el.style.transform='scale(1)';
+  html2pdf().set({
+    margin:10,
+    filename:`Rapor_${anState.senId?.substring(0,25)||'Sinav'}_${new Date().toLocaleDateString('tr-TR').replace(/\./g,'-')}.pdf`,
+    image:{type:'jpeg',quality:0.98},
+    html2canvas:{scale:2,useCORS:true,logging:false},
+    jsPDF:{format:'a4',orientation:'portrait'}
+  }).from(el).save().then(()=>{ el.style.transform=ot; });
+}
+
+// ===== INIT =====
+window.onload=function(){
+  document.getElementById('loginPass').addEventListener('keydown',function(e){ if(e.key==='Enter') doLogin(); });
+  initPdfBuilder();
+};
 </script>
 </body>
 </html>
