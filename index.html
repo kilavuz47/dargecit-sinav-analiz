@@ -824,12 +824,14 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
 // ===== KONFİGÜRASYON =====
 const GEM_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
-// Yapay zeka anahtarını kodda tutmuyoruz, tarayıcıdan güvenli şekilde alıyoruz
+// Güvenlik protokolü: Şifreyi internete sızdırmadan tarayıcı hafızasından alır.
 function getGeminiKey() {
-  let key = localStorage.getItem('gemini_api_key_dargecit');
+  let key = localStorage.getItem('dargecit_secure_ai_key');
   if (!key) {
-    key = prompt("Güvenlik nedeniyle Gemini API Anahtarınızı giriniz. (Bu anahtar sadece sizin cihazınızda kalır, internete sızmaz):");
-    if (key) localStorage.setItem('gemini_api_key_dargecit', key.trim());
+    key = prompt("Sistemin yapay zekayı güvenli çalıştırabilmesi için lütfen Gemini API Anahtarınızı giriniz:\n(Bu anahtar sadece sizin tarayıcınızda kalır, GitHub veya Render ortamına asla sızmaz)");
+    if (key) {
+      localStorage.setItem('dargecit_secure_ai_key', key.trim());
+    }
   }
   return key;
 } 
@@ -1409,7 +1411,14 @@ ${metin}`;
   try{
     let apiKey = getGeminiKey();
 if(!apiKey) { alert('API Anahtarı girmeden yapay zeka analiz yapamaz.'); return; }
-let res=await fetch(`${GEM_URL}?key=${apiKey}`,{
+let activeKey = getGeminiKey();
+if (!activeKey) {
+  alert('API anahtarı girilmeden yapay zeka analizi başlatılamaz.');
+  btn.innerHTML = '<i class="fa-solid fa-robot"></i> Çözümle → Tabloya Aktar';
+  btn.disabled = false;
+  return;
+}
+let res=await fetch(`${GEM_URL}?key=${activeKey}`,{
       method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json'}})
     });
