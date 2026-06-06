@@ -425,35 +425,35 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
 
       <!-- ÖĞRENCİ -->
       <div class="page" id="page-ogrenci">
-        <div class="ph"><h2>Öğrenci Yönetimi</h2><p>Excel ile toplu yükle veya tek tek manuel ekle. Mükerrer no engellenir.</p></div>
+        <div class="ph"><h2>Öğrenci Yönetimi</h2><p>Öğrencileri okullarına ve sınıflarına göre ekleyin, düzenleyin.</p></div>
         <div class="tabs">
-          <button class="tab-btn active" onclick="swTab('togr-xl',this)"><i class="fa-solid fa-file-excel"></i> Excel ile Yükle</button>
-          <button class="tab-btn" onclick="swTab('togr-m',this)"><i class="fa-solid fa-keyboard"></i> Manuel Ekle</button>
+          <button class="tab-btn active" onclick="swTab('togr-m',this)"><i class="fa-solid fa-keyboard"></i> Manuel Ekle / Düzenle</button>
+          <button class="tab-btn" onclick="swTab('togr-xl',this)"><i class="fa-solid fa-file-excel"></i> Excel ile Yükle</button>
         </div>
-        <div class="tc active" id="togr-xl">
-          <div class="g2">
-            <div class="card"><div class="ct">1. Boş Şablon İndir</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Sisteme uygun Excel taslağını indirin, doldurun.</p><button class="btn btn-primary btn-full" onclick="dlTemplate('ogrenci')"><i class="fa-solid fa-download"></i> Öğrenci Şablonu İndir</button></div>
-            <div class="card"><div class="ct">2. Doldurulmuş Excel Yükle</div>
-              <div class="upbox" onclick="document.getElementById('fileOgr').click()">
-                <input type="file" id="fileOgr" accept=".xlsx,.xls" style="display:none" onchange="xlUpload(this,'ogrenci')">
-                <i class="fa-solid fa-cloud-arrow-up"></i><p>Tıklayıp Excel Seçin<br><small>Sütunlar: Okul No · Adı Soyadı · Sınıf · Okul (isteğe bağlı)</small></p>
-              </div>
+        <div class="tc active" id="togr-m">
+          <div class="card">
+            <div class="ct">Tekli Öğrenci Ekle / Düzenle</div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+              <input type="hidden" id="mOldNo">
+              <input type="hidden" id="mOldOkul">
+              <div class="fg" style="margin:0;flex:2;min-width:160px"><label>Okulu</label><select class="fc" id="mOgrOkul"></select></div>
+              <div class="fg" style="margin:0;flex:1;min-width:90px"><label>Okul No</label><input class="fc" id="mNo" placeholder="1001"></div>
+              <div class="fg" style="margin:0;flex:2;min-width:140px"><label>Adı Soyadı</label><input class="fc" id="mAds" placeholder="Ali Veli"></div>
+              <div class="fg" style="margin:0;flex:1;min-width:90px"><label>Sınıf</label><input class="fc" id="mSinif" placeholder="6/A"></div>
+              <div class="fg" style="margin:0;flex:2;min-width:120px"><label>Telefon (İsteğe Bağlı)</label><input class="fc" id="mTel" placeholder="05XX..."></div>
+              <button class="btn btn-success" style="height:43px;margin-top:10px;" id="btnOgrKaydet" onclick="addOgrManuel()"><i class="fa-solid fa-plus"></i> Ekle</button>
+              <button class="btn btn-outline" style="height:43px;margin-top:10px;display:none;" id="btnOgrIptal" onclick="cancelOgrEdit()">İptal</button>
             </div>
           </div>
         </div>
-        <div class="tc" id="togr-m">
-          <div class="card"><div class="ct">Tekli Öğrenci Ekle</div>
-            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
-              <div class="fg" style="margin:0;flex:1;min-width:110px"><label>Okul No</label><input class="fc" id="mNo" placeholder="1001"></div>
-              <div class="fg" style="margin:0;flex:2;min-width:140px"><label>Adı Soyadı</label><input class="fc" id="mAds" placeholder="Ali Veli"></div>
-              <div class="fg" style="margin:0;flex:1;min-width:90px"><label>Sınıf</label><input class="fc" id="mSinif" placeholder="6/A"></div>
-              <!-- YENİ: Okul alanı manuel öğrenci eklerken -->
-              <div class="fg" style="margin:0;flex:2;min-width:180px"><label>Okul <span style="color:var(--muted);font-weight:400">(İsteğe bağlı)</span></label>
-                <select class="fc" id="mOkul">
-                  <option value="">-- Otomatik (kendi okulun) --</option>
-                </select>
+        <div class="tc" id="togr-xl">
+          <div class="g2">
+            <div class="card"><div class="ct">1. Boş Şablon İndir</div><button class="btn btn-primary btn-full" onclick="dlTemplate('ogrenci')"><i class="fa-solid fa-download"></i> Öğrenci Şablonu İndir</button></div>
+            <div class="card"><div class="ct">2. Doldurulmuş Excel Yükle</div>
+              <div class="upbox" onclick="document.getElementById('fileOgr').click()">
+                <input type="file" id="fileOgr" accept=".xlsx,.xls" style="display:none" onchange="xlUpload(this,'ogrenci')">
+                <i class="fa-solid fa-cloud-arrow-up"></i><p>Tıklayıp Excel Seçin<br><small>Sütunlar: Okul No · Adı Soyadı · Sınıf</small></p>
               </div>
-              <button class="btn btn-success" style="height:43px;width:100%;margin-top:10px;" onclick="addOgrManuel()"><i class="fa-solid fa-plus"></i> Ekle</button>
             </div>
           </div>
         </div>
@@ -461,14 +461,13 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
           <div class="ct">
             <span>Kayıtlı Öğrenciler (<span id="ogrC">0</span>)</span>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <select class="fc" id="ogrOkulFil" style="width:200px;padding:7px 11px" onchange="filterOgr()">
-                <option value="">Tüm Okullar</option>
-              </select>
-              <input class="fc" id="ogrSearch" placeholder="Ara..." style="width:160px;padding:7px 11px" oninput="filterOgr()">
-              <button class="btn btn-danger btn-sm" onclick="clearOgr()"><i class="fa-solid fa-trash-can"></i> Tümünü Sil</button>
+              <select class="fc" id="delOkulFiltre" style="width:140px;padding:7px" onchange="updateSinifFiltre()"></select>
+              <select class="fc" id="delSinifFiltre" style="width:100px;padding:7px"><option value="">Tüm Sınıflar</option></select>
+              <button class="btn btn-danger btn-sm" onclick="delHedefliOgr()"><i class="fa-solid fa-eraser"></i> Seçileni Sil</button>
+              <input class="fc" id="ogrSearch" placeholder="Ara..." style="width:120px;padding:7px 11px" oninput="filterOgr()">
             </div>
           </div>
-          <div class="tr-wrap"><table><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th><th>Okul</th><th>İşlem</th></tr></thead><tbody id="ogrBody"></tbody></table></div>
+          <div class="tr-wrap"><table><thead><tr><th>Okul</th><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th><th>Telefon</th><th>İşlem</th></tr></thead><tbody id="ogrBody"></tbody></table></div>
         </div>
       </div>
 
