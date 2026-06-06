@@ -1407,7 +1407,9 @@ Analiz edilecek metin:
 ${metin}`;
 
   try{
-    let res=await fetch(`${GEM_URL}?key=${GEM_KEY}`,{
+    let apiKey = getGeminiKey();
+if(!apiKey) { alert('API Anahtarı girmeden yapay zeka analiz yapamaz.'); return; }
+let res=await fetch(`${GEM_URL}?key=${apiKey}`,{
       method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json'}})
     });
