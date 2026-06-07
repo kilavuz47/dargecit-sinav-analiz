@@ -141,8 +141,11 @@ tr:hover td{background:#F8FAFC}
 .pdf-wrap{overflow:auto;background:#94a3b8;padding:28px;border-radius:12px;
   max-height:620px;display:flex;justify-content:center;-webkit-overflow-scrolling:touch}
 .pdf-doc{background:#fff;width:210mm;min-height:297mm;padding:18mm;
-  box-shadow:0 10px 25px rgba(0,0,0,.18);transform-origin:top center;transition:transform .2s;color:#000}
-.pdf-h{text-align:center;border-bottom:3px solid #000;padding-bottom:18px;margin-bottom:22px}
+  box-shadow:0 10px 25px rgba(0,0,0,.18);transform-origin:top center;transition:transform .2s;color:#000;
+  /* Düzeltme: Taşan grafikleri ve metinleri sınırlamak için */
+  overflow: hidden;
+}
+.pdf-h{text-align:center;border-bottom:2px solid #1E293B;padding-bottom:15px;margin-bottom:20px}
 
 /* Analiz tablo renk */
 .score-high{background:#D1FAE5;color:#065F46;font-weight:700;text-align:center;border-radius:5px;padding:3px 6px}
@@ -408,7 +411,7 @@ textarea.sen-edit-inp { resize: vertical; }
               </select>
             </div>
             <div style="display:flex;gap:10px;margin-top:10px">
-              <button class="btn btn-success btn-full" onclick="adminDuzKaydik()"><i class="fa-solid fa-floppy-disk"></i> Kaydet</button>
+              <button class="btn btn-success btn-full" onclick="adminDuzKaydet()"><i class="fa-solid fa-floppy-disk"></i> Kaydet</button>
               <button class="btn btn-outline" onclick="document.getElementById('adminDuzModal').style.display='none'">İptal</button>
             </div>
           </div>
@@ -596,7 +599,7 @@ textarea.sen-edit-inp { resize: vertical; }
       </div>
 
       <div class="page" id="page-analiz">
-        <div class="ph"><h2>Detaylı Analiz & Raporlar</h2><p>Kazanım bazlı başarı, çeldirici tespiti, zümre raporu.</p></div>
+        <div class="ph"><h2>Detaylı Analiz & Raporlar</h2><p>Kazanım bazlı başarı, çeldirici tespiti, zümre raporu ve öğrenci karneleri.</p></div>
         <div class="card" style="margin-bottom:14px">
           <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end">
             <div class="fg" style="margin:0;flex:2;min-width:220px"><label>Analiz Edilecek Sınav</label><select class="fc" id="anSec" onchange="buildAnaliz()"></select></div>
@@ -610,16 +613,17 @@ textarea.sen-edit-inp { resize: vertical; }
             <button class="tab-btn active" onclick="swTab('tan-ozet',this)"><i class="fa-solid fa-table"></i> Sonuç Tablosu</button>
             <button class="tab-btn" onclick="swTab('tan-toplu',this)"><i class="fa-solid fa-list-ol"></i> Toplu Sınıf Sonuçları</button>
             <button class="tab-btn" onclick="swTab('tan-graf',this)"><i class="fa-solid fa-chart-pie"></i> Grafikler</button>
+            <button class="tab-btn" onclick="swTab('tan-karne',this)"><i class="fa-solid fa-address-card"></i> Öğrenci Karneleri</button>
             <button class="tab-btn" onclick="swTab('tan-manuel',this)"><i class="fa-solid fa-pen-to-square"></i> Manuel Analiz Düzenle</button>
             <button class="tab-btn" onclick="swTab('tan-pdf',this)"><i class="fa-solid fa-file-pdf"></i> AI Rapor (PDF)</button>
           </div>
 
           <div class="tc active" id="tan-ozet">
-            <div class="card">
+            <div class="card" id="printOzet">
               <div class="ct"><span>Öğrenci × Soru Analiz Tablosu</span>
                 <div>
                   <button class="btn btn-info btn-sm" onclick="exportAnalizXl()"><i class="fa-solid fa-file-excel"></i> Excel'e Aktar</button>
-                  <button class="btn btn-outline btn-sm" onclick="swTab('tan-graf',document.querySelectorAll('#page-analiz .tab-btn')[2]);setTimeout(printCharts,400)"><i class="fa-solid fa-print"></i> Yazdır</button>
+                  <button class="btn btn-outline btn-sm" onclick="yazdirBolum('printOzet')"><i class="fa-solid fa-print"></i> Yazdır</button>
                 </div>
               </div>
               <div id="anOzetWrap" class="tr-wrap"></div>
@@ -628,10 +632,13 @@ textarea.sen-edit-inp { resize: vertical; }
           </div>
 
           <div class="tc" id="tan-toplu">
-            <div class="card">
+            <div class="card" id="printToplu">
               <div class="ct">
                 <span><i class="fa-solid fa-ranking-star"></i> Toplu Sınıf & Öğrenci Başarı Tablosu</span>
-                <button class="btn btn-info btn-sm" onclick="exportTopluXl()"><i class="fa-solid fa-file-excel"></i> Excel'e Aktar</button>
+                <div>
+                  <button class="btn btn-info btn-sm" onclick="exportTopluXl()"><i class="fa-solid fa-file-excel"></i> Excel'e Aktar</button>
+                  <button class="btn btn-outline btn-sm" onclick="yazdirBolum('printToplu')"><i class="fa-solid fa-print"></i> Yazdır</button>
+                </div>
               </div>
               <div id="sinifOzetGrid" class="sinif-ozet-grid"></div>
               <div class="g2" style="margin-bottom:18px">
@@ -679,51 +686,67 @@ textarea.sen-edit-inp { resize: vertical; }
           </div>
 
           <div class="tc" id="tan-graf">
-            <div class="g2">
+            <div id="printGrafik">
+              <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+                <button class="btn btn-outline btn-sm" onclick="yazdirBolum('printGrafik')"><i class="fa-solid fa-print"></i> Grafikleri Yazdır</button>
+              </div>
+              <div class="g2">
+                <div class="card">
+                  <div class="chart-zoom-bar">
+                    <span>Kazanım Başarı Sütun Grafiği</span>
+                    <div class="chart-zoom-btns">
+                      <button onclick="zoomChart('bar',-50)">−</button>
+                      <span class="zoom-val" id="zvBar">300px</span>
+                      <button onclick="zoomChart('bar',+50)">+</button>
+                    </div>
+                  </div>
+                  <div id="barWrap" style="overflow-x:auto"><div style="position:relative;height:300px" id="barContainer"><canvas id="cBar"></canvas></div></div>
+                </div>
+                <div class="card">
+                  <div class="chart-zoom-bar">
+                    <span>Başarı Baraj Dağılımı (Daire)</span>
+                    <div class="chart-zoom-btns">
+                      <button onclick="zoomChart('pie',-50)">−</button>
+                      <span class="zoom-val" id="zvPie">300px</span>
+                      <button onclick="zoomChart('pie',+50)">+</button>
+                    </div>
+                  </div>
+                  <div id="pieWrap" style="overflow-x:auto"><div style="position:relative;height:300px" id="pieContainer"><canvas id="cPie"></canvas></div></div>
+                </div>
+              </div>
               <div class="card">
                 <div class="chart-zoom-bar">
-                  <span>Kazanım Başarı Sütun Grafiği</span>
+                  <span>Şubeler Arası Karşılaştırma</span>
                   <div class="chart-zoom-btns">
-                    <button onclick="zoomChart('bar',-50)">−</button>
-                    <span class="zoom-val" id="zvBar">300px</span>
-                    <button onclick="zoomChart('bar',+50)">+</button>
+                    <button onclick="zoomChart('sube',-50)">−</button>
+                    <span class="zoom-val" id="zvSube">380px</span>
+                    <button onclick="zoomChart('sube',+50)">+</button>
                   </div>
                 </div>
-                <div id="barWrap" style="overflow-x:auto"><div style="position:relative;height:300px" id="barContainer"><canvas id="cBar"></canvas></div></div>
+                <div id="subeWrap" style="overflow-x:auto"><div style="position:relative;height:380px" id="subeContainer"><canvas id="cSube"></canvas></div></div>
               </div>
               <div class="card">
                 <div class="chart-zoom-bar">
-                  <span>Başarı Baraj Dağılımı (Daire)</span>
+                  <span>Kazanım Başarı Yüzde Çizgi Grafiği</span>
                   <div class="chart-zoom-btns">
-                    <button onclick="zoomChart('pie',-50)">−</button>
-                    <span class="zoom-val" id="zvPie">300px</span>
-                    <button onclick="zoomChart('pie',+50)">+</button>
+                    <button onclick="zoomChart('line',-50)">−</button>
+                    <span class="zoom-val" id="zvLine">300px</span>
+                    <button onclick="zoomChart('line',+50)">+</button>
                   </div>
                 </div>
-                <div id="pieWrap" style="overflow-x:auto"><div style="position:relative;height:300px" id="pieContainer"><canvas id="cPie"></canvas></div></div>
+                <div id="lineWrap" style="overflow-x:auto"><div style="position:relative;height:300px" id="lineContainer"><canvas id="cLine"></canvas></div></div>
               </div>
             </div>
+          </div>
+
+          <div class="tc" id="tan-karne">
             <div class="card">
-              <div class="chart-zoom-bar">
-                <span>Şubeler Arası Karşılaştırma</span>
-                <div class="chart-zoom-btns">
-                  <button onclick="zoomChart('sube',-50)">−</button>
-                  <span class="zoom-val" id="zvSube">380px</span>
-                  <button onclick="zoomChart('sube',+50)">+</button>
-                </div>
+              <div class="ct">
+                <span>Öğrenci Karneleri</span>
+                <button class="btn btn-outline btn-sm" onclick="yazdirBolum('karneWrap')"><i class="fa-solid fa-print"></i> Tüm Karneleri Yazdır</button>
               </div>
-              <div id="subeWrap" style="overflow-x:auto"><div style="position:relative;height:380px" id="subeContainer"><canvas id="cSube"></canvas></div></div>
-            </div>
-            <div class="card">
-              <div class="chart-zoom-bar">
-                <span>Kazanım Başarı Yüzde Çizgi Grafiği</span>
-                <div class="chart-zoom-btns">
-                  <button onclick="zoomChart('line',-50)">−</button>
-                  <span class="zoom-val" id="zvLine">300px</span>
-                  <button onclick="zoomChart('line',+50)">+</button>
-                </div>
-              </div>
-              <div id="lineWrap" style="overflow-x:auto"><div style="position:relative;height:300px" id="lineContainer"><canvas id="cLine"></canvas></div></div>
+              <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> Her öğrenci için konuya ve kazanıma özel olarak hazırlanmış sınav karnesidir. Çıktı alıp öğrencilere dağıtabilirsiniz.</div>
+              <div id="karneWrap"></div>
             </div>
           </div>
 
@@ -762,6 +785,12 @@ textarea.sen-edit-inp { resize: vertical; }
                     <button class="btn btn-outline btn-sm" onclick="pdfAyar('yazi',-1)">−</button>
                     <span id="pdfYaziBoy" style="font-weight:700;color:var(--primary);min-width:40px;text-align:center">12px</span>
                     <button class="btn btn-outline btn-sm" onclick="pdfAyar('yazi',+1)">+</button>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+                    <span style="color:var(--muted);font-weight:600">Satır Yüksekliği:</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('satir',-1)">−</button>
+                    <span id="pdfSatirBoy" style="font-weight:700;color:var(--primary);min-width:40px;text-align:center">22px</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('satir',+1)">+</button>
                   </div>
                   <div style="display:flex;align-items:center;gap:8px;font-size:13px">
                     <span style="color:var(--muted);font-weight:600">Sayfa Kenar Boşluğu:</span>
@@ -945,7 +974,6 @@ function addLog(msg){ app.logs.unshift((new Date()).toLocaleTimeString('tr')+" �
 
 // ===== YARDIMCI SEÇİCİLER (ROL BAZLI VERİ FİLTRELEME) =====
 function getMyOgr() {
-  // Yönetici tüm öğrencileri, öğretmen kendi okulunu görür
   return app.role === 'Süper Yönetici' ? (app.d.ogrenciler || []) : (app.d.ogrenciler || []).filter(o => (o.okul || app.okul) === app.okul);
 }
 
@@ -962,6 +990,43 @@ async function fetchCloud() {
     }
   } catch(e) { console.error("Bulut veri çekme hatası:", e); }
   return null;
+}
+
+// ===== YAZDIRMA (PRINT) FONKSİYONU =====
+function yazdirBolum(id) {
+  let content = document.getElementById(id).innerHTML;
+  let printWindow = window.open('', '', 'width=1000,height=800');
+  printWindow.document.write('<html><head><title>Dargeçit Sınav Analiz - Rapor</title>');
+  printWindow.document.write(`
+    <style>
+      body { font-family: 'Arial', sans-serif; color: #000; margin: 20px; }
+      table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px; }
+      th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+      th { background-color: #f1f5f9; font-weight: bold; }
+      .ct { font-size: 18px; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 5px; }
+      .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+      .bg-g { color: #065F46; background: #D1FAE5; }
+      .bg-r { color: #991B1B; background: #FEE2E2; }
+      .bg-y { color: #92400E; background: #FEF3C7; }
+      .score-high { color: #065F46; font-weight: bold; }
+      .score-mid { color: #92400E; font-weight: bold; }
+      .score-low { color: #991B1B; font-weight: bold; }
+      canvas { max-width: 100% !important; }
+      .karne-card { page-break-inside: avoid; margin-bottom: 40px; border: 1px solid #000; padding: 20px; border-radius: 8px; }
+      .karne-header { text-align: center; border-bottom: 1px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
+      /* Arayüz elemanlarını gizle */
+      .btn, .chart-zoom-bar, .alert, input, select { display: none !important; }
+      @media print {
+        .karne-card { page-break-after: always; }
+      }
+    </style>
+  `);
+  printWindow.document.write('</head><body>');
+  printWindow.document.write(content);
+  printWindow.document.write('</body></html>');
+  printWindow.document.close();
+  printWindow.focus();
+  setTimeout(() => { printWindow.print(); printWindow.close(); }, 800); // Grafiklerin yüklenmesi için bekletiyoruz
 }
 
 // ===== AUTH =====
@@ -1039,7 +1104,6 @@ async function doLogin(){
 }
 
 function bootApp(db){
-  // --- MIGRATION (KURTARMA VE TAŞIMA İŞLEMİ) ---
   if(!db.genelSenaryolar) {
     db.genelSenaryolar = {};
     if(db.okulData) {
@@ -1083,7 +1147,7 @@ function bootApp(db){
 }
 
 async function saveAll(){
-  localSave(); // Önce yerel kaydet
+  localSave(); 
   let btn = document.querySelector('button[onclick="saveAll()"]');
   let oldHtml = "";
   if(btn) { oldHtml = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Kaydediliyor...'; }
@@ -1126,7 +1190,6 @@ function localSave(){
 
 function doLogout(){ location.reload(); }
 
-// ===== NAVİGASYON =====
 function goPage(p, el){
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
@@ -1145,13 +1208,13 @@ function goPage(p, el){
   else if(p==='bransyon') renderBransYon();
   else if(p==='profil') renderProfil();
 }
+
 function swTab(id, btn){
   let page = btn.closest('.page, .pcont');
   if(page){ page.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); page.querySelectorAll('.tc').forEach(t=>t.classList.remove('active')); }
   btn.classList.add('active'); document.getElementById(id).classList.add('active');
 }
 
-// ===== DASHBOARD =====
 function refreshDash(){
   let ogrList = getMyOgr();
   document.getElementById('statOgr').textContent=ogrList.length;
@@ -1697,7 +1760,7 @@ function addOgrManuel(){
   let tel = document.getElementById('mTel').value.trim();
   
   let okul = document.getElementById('mOgrOkul').value;
-  if(app.role !== 'Süper Yönetici') okul = app.okul; // Öğretmenler sadece kendi okuluna ekleyebilir
+  if(app.role !== 'Süper Yönetici') okul = app.okul; 
 
   if(!no || !ads || !okul){ alert('Okul, Okul No ve Adı Soyadı zorunlu alanlardır.'); return; }
 
@@ -1750,7 +1813,7 @@ function delHedefliOgr(){
     let o = app.d.ogrenciler[i];
     let match = false;
     
-    if(app.role !== 'Süper Yönetici' && (o.okul||app.okul) !== app.okul) continue; // Öğretmen başkasını silemez
+    if(app.role !== 'Süper Yönetici' && (o.okul||app.okul) !== app.okul) continue; 
 
     if(!seciliOkul && !seciliSinif) match = true;
     else if(seciliOkul && !seciliSinif && (o.okul||app.okul) === seciliOkul) match = true;
@@ -1801,7 +1864,7 @@ function xlUpload(inp, tip){
           let sinif=String(row['Sınıf']||'').trim();
           
           let okul=String(row['Okul']||'').trim() || app.okul;
-          if(app.role !== 'Süper Yönetici') okul = app.okul; // Öğretmen yüklerse kendi okuluna yazılır
+          if(app.role !== 'Süper Yönetici') okul = app.okul;
 
           if(!no){ return; }
           if(app.d.ogrenciler.find(o=>String(o.no)===no && (o.okul||app.okul)===okul)){ at++; return; }
@@ -2058,7 +2121,8 @@ function buildNotTable(){
   let mevcut=app.d.sinavlar[senId]||[];
 
   let head='<table id="notTbl"><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
-  det.forEach((k,i)=>head+=`<th>Soru ${i+1}<br><small style="font-weight:400;font-size:10px">(Max:${k.maxPuan})</small></th>`);
+  // Düzeltme: Tablo sütun başlıklarında Konu / Puan yazacak
+  det.forEach((k,i)=>head+=`<th>Soru ${i+1}<br><small style="font-weight:400;font-size:10px">${k.konu || 'Konu Yok'}<br>Max: ${k.maxPuan} Puan</small></th>`);
   head+='<th>Toplam</th><th>%</th></tr></thead><tbody>';
 
   let body='';
@@ -2143,10 +2207,13 @@ function buildAnaliz(){
   let data=sinifFil?rawData.filter(r=>r['Sınıf']===sinifFil):rawData;
   anState={senId,data,det,baraj,rawData};
   document.getElementById('anizKap').style.display='block';
+  
   drawOzetTable(data,det,baraj);
   drawGraphs(data,det,baraj);
   drawManuelTable(data,det);
   drawTopluSonuclar(data,det,baraj);
+  drawKarneler(data, det, baraj); // Karneleri oluştur
+  
   addLog('Analiz görüntülendi: '+senId);
 }
 
@@ -2155,7 +2222,8 @@ function qKey(k,i){ return `Soru ${i+1} [Max:${k.maxPuan}]`; }
 function drawOzetTable(data,det,baraj){
   let maxTop=det.reduce((a,k)=>a+k.maxPuan,0);
   let h='<table><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
-  det.forEach((k,i)=>h+=`<th>Soru ${i+1}<br><small style="font-weight:400;font-size:10px">${k.kazanim.substring(0,20)}...</small></th>`);
+  // Düzeltme: Tablo Sütunlarında artık Konu / Puan yazıyor
+  det.forEach((k,i)=>h+=`<th>Soru ${i+1}<br><small style="font-weight:400;font-size:10px">${k.konu || 'Konu Yok'}<br>Max: ${k.maxPuan} Puan</small></th>`);
   h+='<th>Toplam</th><th>%</th></tr></thead><tbody>';
 
   let soruToplam=det.map(()=>0);
@@ -2185,7 +2253,7 @@ function drawOzetTable(data,det,baraj){
     let p=soruPct[i];
     is+=`<div style="background:${p>=baraj?'#D1FAE5':p>=baraj/2?'#FEF3C7':'#FEE2E2'};border-radius:8px;padding:10px 14px;font-size:12px;min-width:130px">
       <div style="font-weight:700;margin-bottom:3px">Soru ${i+1}</div>
-      <div style="font-size:11px;color:#555;margin-bottom:4px">${k.kazanim.substring(0,30)}...</div>
+      <div style="font-size:11px;color:#555;margin-bottom:4px">${k.konu || 'Konu Yok'}</div>
       <div style="font-size:20px;font-weight:800">${p}%</div>
       <div style="font-size:11px">${p>=baraj?'✓ Başarılı':'✗ Zayıf'}</div>
     </div>`;
@@ -2193,6 +2261,101 @@ function drawOzetTable(data,det,baraj){
   is+='</div>';
   document.getElementById('anIstatWrap').innerHTML=is;
   anState.soruPct=soruPct; anState.pie=pie; anState.subeler=subeler;
+}
+
+// ===== ÖĞRENCİ KARNELERİ (YENİ) =====
+function drawKarneler(data, det, baraj) {
+  let maxTop = det.reduce((a, k) => a + k.maxPuan, 0);
+  let wrap = document.getElementById('karneWrap');
+  let html = '';
+
+  data.forEach(r => {
+    let tot = 0;
+    let rows = '';
+    let eksikler = [];
+    
+    det.forEach((k, i) => {
+      let v = parseFloat(r[qKey(k, i)]) || 0;
+      tot += v;
+      let pct = k.maxPuan ? Math.round(v / k.maxPuan * 100) : 0;
+      let durum = pct >= baraj ? '<span class="badge bg-g">Yeterli</span>' : '<span class="badge bg-r">Eksik</span>';
+      
+      if (pct < baraj) {
+        eksikler.push(k.konu || `Soru ${i+1} Kazanımı`);
+      }
+      
+      rows += `
+        <tr>
+          <td><b>Soru ${i+1}</b></td>
+          <td>${k.konu || 'Genel Konu'}</td>
+          <td style="font-size: 11px;">${k.kazanim.substring(0, 50)}...</td>
+          <td><b>${v}</b> / ${k.maxPuan}</td>
+          <td>${durum}</td>
+        </tr>
+      `;
+    });
+    
+    let genPct = maxTop ? Math.round(tot / maxTop * 100) : 0;
+    let genDurum = genPct >= baraj ? '<span style="color:#10B981;">✓ BAŞARILI</span>' : '<span style="color:#EF4444;">✗ GELİŞTİRİLMELİ</span>';
+    
+    // Öğretmen Yorumu Oluşturma
+    let yorum = "";
+    if (eksikler.length > 0) {
+      // Sadece ilk 3 eksiği göster kalabalık olmasın
+      let gosterilenEksikler = eksikler.slice(0, 3).join(', ');
+      let eklenti = eksikler.length > 3 ? ' ve diğer' : '';
+      yorum = `Öğrencinin özellikle <b>${gosterilenEksikler}</b>${eklenti} konularında eksikleri tespit edilmiştir. İlgili kazanımların tekrar edilmesi öğrencinin gelişimi için faydalı olacaktır.`;
+    } else {
+      yorum = `Öğrenci sınavdaki tüm konu ve kazanımlarda yeterli başarıyı göstermiştir. Gösterdiği çaba için tebrik eder, başarılarının devamını dilerim.`;
+    }
+
+    html += `
+      <div class="karne-card" style="border: 2px solid #E2E8F0; border-top: 5px solid #4F46E5; border-radius: 12px; padding: 25px; margin-bottom: 30px; background: #fff; page-break-inside: avoid;">
+        <div class="karne-header" style="text-align: center; border-bottom: 2px solid #E2E8F0; padding-bottom: 15px; margin-bottom: 20px;">
+          <h2 style="margin: 0 0 5px 0; color: #1E293B; font-size: 20px;">ÖĞRENCİ SINAV SONUÇ KARNESİ</h2>
+          <div style="font-size: 14px; color: #64748B;">Sınav: ${anState.senId}</div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <div style="font-size: 18px; font-weight: 800; color: #0F172A;">${r['Adı Soyadı'] || 'İsimsiz Öğrenci'}</div>
+            <div style="font-size: 14px; color: #475569;">Sınıf: <span class="badge bg-b">${r['Sınıf'] || '-'}</span> | Okul No: <b>${r['Okul No']}</b></div>
+          </div>
+          <div style="text-align: right; background: #F8FAFC; padding: 10px 20px; border-radius: 8px; border: 1px solid #E2E8F0;">
+            <div style="font-size: 12px; color: #64748B; font-weight: 600;">TOPLAM BAŞARI</div>
+            <div style="font-size: 24px; font-weight: 800; color: #0F172A;">${tot} <span style="font-size: 14px; color: #64748B;">/ ${maxTop}</span></div>
+            <div style="font-size: 14px; font-weight: 700;">${genDurum}</div>
+          </div>
+        </div>
+        
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
+          <thead>
+            <tr style="background: #F1F5F9;">
+              <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: left;">Soru</th>
+              <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: left;">Konu</th>
+              <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: left;">Ölçülen Kazanım</th>
+              <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: center;">Puan</th>
+              <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: center;">Durum</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+        
+        <div style="background: #EEF2FF; border-left: 4px solid #4F46E5; padding: 15px; border-radius: 0 8px 8px 0;">
+          <div style="font-size: 12px; font-weight: 800; color: #4338CA; margin-bottom: 5px;"><i class="fa-solid fa-comment-dots"></i> ÖĞRETMEN DEĞERLENDİRMESİ</div>
+          <div style="font-size: 13px; color: #334155; line-height: 1.5;">${yorum}</div>
+        </div>
+      </div>
+    `;
+  });
+  
+  if(data.length === 0) {
+    wrap.innerHTML = '<div style="color:#64748B; padding: 20px; text-align: center;">Öğrenci bulunamadı.</div>';
+  } else {
+    wrap.innerHTML = html;
+  }
 }
 
 // ===== GRAFİK ZOOM =====
@@ -2211,16 +2374,21 @@ function drawGraphs(data,det,baraj){
   let soruPct=anState.soruPct||[];
   let labels=det.map((k,i)=>'S'+(i+1));
   let colors=soruPct.map(p=>p>=baraj?'#10B981':p>=baraj/2?'#F59E0B':'#EF4444');
+  
+  // Düzeltme: animation: false eklendi. PDF çıktısında grafikleri kesin görebilmek için animasyon kapatıldı.
   if(app.charts.bar){app.charts.bar.destroy();}
-  app.charts.bar=new Chart(document.getElementById('cBar'),{type:'bar',data:{labels,datasets:[{label:'Başarı %',data:soruPct,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`%${c.raw}`}}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}},x:{ticks:{font:{size:11}}}}}});
+  app.charts.bar=new Chart(document.getElementById('cBar'),{type:'bar',data:{labels,datasets:[{label:'Başarı %',data:soruPct,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},options:{animation: false, responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`%${c.raw}`}}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}},x:{ticks:{font:{size:11}}}}}});
+  
   let pie=anState.pie||{};
   if(app.charts.pie){app.charts.pie.destroy();}
-  app.charts.pie=new Chart(document.getElementById('cPie'),{type:'doughnut',data:{labels:[`Çok İyi (>%${baraj+20})`,`Geçti (>%${baraj})`,`Kaldı (<%${baraj})`],datasets:[{data:[pie.basarili||0,pie.orta||0,pie.zayif||0],backgroundColor:['#10B981','#0EA5E9','#EF4444'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+  app.charts.pie=new Chart(document.getElementById('cPie'),{type:'doughnut',data:{labels:[`Çok İyi (>%${baraj+20})`,`Geçti (>%${baraj})`,`Kaldı (<%${baraj})`],datasets:[{data:[pie.basarili||0,pie.orta||0,pie.zayif||0],backgroundColor:['#10B981','#0EA5E9','#EF4444'],borderWidth:0,hoverOffset:6}]},options:{animation: false, responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+  
   let subeler=anState.subeler||{}; let sbIsim=Object.keys(subeler); let sbDeger=sbIsim.map(s=>Math.round(subeler[s].t/subeler[s].n));
   if(app.charts.sube){app.charts.sube.destroy();}
-  if(sbIsim.length){ app.charts.sube=new Chart(document.getElementById('cSube'),{type:'bar',data:{labels:sbIsim,datasets:[{label:'Şube Başarısı %',data:sbDeger,backgroundColor:sbDeger.map(v=>v>=baraj?'#10B981':'#EF4444'),borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}}}}}); }
+  if(sbIsim.length){ app.charts.sube=new Chart(document.getElementById('cSube'),{type:'bar',data:{labels:sbIsim,datasets:[{label:'Şube Başarısı %',data:sbDeger,backgroundColor:sbDeger.map(v=>v>=baraj?'#10B981':'#EF4444'),borderRadius:8}]},options:{animation: false, responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}}}}}); }
+  
   if(app.charts.line){app.charts.line.destroy();}
-  app.charts.line=new Chart(document.getElementById('cLine'),{type:'line',data:{labels,datasets:[{label:'Başarı %',data:soruPct,borderColor:'#4F46E5',backgroundColor:'rgba(79,70,229,0.1)',fill:true,tension:.3,pointBackgroundColor:colors,pointRadius:6,pointHoverRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}}}}});
+  app.charts.line=new Chart(document.getElementById('cLine'),{type:'line',data:{labels,datasets:[{label:'Başarı %',data:soruPct,borderColor:'#4F46E5',backgroundColor:'rgba(79,70,229,0.1)',fill:true,tension:.3,pointBackgroundColor:colors,pointRadius:6,pointHoverRadius:8}]},options:{animation: false, responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}}}}});
 }
 
 function drawManuelTable(data,det){
@@ -2266,10 +2434,10 @@ function drawTopluSonuclar(data,det,baraj){
   let barLabels=ogrSonuc.map(o=>o.ads.split(' ').pop()); let barData=ogrSonuc.map(o=>o.yukl); let barColors=ogrSonuc.map(o=>o.pct>=baraj?'#10B981':o.pct>=(baraj/2)?'#F59E0B':'#EF4444');
   if(app.charts.topluBar){app.charts.topluBar.destroy();}
   let minW=Math.max(300,ogrSonuc.length*28); document.getElementById('topluBarContainer').style.minWidth=minW+'px';
-  app.charts.topluBar=new Chart(document.getElementById('cTopluBar'),{type:'bar',data:{labels:barLabels,datasets:[{label:'Yüzlük Puan',data:barData,backgroundColor:barColors,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`Puan: ${c.raw} | ${c.raw>=baraj?'✓ Başarılı':'✗ Başarısız'}`}}},scales:{y:{min:0,max:100},x:{ticks:{font:{size:10},maxRotation:45}}}}});
+  app.charts.topluBar=new Chart(document.getElementById('cTopluBar'),{type:'bar',data:{labels:barLabels,datasets:[{label:'Yüzlük Puan',data:barData,backgroundColor:barColors,borderRadius:4}]},options:{animation: false, responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`Puan: ${c.raw} | ${c.raw>=baraj?'✓ Başarılı':'✗ Başarısız'}`}}},scales:{y:{min:0,max:100},x:{ticks:{font:{size:10},maxRotation:45}}}}});
   let soruData=det.map((k,i)=>{ let vals=data.map(r=>parseFloat(r[qKey(k,i)])||0); return vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length/k.maxPuan*100):0; }); let soruColors=soruData.map(p=>p>=baraj?'#10B981':p>=(baraj/2)?'#F59E0B':'#EF4444');
   if(app.charts.topluSoru){app.charts.topluSoru.destroy();}
-  app.charts.topluSoru=new Chart(document.getElementById('cTopluSoru'),{type:'bar',data:{labels:det.map((k,i)=>`S${i+1}`),datasets:[{label:'Soru Başarı %',data:soruData,backgroundColor:soruColors,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{title:([c])=>det[c.dataIndex]?.kazanim?.substring(0,50)+'…'||'',label:c=>`Ortalama: %${c.raw}`}}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}}}}});
+  app.charts.topluSoru=new Chart(document.getElementById('cTopluSoru'),{type:'bar',data:{labels:det.map((k,i)=>`S${i+1}`),datasets:[{label:'Soru Başarı %',data:soruData,backgroundColor:soruColors,borderRadius:4}]},options:{animation: false, responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{title:([c])=>det[c.dataIndex]?.kazanim?.substring(0,50)+'…'||'',label:c=>`Ortalama: %${c.raw}`}}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}}}}});
   let tblH=`<table><thead><tr><th>Sıra</th><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th><th>Toplam</th><th>Yüzlük Not</th><th>Başarı Durumu</th></tr></thead><tbody>`;
   ogrSonuc.forEach((o,idx)=>{ let durum=o.pct>=baraj?'<span class="badge bg-g">✓ Başarılı</span>':'<span class="badge bg-r">✗ Başarısız</span>'; let notCls=o.pct>=70?'score-high':o.pct>=50?'score-mid':'score-low'; tblH+=`<tr><td><b>#${idx+1}</b></td><td>${o.no}</td><td><b>${o.ads}</b></td><td><span class="badge bg-b">${o.sinif}</span></td><td>${o.tot}/${o.maxTop}</td><td><span class="${notCls}">${o.yukl}</span></td><td>${durum}</td></tr>`; });
   tblH+='</tbody></table>'; document.getElementById('topluTblWrap').innerHTML=tblH;
@@ -2451,8 +2619,8 @@ async function pdfOnizleOlustur(){
       case 'soruTbl':
         html+=`<h2 style="${h2Stil}">Soru / Kazanım Başarı Tablosu</h2>
         <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
-          <thead><tr><th style="${thStil}">#</th><th style="${thStil}">Ünite/Tema</th><th style="${thStil}">Kazanım</th><th style="${thStil}">Max</th><th style="${thStil}">Başarı %</th><th style="${thStil}">Değerlendirme</th></tr></thead><tbody>`;
-        soruStat.forEach((s,i)=>{ let c=s.basariPct>=baraj?'#D1FAE5':s.basariPct>=50?'#FEF3C7':'#FEE2E2'; let tc=s.basariPct>=baraj?'#065F46':s.basariPct>=50?'#92400E':'#991B1B'; html+=`<tr style="background:${i%2===0?'#fff':'#F8FAFC'}"><td style="${tdStil}text-align:center;font-weight:700">${s.no}</td><td style="${tdStil}font-size:${fs-1}px">${s.unite||'—'}</td><td style="${tdStil}font-size:${fs-1}px">${s.kazanim.substring(0,70)}${s.kazanim.length>70?'…':''}</td><td style="${tdStil}text-align:center">${s.maxPuan}</td><td style="${tdStil}text-align:center;background:${c};color:${tc};font-weight:800">${s.basariPct}%</td><td style="${tdStil}background:${c};color:${tc};font-size:${fs-1}px;font-weight:700">${s.basariPct>=baraj+20?'Çok İyi':s.basariPct>=baraj?'Yeterli':s.basariPct>=30?'Geliştirilmeli':'Başarısız'}</td></tr>`; });
+          <thead><tr><th style="${thStil}">#</th><th style="${thStil}">Konu</th><th style="${thStil}">Kazanım</th><th style="${thStil}">Max</th><th style="${thStil}">Başarı %</th><th style="${thStil}">Değerlendirme</th></tr></thead><tbody>`;
+        soruStat.forEach((s,i)=>{ let c=s.basariPct>=baraj?'#D1FAE5':s.basariPct>=50?'#FEF3C7':'#FEE2E2'; let tc=s.basariPct>=baraj?'#065F46':s.basariPct>=50?'#92400E':'#991B1B'; html+=`<tr style="background:${i%2===0?'#fff':'#F8FAFC'}"><td style="${tdStil}text-align:center;font-weight:700">${s.no}</td><td style="${tdStil}font-size:${fs-1}px">${s.konu||'—'}</td><td style="${tdStil}font-size:${fs-1}px">${s.kazanim.substring(0,70)}${s.kazanim.length>70?'…':''}</td><td style="${tdStil}text-align:center">${s.maxPuan}</td><td style="${tdStil}text-align:center;background:${c};color:${tc};font-weight:800">${s.basariPct}%</td><td style="${tdStil}background:${c};color:${tc};font-size:${fs-1}px;font-weight:700">${s.basariPct>=baraj+20?'Çok İyi':s.basariPct>=baraj?'Yeterli':s.basariPct>=30?'Geliştirilmeli':'Başarısız'}</td></tr>`; });
         html+='</tbody></table>'; break;
 
       case 'grafBar': html+=`<h2 style="${h2Stil}">Kazanım Başarı Sütun Grafiği</h2>`+pdfGrafikHTML('cBar',gh,'%90','inline'); break;
@@ -2509,7 +2677,6 @@ async function pdfOnizleOlustur(){
   html+='</div>';
   document.getElementById('pdfDoc').innerHTML=html;
   document.getElementById('pdfDoc').style.padding = pdfAyarlar.kenar + 'mm';
-  document.getElementById('pdfDoc').style.transform=`scale(${zoomLevel})`;
   document.getElementById('pdfAlan').style.display='block';
   document.getElementById('zoomVal').textContent=zoomLevel.toFixed(2);
   btn.innerHTML='<i class="fa-solid fa-eye"></i> Önizleme Oluştur'; btn.disabled=false;
