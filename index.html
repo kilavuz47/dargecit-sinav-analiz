@@ -96,7 +96,7 @@ body{background:var(--light);color:var(--text);overflow:hidden}
 .stat-val{font-size:38px;font-weight:800;color:var(--dark);margin-bottom:4px}
 .stat-lbl{color:var(--muted);font-size:13px;font-weight:600}
 
-/* DÜZELTİLDİ: Sabit (Sticky) Başlık ve Tablo Yapısı */
+/* Sabit (Sticky) Başlık ve Tablo Yapısı */
 .tr-wrap{overflow-x:auto; overflow-y:auto; max-height:550px; background:#fff;border-radius:var(--radius);
   border:1px solid var(--border);margin-bottom:14px;-webkit-overflow-scrolling:touch;width:100%}
 table{width:100%;border-collapse:collapse;min-width:600px; position:relative;}
@@ -297,7 +297,7 @@ textarea.sen-edit-inp { resize: vertical; }
           <option>Dargeçit Anadolu Lisesi</option>
           <option>Dargeçit Ilısu Anadolu Lisesi</option>
           <option>Dargeçit İmam Hatip Ortaokulu</option>
-          <option>Gazi Ortaokulu</option>
+          <option>60. Yıl Sarıgazi Ortaokulu</option>
           <option>Ilısu Ortaokulu</option>
           <option>Karabayır İmam Hatip Ortaokulu</option>
           <option>Kılavuz Ortaokulu</option>
@@ -324,7 +324,7 @@ textarea.sen-edit-inp { resize: vertical; }
       <a class="nav-item" id="navOkul" style="display:none" onclick="goPage('okulyon',this)"><i class="fa-solid fa-school-flag"></i> Okul Yönetimi</a>
       <a class="nav-item" id="navBrans" style="display:none" onclick="goPage('bransyon',this)"><i class="fa-solid fa-book-open"></i> Branş Yönetimi</a>
       <a class="nav-item" onclick="goPage('ogrenci',this)"><i class="fa-solid fa-users"></i> Öğrenci Yönetimi</a>
-      <a class="nav-item" onclick="goPage('senaryo',this)"><i class="fa-solid fa-layer-group"></i> Senaryo Havuzu</a>
+      <a class="nav-item" onclick="goPage('senaryo',this)"><i class="fa-solid fa-layer-group"></i> Ortak Senaryo Havuzu</a>
       <a class="nav-item" onclick="goPage('sinav',this)"><i class="fa-solid fa-file-pen"></i> Sınav Not Girişi</a>
       <a class="nav-item" onclick="goPage('analiz',this)"><i class="fa-solid fa-magnifying-glass-chart"></i> Analiz & Raporlar</a>
       <a class="nav-item" onclick="goPage('profil',this)"><i class="fa-solid fa-user-pen"></i> Profilim</a>
@@ -352,8 +352,8 @@ textarea.sen-edit-inp { resize: vertical; }
       <div class="page active" id="page-dashboard">
         <div class="ph"><h2>Sistem Özeti</h2><p>Kurumunuza ait genel istatistikler</p></div>
         <div class="g3">
-          <div class="stat-card"><div class="stat-icon" style="color:var(--primary)"><i class="fa-solid fa-user-graduate"></i></div><div class="stat-val" id="statOgr">0</div><div class="stat-lbl">Kayıtlı Öğrenci</div></div>
-          <div class="stat-card"><div class="stat-icon" style="color:var(--secondary)"><i class="fa-solid fa-cubes"></i></div><div class="stat-val" id="statSen">0</div><div class="stat-lbl">Oluşturulan Senaryo</div></div>
+          <div class="stat-card"><div class="stat-icon" style="color:var(--primary)"><i class="fa-solid fa-user-graduate"></i></div><div class="stat-val" id="statOgr">0</div><div class="stat-lbl">Kayıtlı Öğrenci (Erişilebilir)</div></div>
+          <div class="stat-card"><div class="stat-icon" style="color:var(--secondary)"><i class="fa-solid fa-cubes"></i></div><div class="stat-val" id="statSen">0</div><div class="stat-lbl">Ortak Senaryolar</div></div>
           <div class="stat-card"><div class="stat-icon" style="color:var(--warning)"><i class="fa-solid fa-file-signature"></i></div><div class="stat-val" id="statSin">0</div><div class="stat-lbl">Uygulanan Sınav</div></div>
         </div>
         <div class="card">
@@ -408,7 +408,7 @@ textarea.sen-edit-inp { resize: vertical; }
               </select>
             </div>
             <div style="display:flex;gap:10px;margin-top:10px">
-              <button class="btn btn-success btn-full" onclick="adminDuzKaydet()"><i class="fa-solid fa-floppy-disk"></i> Kaydet</button>
+              <button class="btn btn-success btn-full" onclick="adminDuzKaydik()"><i class="fa-solid fa-floppy-disk"></i> Kaydet</button>
               <button class="btn btn-outline" onclick="document.getElementById('adminDuzModal').style.display='none'">İptal</button>
             </div>
           </div>
@@ -416,7 +416,7 @@ textarea.sen-edit-inp { resize: vertical; }
       </div>
 
       <div class="page" id="page-ogrenci">
-        <div class="ph"><h2>Öğrenci Yönetimi</h2><p>Öğrencileri okullarına ve sınıflarına göre ekleyin, düzenleyin.</p></div>
+        <div class="ph"><h2>Öğrenci Yönetimi (Ortak Havuz)</h2><p>Öğretmenler yalnızca kendi okulundaki öğrencileri görür, yönetici ise tüm sistemi yönetir.</p></div>
         <div class="tabs">
           <button class="tab-btn active" onclick="swTab('togr-m',this)"><i class="fa-solid fa-keyboard"></i> Manuel Ekle / Düzenle</button>
           <button class="tab-btn" onclick="swTab('togr-xl',this)"><i class="fa-solid fa-file-excel"></i> Excel ile Yükle</button>
@@ -463,7 +463,7 @@ textarea.sen-edit-inp { resize: vertical; }
       </div>
 
       <div class="page" id="page-senaryo">
-        <div class="ph"><h2>Senaryo Havuzu</h2><p>Yapay zeka ile metni çözümle, puanları düzenle, havuza kaydet.</p></div>
+        <div class="ph"><h2>Ortak Senaryo Havuzu</h2><p>Tüm öğretmenlerin ve yöneticilerin eklediği senaryolar bu havuzda toplanır. Sınavlarda ortak kullanılır.</p></div>
         <div class="tabs">
           <button class="tab-btn active" onclick="swTab('tsen-ai',this)"><i class="fa-solid fa-wand-magic-sparkles"></i> Yapay Zeka ile Çözümle</button>
           <button class="tab-btn" onclick="swTab('tsen-m',this)"><i class="fa-solid fa-table-list"></i> Manuel Tablo</button>
@@ -476,7 +476,7 @@ textarea.sen-edit-inp { resize: vertical; }
             <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> PDF veya Word belgeden kopyalayıp yapıştırın. Ünite, konu, kazanım ve soru sayısı gibi bilgiler otomatik ayrıştırılır.</div>
             <div class="g2" style="margin-bottom:14px">
               <div class="fg" style="margin:0"><label>Sınav / Senaryo Adı (Havuza kaydedilecek isim)</label><input class="fc" id="aiSenAdi" placeholder="Örn: 6.Sınıf Matematik 2.Dönem 2.Ortak - Senaryo 4"></div>
-              <div class="fg" style="margin:0"><label>Branş <span style="color:var(--danger)">*</span> <small style="color:var(--muted)">(senaryonun ait olduğu branş)</small></label>
+              <div class="fg" style="margin:0"><label>Branş <span style="color:var(--danger)">*</span></label>
                 <select class="fc" id="aiBrans">
                   <option value="">-- Branş Seçin --</option>
                 </select>
@@ -500,7 +500,7 @@ textarea.sen-edit-inp { resize: vertical; }
               <div class="fg" style="margin:0"><label>Senaryo Adı</label><input class="fc" id="mSenSen" placeholder="Senaryo 4"></div>
             </div>
             <div class="fg" style="margin-bottom:14px">
-              <label>Branş <span style="color:var(--danger)">*</span> <small style="color:var(--muted)">(senaryonun ait olduğu branş)</small></label>
+              <label>Branş <span style="color:var(--danger)">*</span></label>
               <select class="fc" id="mSenBrans" style="max-width:320px">
                 <option value="">-- Branş Seçin --</option>
               </select>
@@ -551,7 +551,7 @@ textarea.sen-edit-inp { resize: vertical; }
       </div>
 
       <div class="page" id="page-sinav">
-        <div class="ph"><h2>Sınav Not Girişi</h2><p>Öğrenci puanlarını sisteme işleyin. Notlar öğrenci adıyla eşleştirilir.</p></div>
+        <div class="ph"><h2>Sınav Not Girişi</h2><p>Öğrenci puanlarını sisteme işleyin. Öğrenciler filtrelediğiniz şubeye göre listelenir.</p></div>
         <div class="tabs">
           <button class="tab-btn active" onclick="swTab('tnot-m',this)"><i class="fa-solid fa-keyboard"></i> Tablo Üzerinden Gir</button>
           <button class="tab-btn" onclick="swTab('tnot-xl',this)"><i class="fa-solid fa-file-excel"></i> Excel Şablonu ile Toplu Yükle</button>
@@ -566,7 +566,7 @@ textarea.sen-edit-inp { resize: vertical; }
                   <option value="">Tüm Branşlar</option>
                 </select>
               </div>
-              <div class="fg" style="margin:0"><label>Uygulanan Senaryo</label><select class="fc" id="mnSen" onchange="buildNotTable()"></select></div>
+              <div class="fg" style="margin:0"><label>Uygulanan Senaryo (Ortak Havuzdan)</label><select class="fc" id="mnSen" onchange="buildNotTable()"></select></div>
             </div>
             <div class="fg" style="margin-bottom:14px"><label>Sınıf / Şube Filtrele</label><select class="fc" id="mnSinif" onchange="buildNotTable()"></select></div>
             <div id="notTableWrap" class="tr-wrap" style="max-height:480px;overflow-y:auto;margin-bottom:14px"></div>
@@ -926,7 +926,6 @@ function getDB(){
     let p = d ? JSON.parse(d) : { users: [], okulData: {}, okullar: [], branslar: [] };
     if (!p.okulData) p.okulData = {};
     if (!p.users) p.users = [];
-    // Asla mevcut listeyi ezme. Eğer dizi yoksa veya boşsa varsayılanları yükle.
     if (!p.okullar || p.okullar.length === 0) p.okullar = [...VARSAYILAN_OKULLAR];
     if (!p.branslar || p.branslar.length === 0) p.branslar = [...VARSAYILAN_BRANSLAR];
     return p;
@@ -937,6 +936,12 @@ function getDB(){
 function setDB(db){ try{ localStorage.setItem(DBK,JSON.stringify(db)); }catch(e){ console.error('localStorage kayıt hatası:',e); } }
 function errMsg(id,msg){ let e=document.getElementById(id); if(e){ e.textContent=msg; } }
 function addLog(msg){ app.logs.unshift((new Date()).toLocaleTimeString('tr')+" — "+msg); let el=document.getElementById('dashLog'); if(el) el.innerHTML=app.logs.slice(0,8).map(l=>'<div>'+l+'</div>').join(''); }
+
+// ===== YARDIMCI SEÇİCİLER (ROL BAZLI VERİ FİLTRELEME) =====
+function getMyOgr() {
+  // Yönetici tüm öğrencileri, öğretmen kendi okulunu görür
+  return app.role === 'Süper Yönetici' ? (app.d.ogrenciler || []) : (app.d.ogrenciler || []).filter(o => (o.okul || app.okul) === app.okul);
+}
 
 // ===== BULUT =====
 async function fetchCloud() {
@@ -984,7 +989,7 @@ async function doRegister(){
   }
 
   db.users.push({username:u,password:p,okul:o,rol:'Öğretmen',durum:'Onaylı', adSoyad: ads, brans: brans, email: email, tel: tel, izinler:{sablon:true, ogrenciEkle:true}});
-  if(!db.okulData[o]) db.okulData[o]={ogrenciler:[],senaryolar:{},sinavlar:{}};
+  if(!db.okulData[o]) db.okulData[o]={sinavlar:{}};
   setDB(db);
 
   if(supa) {
@@ -1014,7 +1019,7 @@ async function doLogin(){
   let db=getDB();
   if(u==='admin' && p==='Saracaksan.47'){
     app.user=u; app.role='Süper Yönetici'; app.okul='İlçe MEM'; app.adSoyad='Sistem Yöneticisi'; app.brans='Tümü';
-    if(!db.okulData['İlçe MEM']) db.okulData['İlçe MEM']={ogrenciler:[],senaryolar:{},sinavlar:{}};
+    if(!db.okulData['İlçe MEM']) db.okulData['İlçe MEM']={sinavlar:{}};
     setDB(db); bootApp(db); return;
   }
 
@@ -1028,14 +1033,17 @@ async function doLogin(){
 }
 
 function bootApp(db){
+  // --- MIGRATION (KURTARMA VE TAŞIMA İŞLEMİ) ---
   if(!db.genelSenaryolar) {
     db.genelSenaryolar = {};
-    // Eski senaryoları kurtarıp havuza alıyoruz
-    if(db.okulData) Object.keys(db.okulData).forEach(k => Object.assign(db.genelSenaryolar, db.okulData[k].senaryolar||{}));
+    if(db.okulData) {
+      Object.keys(db.okulData).forEach(k => {
+        Object.assign(db.genelSenaryolar, db.okulData[k].senaryolar || {});
+      });
+    }
   }
   if(!db.genelOgrenciler) {
     db.genelOgrenciler = [];
-    // Yöneticinin önceki okullara kaydettiği öğrencileri tek havuza alıyoruz
     if(db.okulData) {
       Object.keys(db.okulData).forEach(k => {
         if(db.okulData[k].ogrenciler) {
@@ -1044,10 +1052,13 @@ function bootApp(db){
       });
     }
   }
-  if(!db.okulData[app.okul]) db.okulData[app.okul]={ogrenciler:[],senaryolar:{},sinavlar:{}};
+
+  if(!db.okulData[app.okul]) db.okulData[app.okul] = { sinavlar: {} };
+  
   app.d = db.okulData[app.okul];
   app.d.senaryolar = db.genelSenaryolar;
-  app.d.ogrenciler = db.genelOgrenciler; 
+  app.d.ogrenciler = db.genelOgrenciler;
+
   setDB(db);
   document.getElementById('authScreen').style.display='none';
   document.getElementById('mainApp').style.display='flex';
@@ -1065,16 +1076,8 @@ function bootApp(db){
   addLog('Sisteme giriş yapıldı.');
 }
 
-function localSave(){
-  let db=getDB();
-  db.genelSenaryolar = app.d.senaryolar;
-  db.genelOgrenciler = app.d.ogrenciler;
-  db.okulData[app.okul].sinavlar = app.d.sinavlar;
-  setDB(db);
-}
-
 async function saveAll(){
-  localSave();
+  localSave(); // Önce yerel kaydet
   let btn = document.querySelector('button[onclick="saveAll()"]');
   let oldHtml = "";
   if(btn) { oldHtml = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Kaydediliyor...'; }
@@ -1084,12 +1087,14 @@ async function saveAll(){
       let cloudDb = await fetchCloud() || getDB();
       let localDb = getDB();
       if(!cloudDb.okulData) cloudDb.okulData = {};
+      
       cloudDb.okulData[app.okul] = localDb.okulData[app.okul];
       cloudDb.genelSenaryolar = localDb.genelSenaryolar;
       cloudDb.genelOgrenciler = localDb.genelOgrenciler;
       cloudDb.users = localDb.users;
       if(localDb.okullar) cloudDb.okullar = localDb.okullar;
       if(localDb.branslar) cloudDb.branslar = localDb.branslar;
+
       let {error} = await supa.from('okul_verileri').upsert({id:1,json_data:cloudDb});
       if(error) throw error;
       setDB(cloudDb);
@@ -1101,12 +1106,16 @@ async function saveAll(){
   } else {
     alert('Veriler bu tarayıcıya kaydedildi ✓');
   }
+
   if(btn) { btn.disabled = false; btn.innerHTML = oldHtml; }
 }
 
-// Sessiz yerel kayıt (her işlemden sonra otomatik çağrılır)
 function localSave(){
-  let db=getDB(); db.okulData[app.okul]=app.d; setDB(db);
+  let db=getDB(); 
+  db.genelSenaryolar = app.d.senaryolar;
+  db.genelOgrenciler = app.d.ogrenciler;
+  db.okulData[app.okul].sinavlar = app.d.sinavlar;
+  setDB(db);
 }
 
 function doLogout(){ location.reload(); }
@@ -1138,7 +1147,7 @@ function swTab(id, btn){
 
 // ===== DASHBOARD =====
 function refreshDash(){
-  let ogrList = app.role === 'Süper Yönetici' ? (app.d.ogrenciler||[]) : (app.d.ogrenciler||[]).filter(o=> (o.okul||app.okul) === app.okul);
+  let ogrList = getMyOgr();
   document.getElementById('statOgr').textContent=ogrList.length;
   document.getElementById('statSen').textContent=Object.keys(app.d.senaryolar).length;
   document.getElementById('statSin').textContent=Object.keys(app.d.sinavlar).length;
@@ -1310,7 +1319,7 @@ const VARSAYILAN_OKULLAR = [
   {ad:'Dargeçit Anadolu Lisesi', tur:'Anadolu Lisesi'},
   {ad:'Dargeçit Ilısu Anadolu Lisesi', tur:'Anadolu Lisesi'},
   {ad:'Dargeçit İmam Hatip Ortaokulu', tur:'İmam Hatip Ortaokulu'},
-  {ad:'Gazi Ortaokulu', tur:'Ortaokul'},
+  {ad:'60. Yıl Sarıgazi Ortaokulu', tur:'Ortaokul'},
   {ad:'Ilısu Ortaokulu', tur:'Ortaokul'},
   {ad:'Karabayır İmam Hatip Ortaokulu', tur:'İmam Hatip Ortaokulu'},
   {ad:'Kılavuz Ortaokulu', tur:'Ortaokul'},
@@ -1406,11 +1415,9 @@ function syncOkulSelect(){
   let sel=document.getElementById('regOkul');
   if(sel){ let mevcut=sel.value; sel.innerHTML=opts+'<option value="diger">Yeni Okul Ekle (Diğer)...</option>'; if(mevcut) sel.value=mevcut; }
   
-  // DÜZELTİLDİ: Öğrenci ekleme okul seçicisi ID'si mOgrOkul olarak güncellendi.
   let mOkul=document.getElementById('mOgrOkul');
   if(mOkul){ let mmev=mOkul.value; mOkul.innerHTML=opts; if(mmev) mOkul.value=mmev; else mOkul.value=app.okul; }
   
-  // Öğrenci filtre
   let ogrOkul=document.getElementById('delOkulFiltre');
   if(ogrOkul){ let mev=ogrOkul.value; ogrOkul.innerHTML='<option value="">Tüm Okullar</option>'+opts; if(mev) ogrOkul.value=mev; }
 }
@@ -1498,17 +1505,14 @@ function syncBransSelect(){
   let opts=branslar.map(b=>`<option value="${b.ad}">${b.ad}</option>`).join('');
   let optsEmpty='<option value="">-- Branş Seçin --</option>'+opts;
   ['regBrans','aiBrans','mSenBrans','xlSenBrans'].forEach(id=>{ let el=document.getElementById(id); if(el) el.innerHTML=optsEmpty; });
-  // Sınav sayfasındaki branş filtresi
   let mnBrans=document.getElementById('mnBransFil');
   if(mnBrans){ let mev=mnBrans.value; mnBrans.innerHTML='<option value="">Tüm Branşlar</option>'+opts; if(mev) mnBrans.value=mev; }
-  // Senaryo havuzu üst filtresi
   let senFil=document.getElementById('senBransFil');
   if(senFil){ let mev=senFil.value; senFil.innerHTML='<option value="">Tüm Branşlar</option>'+opts; if(mev) senFil.value=mev; }
   let profEl=document.getElementById('profBrans'); if(profEl) profEl.innerHTML=opts;
   let duzEl=document.getElementById('duzBrans'); if(duzEl) duzEl.innerHTML=opts;
 }
 
-// ===== YENİ: Öğrenci okul filtresi senkron =====
 function syncOgrOkulFil(){
   let list=getOkullar();
   let el=document.getElementById('delOkulFiltre');
@@ -1518,7 +1522,6 @@ function syncOgrOkulFil(){
   if(mev) el.value=mev;
 }
 
-// ===== YENİ: Senaryo branş filtresi senkron =====
 function syncSenBransFil(){
   syncBransSelect();
 }
@@ -1593,10 +1596,9 @@ function sifreDegistir(){
   addLog('Şifre değiştirildi.');
 }
 
-// ===== ÖĞRENCİ YÖNETİMİ (DÜZELTİLMİŞ KISIM) =====
+// ===== ÖĞRENCİ YÖNETİMİ =====
 function renderOgr(list){
-  let data = list || app.d.ogrenciler || [];
-  if (!list && app.role !== 'Süper Yönetici') data = data.filter(o => (o.okul||app.okul) === app.okul);
+  let data = list || getMyOgr();
   let ogrC = document.getElementById('ogrC');
   if (ogrC) ogrC.textContent = data.length;
   
@@ -1615,7 +1617,6 @@ function renderOgr(list){
       </tr>`).join('');
   }
 
-  // ÇÖZÜLEN HATA: Doğrudan tanımsız olabilecek diziler yerine garantili getOkullar() kullanıldı.
   let okullarHtml = getOkullar().map(o=>`<option value="${o.ad}">${o.ad}</option>`).join('');
   let mOgrOkul = document.getElementById('mOgrOkul');
   if(mOgrOkul && mOgrOkul.options.length <= 1) {
@@ -1623,7 +1624,7 @@ function renderOgr(list){
     mOgrOkul.value = app.okul;
   }
 
-  let ogrList2 = app.role === 'Süper Yönetici' ? (app.d.ogrenciler||[]) : (app.d.ogrenciler||[]).filter(o => (o.okul||app.okul) === app.okul);
+  let ogrList2 = getMyOgr();
   let kayitliOkullar = [...new Set(ogrList2.map(o=>o.okul||app.okul))].sort();
   let delOkul = document.getElementById('delOkulFiltre');
   if(delOkul) {
@@ -1636,17 +1637,18 @@ function renderOgr(list){
 
 function filterOgr(){ 
   let q=document.getElementById('ogrSearch').value.toLowerCase(); 
-  let data = app.role === 'Süper Yönetici' ? (app.d.ogrenciler||[]) : (app.d.ogrenciler||[]).filter(o => (o.okul||app.okul) === app.okul);
+  let data = getMyOgr();
   renderOgr(data.filter(o=>(o.no+o.ads+(o.sinif||'')+(o.okul||'')).toLowerCase().includes(q))); 
 }
 
 function updateSinifFiltre() {
   let seciliOkul = document.getElementById('delOkulFiltre')?.value || '';
-  let myOgr = app.role === 'Süper Yönetici' ? (app.d.ogrenciler||[]) : (app.d.ogrenciler||[]).filter(o=> (o.okul||app.okul) === app.okul);
+  let myOgr = getMyOgr();
   let siniflar = [...new Set(myOgr.filter(o => !seciliOkul || (o.okul||app.okul) === seciliOkul).map(o=>o.sinif).filter(Boolean))].sort();
   let el = document.getElementById('delSinifFiltre');
-  if(el) el.innerHTML = '<option value="">Tüm Sınıflar</option>' + siniflar.map(s=>`<option value="${s}">${s}</option>`).join('');
-}
+  if(el) {
+    el.innerHTML = '<option value="">Tüm Sınıflar</option>' + siniflar.map(s=>`<option value="${s}">${s}</option>`).join('');
+  }
 }
 
 function editOgr(no, okul) {
@@ -1687,14 +1689,15 @@ function addOgrManuel(){
   let ads = document.getElementById('mAds').value.trim();
   let sinif = document.getElementById('mSinif').value.trim();
   let tel = document.getElementById('mTel').value.trim();
+  
   let okul = document.getElementById('mOgrOkul').value;
+  if(app.role !== 'Süper Yönetici') okul = app.okul; // Öğretmenler sadece kendi okuluna ekleyebilir
 
   if(!no || !ads || !okul){ alert('Okul, Okul No ve Adı Soyadı zorunlu alanlardır.'); return; }
 
   if (!app.d.ogrenciler) app.d.ogrenciler = [];
 
   if(oldNo && oldOkul) {
-    // Düzenleme Modu
     let idx = app.d.ogrenciler.findIndex(o => String(o.no) === String(oldNo) && (o.okul||app.okul) === oldOkul);
     if(idx > -1) {
       if((oldNo !== no || oldOkul !== okul) && app.d.ogrenciler.find(o => String(o.no) === String(no) && (o.okul||app.okul) === okul)){
@@ -1704,7 +1707,6 @@ function addOgrManuel(){
     }
     cancelOgrEdit();
   } else {
-    // Yeni Ekleme Modu
     if(app.d.ogrenciler.find(o => String(o.no) === String(no) && (o.okul||app.okul) === okul)){
       alert('Bu okulda bu okul numarası zaten kayıtlı! (Mükerrer engellendi)'); return;
     }
@@ -1725,10 +1727,11 @@ function delOgr(no, okul){
 function delHedefliOgr(){ 
   let seciliOkul = document.getElementById('delOkulFiltre').value;
   let seciliSinif = document.getElementById('delSinifFiltre').value;
+
   if (!app.d.ogrenciler) return;
 
   if(!seciliOkul && !seciliSinif) {
-    if(!confirm("TÜM okullardaki TÜM öğrencileri silmek istediğinize emin misiniz? (Bu işlem geri alınamaz!)")) return;
+    if(!confirm("Ekranda listelenen TÜM okullardaki TÜM öğrencileri silmek istediğinize emin misiniz? (Bu işlem geri alınamaz!)")) return;
   } 
   else if (seciliOkul && !seciliSinif) {
     if(!confirm(`"${seciliOkul}" okulundaki TÜM öğrencileri silmek istediğinize emin misiniz?`)) return;
@@ -1740,9 +1743,13 @@ function delHedefliOgr(){
   for(let i = app.d.ogrenciler.length - 1; i >= 0; i--) {
     let o = app.d.ogrenciler[i];
     let match = false;
+    
+    if(app.role !== 'Süper Yönetici' && (o.okul||app.okul) !== app.okul) continue; // Öğretmen başkasını silemez
+
     if(!seciliOkul && !seciliSinif) match = true;
     else if(seciliOkul && !seciliSinif && (o.okul||app.okul) === seciliOkul) match = true;
     else if(seciliOkul && seciliSinif && (o.okul||app.okul) === seciliOkul && o.sinif === seciliSinif) match = true;
+    
     if(match) app.d.ogrenciler.splice(i, 1);
   }
   renderOgr(); saveAll();
@@ -1779,18 +1786,22 @@ function xlUpload(inp, tip){
       let data=XLSX.utils.sheet_to_json(ws);
       if(tip==='ogrenci'){
         let ek=0,at=0;
+        if(!app.d.ogrenciler) app.d.ogrenciler = [];
         data.forEach(row=>{
           let no=String(row['Okul No']||'').trim();
           let ads='';
           if(row['Adı Soyadı']) ads=String(row['Adı Soyadı']).trim();
           else if(row['Adı']||row['Soyadı']) ads=(String(row['Adı']||'')+' '+String(row['Soyadı']||'')).trim();
           let sinif=String(row['Sınıf']||'').trim();
+          
           let okul=String(row['Okul']||'').trim() || app.okul;
+          if(app.role !== 'Süper Yönetici') okul = app.okul; // Öğretmen yüklerse kendi okuluna yazılır
+
           if(!no){ return; }
           if(app.d.ogrenciler.find(o=>String(o.no)===no && (o.okul||app.okul)===okul)){ at++; return; }
           app.d.ogrenciler.push({no,ads,sinif,okul}); ek++;
         });
-        renderOgr(); localSave(); alert(`${ek} öğrenci eklendi. ${at} mükerrer kayıt engellendi.`); addLog(`Öğrenci Excel yüklendi: +${ek}`);
+        renderOgr(); saveAll(); alert(`${ek} öğrenci eklendi. ${at} mükerrer kayıt engellendi.`); addLog(`Öğrenci Excel yüklendi: +${ek}`);
       } else if(tip==='senaryo'){
         let ad=document.getElementById('xlSenAdi').value.trim(); if(!ad){ alert('Senaryo adı girin.'); return; }
         let brans=document.getElementById('xlSenBrans').value; if(!brans){ alert('Branş seçin.'); return; }
@@ -1802,7 +1813,7 @@ function xlUpload(inp, tip){
           surec:String(row['Süreç Bileşeni']||row['Surec']||'').trim(),
           maxPuan:parseInt(row['Max Puan']||row['maxPuan'])||20
         })).filter(d=>d.kazanim);
-        app.d.senaryolar[ad]={detaylar, brans, olusturan: app.adSoyad || app.user}; renderSen(); localSave(); alert('Senaryo eklendi: '+ad); addLog('Senaryo Excel: '+ad);
+        app.d.senaryolar[ad]={detaylar, brans, olusturan: app.adSoyad || app.user}; renderSen(); saveAll(); alert('Senaryo eklendi: '+ad); addLog('Senaryo Excel: '+ad);
       } else if(tip==='not'){
         let senId=document.getElementById('xlNotSenUp').value; if(!senId){ alert('Senaryo seçin.'); return; }
         if(!app.d.sinavlar[senId]) app.d.sinavlar[senId]=[];
@@ -1811,7 +1822,7 @@ function xlUpload(inp, tip){
           let idx=app.d.sinavlar[senId].findIndex(x=>String(x['Okul No'])===no);
           if(idx>-1) app.d.sinavlar[senId][idx]=row; else app.d.sinavlar[senId].push(row);
         });
-        localSave(); alert('Notlar yüklendi!'); addLog('Not Excel yüklendi: '+senId);
+        saveAll(); alert('Notlar yüklendi!'); addLog('Not Excel yüklendi: '+senId);
       }
     }catch(e){ alert('Dosya okuma hatası: '+e.message); }
     inp.value='';
@@ -1826,17 +1837,7 @@ function renderSen(){
   let h='';
   let keys=Object.keys(app.d.senaryolar);
 
-  // Süper Yönetici tüm senaryoları görür; öğretmen kendi branşını + branşsızları
-  if(app.role!=='Süper Yönetici' && app.brans){
-    keys=keys.filter(id=>{
-      let b=app.d.senaryolar[id].brans||'';
-      return !b || b===app.brans;
-    });
-  }
-
-  // Branş filtresi
   if(bransFil) keys=keys.filter(id=>(app.d.senaryolar[id].brans||'')=== bransFil);
-  // Arama filtresi
   if(q) keys=keys.filter(id=>id.toLowerCase().includes(q));
 
   if(!keys.length){ h='<p style="color:var(--muted);font-size:13px;padding:10px 0">Gösterilecek senaryo yok.</p>'; }
@@ -1845,7 +1846,8 @@ function renderSen(){
     let sen=app.d.senaryolar[id];
     let det=sen.detaylar||[];
     let bransRozet=sen.brans?`<span class="brans-tag">${sen.brans}</span>`:'';
-    let olusturanRozet=sen.olusturan?`<span class="badge bg-b" style="font-size:10px"><i class="fa-solid fa-user"></i> ${sen.olusturan}</span>`:'';
+    let olusturanRozet = sen.olusturan ? `<span class="badge bg-b" style="font-size:10px"><i class="fa-solid fa-user"></i> Ekleyen: ${sen.olusturan}</span>` : `<span class="badge" style="background:#94a3b8;color:#fff;font-size:10px"><i class="fa-solid fa-robot"></i> Sistem</span>`;
+    
     h+=`<div style="border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:var(--radius);padding:16px 18px;margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:10px">
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
@@ -1879,7 +1881,6 @@ function renderSen(){
   document.getElementById('senList').innerHTML=h;
 }
 
-// DÜZELTİLDİ: Senaryo satır inline düzenleme textarea yapıldı
 function editSenSatir(senId, rowIdx){
   let sen=app.d.senaryolar[senId];
   if(!sen || !sen.detaylar || !sen.detaylar[rowIdx]) return;
@@ -1916,12 +1917,12 @@ function saveSenSatir(senId, rowIdx){
     surec: document.getElementById(`sedit_b_${rowIdx}`).value.trim(),
     maxPuan: parseInt(document.getElementById(`sedit_p_${rowIdx}`).value)||20
   };
-  localSave();
+  saveAll();
   renderSen();
   addLog(`Senaryo satırı güncellendi: ${senId} #${rowIdx+1}`);
 }
 
-function delSen(id){ if(!confirm(`"${id}" senaryosu silinsin mi?`)) return; delete app.d.senaryolar[id]; renderSen(); localSave(); }
+function delSen(id){ if(!confirm(`"${id}" senaryosu silinsin mi?`)) return; delete app.d.senaryolar[id]; renderSen(); saveAll(); }
 
 function editSen(id){
   let s=app.d.senaryolar[id]; if(!s) return;
@@ -1959,7 +1960,7 @@ function saveMSen(){
   let rows=document.querySelectorAll('#mSenBody tr'), detaylar=[];
   rows.forEach(tr=>{ let c=tr.querySelector('.s-c').value.trim(); if(c) detaylar.push({unite:tr.querySelector('.s-u').value.trim(),konu:tr.querySelector('.s-k').value.trim(),kazanim:c,surec:tr.querySelector('.s-b').value.trim(),maxPuan:parseInt(tr.querySelector('.s-p').value)||20}); });
   if(!detaylar.length){ alert('En az 1 öğrenme çıktısı ekleyin.'); return; }
-  app.d.senaryolar[ad]={detaylar, brans, olusturan: app.adSoyad || app.user}; renderSen(); localSave(); alert('Senaryo kaydedildi: '+ad); addLog('Senaryo kaydedildi: '+ad);
+  app.d.senaryolar[ad]={detaylar, brans, olusturan: app.adSoyad || app.user}; renderSen(); saveAll(); alert('Senaryo kaydedildi: '+ad); addLog('Senaryo kaydedildi: '+ad);
 }
 
 // ===== AI SENARYO =====
@@ -2010,14 +2011,10 @@ ${metin}`;
 }
 
 // ===== SINAV NOT GİRİŞİ =====
-// DÜZELTİLDİ: Senaryo Atama Hatası
 function initSinavSenaryolar(){
   let bransFil=document.getElementById('mnBransFil')?.value||'';
   let keys=Object.keys(app.d.senaryolar);
   if(bransFil) keys=keys.filter(k=>(app.d.senaryolar[k].brans||'')=== bransFil);
-  else if(app.role!=='Süper Yönetici' && app.brans){
-    keys=keys.filter(k=>{ let b=app.d.senaryolar[k].brans||''; return !b || b===app.brans; });
-  }
   let mnSen=document.getElementById('mnSen');
   if(mnSen){ 
     mnSen.innerHTML='<option value="">-- Senaryo seçin --</option>'; 
@@ -2037,22 +2034,21 @@ function initSinav(){
   let allKeys=Object.keys(app.d.senaryolar);
   ['xlNotSen','xlNotSenUp'].forEach(id=>{ let el=document.getElementById(id); if(el){ el.innerHTML='<option value="">-- Senaryo seçin --</option>'; allKeys.forEach(k=>el.innerHTML+=`<option value="${k}">${k}</option>`); } });
 
-  let myOgr = app.role === 'Süper Yönetici' ? (app.d.ogrenciler||[]) : (app.d.ogrenciler||[]).filter(o=> (o.okul||app.okul) === app.okul);
+  let myOgr = getMyOgr();
   let siniflar=[...new Set(myOgr.map(o=>o.sinif).filter(Boolean))].sort();
   ['mnSinif','xlNotSinif'].forEach(id=>{ let el=document.getElementById(id); if(el){ el.innerHTML='<option value="">Tümü</option>'; siniflar.forEach(s=>el.innerHTML+=`<option>${s}</option>`); } });
 
   initSinavSenaryolar();
 }
 
-// DÜZELTİLDİ: Tablo Hizalaması ve Puan Kayıt Hatası
 function buildNotTable(){
   let senId=document.getElementById('mnSen').value;
   let sinif=document.getElementById('mnSinif').value;
   let wrap=document.getElementById('notTableWrap'); wrap.innerHTML='';
   if(!senId || !app.d.senaryolar[senId]) return;
   let det=app.d.senaryolar[senId]?.detaylar||[];
-  let myOgr = app.role === 'Süper Yönetici' ? (app.d.ogrenciler||[]) : (app.d.ogrenciler||[]).filter(o=> (o.okul||app.okul) === app.okul);
-  let ogr = sinif ? myOgr.filter(o=>o.sinif===sinif) : myOgr;
+  let myOgr = getMyOgr();
+  let ogr=sinif?myOgr.filter(o=>o.sinif===sinif):myOgr;
   let mevcut=app.d.sinavlar[senId]||[];
 
   let head='<table id="notTbl"><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
@@ -2066,11 +2062,11 @@ function buildNotTable(){
     body+=`<tr data-no="${o.no}" data-ads="${o.ads}" data-sinif="${o.sinif||''}" data-senid="${senId}">`;
     body+=`<td><b>${o.no}</b></td><td>${o.ads}</td><td>${o.sinif||''}</td>`;
     det.forEach((k,i)=>{
-      let col=qKey(k,i);
+      let col=`Soru ${i+1} [Max:${k.maxPuan}]`;
       let v=(ex&&ex[col]!=null)?ex[col]:'';
       body+=`<td><input type="number" class="ic ni" data-col="${col}" data-max="${k.maxPuan}" min="0" max="${k.maxPuan}" value="${v}" oninput="calcRow(this)"></td>`;
     });
-    let totVal=det.reduce((s,k,i)=>{let c=qKey(k,i);return s+((ex&&ex[c]!=null)?parseFloat(ex[c])||0:0);},0);
+    let totVal=det.reduce((s,k,i)=>{let c=`Soru ${i+1} [Max:${k.maxPuan}]`;return s+((ex&&ex[c]!=null)?parseFloat(ex[c])||0:0);},0);
     let pct=maxTop?Math.round(totVal/maxTop*100):0;
     body+=`<td class="row-top"><b>${totVal}</b></td><td class="row-pct"><span class="badge ${pct>=70?'bg-g':pct>=50?'bg-y':'bg-r'}">%${pct}</span></td></tr>`;
   });
@@ -2103,7 +2099,7 @@ function saveNot(){
     let idx=app.d.sinavlar[senId].findIndex(x=>String(x['Okul No'])===String(no));
     if(idx>-1) app.d.sinavlar[senId][idx]=row; else app.d.sinavlar[senId].push(row);
   });
-  localSave();
+  saveAll();
   let msg=document.getElementById('notSaveMsg'); msg.textContent='Notlar kaydedildi ✓';
   setTimeout(()=>msg.textContent='',3000);
   addLog('Notlar kaydedildi: '+senId);
@@ -2113,9 +2109,9 @@ function dlNotTemplate(){
   let rawSen=document.getElementById('xlNotSen').value, sinif=document.getElementById('xlNotSinif').value;
   if(!rawSen){ alert('Senaryo seçin.'); return; }
   let det=app.d.senaryolar[rawSen]?.detaylar||[];
-  let myOgr = app.role === 'Süper Yönetici' ? (app.d.ogrenciler||[]) : (app.d.ogrenciler||[]).filter(o=> (o.okul||app.okul) === app.okul);
-  let ogr = sinif ? myOgr.filter(o=>o.sinif===sinif) : myOgr;
-  let hdr=['Okul No','Adı Soyadı','Sınıf']; det.forEach((k,i)=>hdr.push(qKey(k,i)));
+  let myOgr = getMyOgr();
+  let ogr=sinif?myOgr.filter(o=>o.sinif===sinif):myOgr;
+  let hdr=['Okul No','Adı Soyadı','Sınıf']; det.forEach((k,i)=>hdr.push(`Soru ${i+1} [Max:${k.maxPuan}]`));
   let rows=[hdr]; ogr.forEach(o=>{ let r=[o.no,o.ads,o.sinif||'']; det.forEach(()=>r.push('')); rows.push(r); });
   let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),'Notlar');
   XLSX.writeFile(wb,`NotSablonu_${rawSen.substring(0,30)}.xlsx`);
@@ -2242,7 +2238,7 @@ function saveManuelAnaliz(){
     if(idx<0) return;
     tr.querySelectorAll('.man-ic').forEach(inp=>{ let v=parseFloat(inp.value)||0; let mx=parseFloat(inp.dataset.max)||20; app.d.sinavlar[senId][idx][inp.dataset.col]=Math.min(v,mx); });
   });
-  localSave(); buildAnaliz(); alert('Manuel düzenleme kaydedildi ve analiz yenilendi ✓');
+  saveAll(); buildAnaliz(); alert('Manuel düzenleme kaydedildi ve analiz yenilendi ✓');
 }
 
 function exportAnalizXl(){
@@ -2318,7 +2314,7 @@ let pdfAyarlar = { grafik: 180, yazi: 12, satir: 22 };
 let zoomLevel = 0.75;
 
 const PDF_BOLUMLER = [
-  { id:'kapak',     label:'Kapak Sayfası (Okul / Sınav Adı)',  icon:'fa-file',           varsayilan:true },
+  { id:'kapak',     label:'Kapak Sayfası (Okul / Sınav Adı)',  icon:'fa-file',             varsayilan:true },
   { id:'istatistik',label:'İstatistiksel Özet (Ort · SS · Min · Max)', icon:'fa-calculator', varsayilan:true },
   { id:'sinifkart', label:'Şube Özet Kartları',                icon:'fa-school',         varsayilan:true },
   { id:'ogrenciTbl',label:'Öğrenci Sonuç Tablosu (Sıralı)',   icon:'fa-table',          varsayilan:true },
