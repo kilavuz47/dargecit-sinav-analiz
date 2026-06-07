@@ -1003,6 +1003,13 @@ function yazdirBolum(id) {
       table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px; }
       th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
       th { background-color: #f1f5f9; font-weight: bold; }
+      
+      /* EKLENEN KISIM: Tablo satırlarının ve kartların ortadan bölünmesini kesin olarak engeller */
+      tr, .sinif-ozet-card, .ai-yorum-box { 
+        page-break-inside: avoid !important; 
+        break-inside: avoid !important; 
+      }
+      
       .ct { font-size: 18px; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 5px; }
       .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
       .bg-g { color: #065F46; background: #D1FAE5; }
@@ -1026,7 +1033,7 @@ function yazdirBolum(id) {
   printWindow.document.write('</body></html>');
   printWindow.document.close();
   printWindow.focus();
-  setTimeout(() => { printWindow.print(); printWindow.close(); }, 800); // Grafiklerin yüklenmesi için bekletiyoruz
+  setTimeout(() => { printWindow.print(); printWindow.close(); }, 800);
 }
 
 // ===== AUTH =====
