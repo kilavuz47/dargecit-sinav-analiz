@@ -2113,8 +2113,9 @@ function dlNotTemplate(){
   let rawSen=document.getElementById('xlNotSen').value, sinif=document.getElementById('xlNotSinif').value;
   if(!rawSen){ alert('Senaryo seçin.'); return; }
   let det=app.d.senaryolar[rawSen]?.detaylar||[];
-  let ogr=sinif?app.d.ogrenciler.filter(o=>o.sinif===sinif):app.d.ogrenciler;
-  let hdr=['Okul No','Adı Soyadı','Sınıf']; det.forEach((k,i)=>hdr.push(`Soru ${i+1} [Max:${k.maxPuan}]`));
+  let myOgr = app.role === 'Süper Yönetici' ? (app.d.ogrenciler||[]) : (app.d.ogrenciler||[]).filter(o=> (o.okul||app.okul) === app.okul);
+  let ogr = sinif ? myOgr.filter(o=>o.sinif===sinif) : myOgr;
+  let hdr=['Okul No','Adı Soyadı','Sınıf']; det.forEach((k,i)=>hdr.push(qKey(k,i)));
   let rows=[hdr]; ogr.forEach(o=>{ let r=[o.no,o.ads,o.sinif||'']; det.forEach(()=>r.push('')); rows.push(r); });
   let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),'Notlar');
   XLSX.writeFile(wb,`NotSablonu_${rawSen.substring(0,30)}.xlsx`);
