@@ -1028,10 +1028,26 @@ async function doLogin(){
 }
 
 function bootApp(db){
-  if(!db.genelSenaryolar) db.genelSenaryolar = {}; // Herkes için ortak senaryo havuzu eklendi
+  if(!db.genelSenaryolar) {
+    db.genelSenaryolar = {};
+    // Eski senaryoları kurtarıp havuza alıyoruz
+    if(db.okulData) Object.keys(db.okulData).forEach(k => Object.assign(db.genelSenaryolar, db.okulData[k].senaryolar||{}));
+  }
+  if(!db.genelOgrenciler) {
+    db.genelOgrenciler = [];
+    // Yöneticinin önceki okullara kaydettiği öğrencileri tek havuza alıyoruz
+    if(db.okulData) {
+      Object.keys(db.okulData).forEach(k => {
+        if(db.okulData[k].ogrenciler) {
+          db.okulData[k].ogrenciler.forEach(o => { o.okul = o.okul || k; db.genelOgrenciler.push(o); });
+        }
+      });
+    }
+  }
   if(!db.okulData[app.okul]) db.okulData[app.okul]={ogrenciler:[],senaryolar:{},sinavlar:{}};
   app.d = db.okulData[app.okul];
-  app.d.senaryolar = db.genelSenaryolar; // Artık herkes ortak havuzu kullanacak
+  app.d.senaryolar = db.genelSenaryolar;
+  app.d.ogrenciler = db.genelOgrenciler; 
   setDB(db);
   document.getElementById('authScreen').style.display='none';
   document.getElementById('mainApp').style.display='flex';
@@ -1049,10 +1065,16 @@ function bootApp(db){
   addLog('Sisteme giriş yapıldı.');
 }
 
-async function saveAll(){
-  // Önce yerel kaydet
-  let db=getDB(); db.okulData[app.okul]=app.d; setDB(db);
+function localSave(){
+  let db=getDB();
+  db.genelSenaryolar = app.d.senaryolar;
+  db.genelOgrenciler = app.d.ogrenciler;
+  db.okulData[app.okul].sinavlar = app.d.sinavlar;
+  setDB(db);
+}
 
+async function saveAll(){
+  localSave();
   let btn = document.querySelector('button[onclick="saveAll()"]');
   let oldHtml = "";
   if(btn) { oldHtml = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Kaydediliyor...'; }
@@ -1060,9 +1082,11 @@ async function saveAll(){
   if(supa){
     try{
       let cloudDb = await fetchCloud() || getDB();
-      if(!cloudDb.okulData) cloudDb.okulData = {};
-      cloudDb.okulData[app.okul] = app.d;
       let localDb = getDB();
+      if(!cloudDb.okulData) cloudDb.okulData = {};
+      cloudDb.okulData[app.okul] = localDb.okulData[app.okul];
+      cloudDb.genelSenaryolar = localDb.genelSenaryolar;
+      cloudDb.genelOgrenciler = localDb.genelOgrenciler;
       cloudDb.users = localDb.users;
       if(localDb.okullar) cloudDb.okullar = localDb.okullar;
       if(localDb.branslar) cloudDb.branslar = localDb.branslar;
@@ -1077,7 +1101,6 @@ async function saveAll(){
   } else {
     alert('Veriler bu tarayıcıya kaydedildi ✓');
   }
-
   if(btn) { btn.disabled = false; btn.innerHTML = oldHtml; }
 }
 
@@ -1115,7 +1138,8 @@ function swTab(id, btn){
 
 // ===== DASHBOARD =====
 function refreshDash(){
-  document.getElementById('statOgr').textContent=app.d.ogrenciler.length;
+  let ogrList = app.role === 'Süper Yönetici' ? (app.d.ogrenciler||[]) : (app.d.ogrenciler||[]).filter(o=> (o.okul||app.okul) === app.okul);
+  document.getElementById('statOgr').textContent=ogrList.length;
   document.getElementById('statSen').textContent=Object.keys(app.d.senaryolar).length;
   document.getElementById('statSin').textContent=Object.keys(app.d.sinavlar).length;
 }
@@ -1572,6 +1596,7 @@ function sifreDegistir(){
 // ===== ÖĞRENCİ YÖNETİMİ (DÜZELTİLMİŞ KISIM) =====
 function renderOgr(list){
   let data = list || app.d.ogrenciler || [];
+  if (!list && app.role !== 'Süper Yönetici') data = data.filter(o => (o.okul||app.okul) === app.okul);
   let ogrC = document.getElementById('ogrC');
   if (ogrC) ogrC.textContent = data.length;
   
@@ -1595,11 +1620,11 @@ function renderOgr(list){
   let mOgrOkul = document.getElementById('mOgrOkul');
   if(mOgrOkul && mOgrOkul.options.length <= 1) {
     mOgrOkul.innerHTML = okullarHtml; 
-    mOgrOkul.value = app.okul; // Varsayılan olarak öğretmenin kendi okulu
+    mOgrOkul.value = app.okul;
   }
 
-  let ogrenciler = app.d.ogrenciler || [];
-  let kayitliOkullar = [...new Set(ogrenciler.map(o=>o.okul||app.okul))].sort();
+  let ogrList2 = app.role === 'Süper Yönetici' ? (app.d.ogrenciler||[]) : (app.d.ogrenciler||[]).filter(o => (o.okul||app.okul) === app.okul);
+  let kayitliOkullar = [...new Set(ogrList2.map(o=>o.okul||app.okul))].sort();
   let delOkul = document.getElementById('delOkulFiltre');
   if(delOkul) {
     let mevcutSecim = delOkul.value;
@@ -1611,18 +1636,17 @@ function renderOgr(list){
 
 function filterOgr(){ 
   let q=document.getElementById('ogrSearch').value.toLowerCase(); 
-  let ogrenciler = app.d.ogrenciler || [];
-  renderOgr(ogrenciler.filter(o=>(o.no+o.ads+(o.sinif||'')+(o.okul||'')).toLowerCase().includes(q))); 
+  let data = app.role === 'Süper Yönetici' ? (app.d.ogrenciler||[]) : (app.d.ogrenciler||[]).filter(o => (o.okul||app.okul) === app.okul);
+  renderOgr(data.filter(o=>(o.no+o.ads+(o.sinif||'')+(o.okul||'')).toLowerCase().includes(q))); 
 }
 
 function updateSinifFiltre() {
   let seciliOkul = document.getElementById('delOkulFiltre')?.value || '';
-  let ogrenciler = app.d.ogrenciler || [];
-  let siniflar = [...new Set(ogrenciler.filter(o => !seciliOkul || (o.okul||app.okul) === seciliOkul).map(o=>o.sinif).filter(Boolean))].sort();
+  let myOgr = app.role === 'Süper Yönetici' ? (app.d.ogrenciler||[]) : (app.d.ogrenciler||[]).filter(o=> (o.okul||app.okul) === app.okul);
+  let siniflar = [...new Set(myOgr.filter(o => !seciliOkul || (o.okul||app.okul) === seciliOkul).map(o=>o.sinif).filter(Boolean))].sort();
   let el = document.getElementById('delSinifFiltre');
-  if(el) {
-    el.innerHTML = '<option value="">Tüm Sınıflar</option>' + siniflar.map(s=>`<option value="${s}">${s}</option>`).join('');
-  }
+  if(el) el.innerHTML = '<option value="">Tüm Sınıflar</option>' + siniflar.map(s=>`<option value="${s}">${s}</option>`).join('');
+}
 }
 
 function editOgr(no, okul) {
@@ -1693,32 +1717,34 @@ function addOgrManuel(){
 function delOgr(no, okul){ 
   if(!confirm("Öğrenci silinsin mi?")) return;
   if(!app.d.ogrenciler) return;
-  app.d.ogrenciler = app.d.ogrenciler.filter(o => !(String(o.no) === String(no) && (o.okul||app.okul) === okul)); 
+  let idx = app.d.ogrenciler.findIndex(o => String(o.no) === String(no) && (o.okul||app.okul) === okul);
+  if(idx > -1) app.d.ogrenciler.splice(idx, 1);
   renderOgr(); saveAll(); 
 }
 
 function delHedefliOgr(){ 
   let seciliOkul = document.getElementById('delOkulFiltre').value;
   let seciliSinif = document.getElementById('delSinifFiltre').value;
-
   if (!app.d.ogrenciler) return;
 
   if(!seciliOkul && !seciliSinif) {
-    if(confirm("TÜM okullardaki TÜM öğrencileri silmek istediğinize emin misiniz? (Bu işlem geri alınamaz!)")) {
-      app.d.ogrenciler = [];
-    } else return;
+    if(!confirm("TÜM okullardaki TÜM öğrencileri silmek istediğinize emin misiniz? (Bu işlem geri alınamaz!)")) return;
   } 
   else if (seciliOkul && !seciliSinif) {
-    if(confirm(`"${seciliOkul}" okulundaki TÜM öğrencileri silmek istediğinize emin misiniz?`)) {
-      app.d.ogrenciler = app.d.ogrenciler.filter(o => (o.okul||app.okul) !== seciliOkul);
-    } else return;
+    if(!confirm(`"${seciliOkul}" okulundaki TÜM öğrencileri silmek istediğinize emin misiniz?`)) return;
   }
   else if (seciliOkul && seciliSinif) {
-    if(confirm(`"${seciliOkul}" okulunun "${seciliSinif}" sınıfındaki öğrencileri silmek istediğinize emin misiniz?`)) {
-      app.d.ogrenciler = app.d.ogrenciler.filter(o => !((o.okul||app.okul) === seciliOkul && o.sinif === seciliSinif));
-    } else return;
+    if(!confirm(`"${seciliOkul}" okulunun "${seciliSinif}" sınıfındaki öğrencileri silmek istediğinize emin misiniz?`)) return;
   }
 
+  for(let i = app.d.ogrenciler.length - 1; i >= 0; i--) {
+    let o = app.d.ogrenciler[i];
+    let match = false;
+    if(!seciliOkul && !seciliSinif) match = true;
+    else if(seciliOkul && !seciliSinif && (o.okul||app.okul) === seciliOkul) match = true;
+    else if(seciliOkul && seciliSinif && (o.okul||app.okul) === seciliOkul && o.sinif === seciliSinif) match = true;
+    if(match) app.d.ogrenciler.splice(i, 1);
+  }
   renderOgr(); saveAll();
 }
 
@@ -2011,7 +2037,8 @@ function initSinav(){
   let allKeys=Object.keys(app.d.senaryolar);
   ['xlNotSen','xlNotSenUp'].forEach(id=>{ let el=document.getElementById(id); if(el){ el.innerHTML='<option value="">-- Senaryo seçin --</option>'; allKeys.forEach(k=>el.innerHTML+=`<option value="${k}">${k}</option>`); } });
 
-  let siniflar=[...new Set(app.d.ogrenciler.map(o=>o.sinif).filter(Boolean))].sort();
+  let myOgr = app.role === 'Süper Yönetici' ? (app.d.ogrenciler||[]) : (app.d.ogrenciler||[]).filter(o=> (o.okul||app.okul) === app.okul);
+  let siniflar=[...new Set(myOgr.map(o=>o.sinif).filter(Boolean))].sort();
   ['mnSinif','xlNotSinif'].forEach(id=>{ let el=document.getElementById(id); if(el){ el.innerHTML='<option value="">Tümü</option>'; siniflar.forEach(s=>el.innerHTML+=`<option>${s}</option>`); } });
 
   initSinavSenaryolar();
@@ -2024,7 +2051,8 @@ function buildNotTable(){
   let wrap=document.getElementById('notTableWrap'); wrap.innerHTML='';
   if(!senId || !app.d.senaryolar[senId]) return;
   let det=app.d.senaryolar[senId]?.detaylar||[];
-  let ogr=sinif?app.d.ogrenciler.filter(o=>o.sinif===sinif):app.d.ogrenciler;
+  let myOgr = app.role === 'Süper Yönetici' ? (app.d.ogrenciler||[]) : (app.d.ogrenciler||[]).filter(o=> (o.okul||app.okul) === app.okul);
+  let ogr = sinif ? myOgr.filter(o=>o.sinif===sinif) : myOgr;
   let mevcut=app.d.sinavlar[senId]||[];
 
   let head='<table id="notTbl"><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
@@ -2038,11 +2066,11 @@ function buildNotTable(){
     body+=`<tr data-no="${o.no}" data-ads="${o.ads}" data-sinif="${o.sinif||''}" data-senid="${senId}">`;
     body+=`<td><b>${o.no}</b></td><td>${o.ads}</td><td>${o.sinif||''}</td>`;
     det.forEach((k,i)=>{
-      let col=`Soru ${i+1} [Max:${k.maxPuan}]`;
+      let col=qKey(k,i);
       let v=(ex&&ex[col]!=null)?ex[col]:'';
       body+=`<td><input type="number" class="ic ni" data-col="${col}" data-max="${k.maxPuan}" min="0" max="${k.maxPuan}" value="${v}" oninput="calcRow(this)"></td>`;
     });
-    let totVal=det.reduce((s,k,i)=>{let c=`Soru ${i+1} [Max:${k.maxPuan}]`;return s+((ex&&ex[c]!=null)?parseFloat(ex[c])||0:0);},0);
+    let totVal=det.reduce((s,k,i)=>{let c=qKey(k,i);return s+((ex&&ex[c]!=null)?parseFloat(ex[c])||0:0);},0);
     let pct=maxTop?Math.round(totVal/maxTop*100):0;
     body+=`<td class="row-top"><b>${totVal}</b></td><td class="row-pct"><span class="badge ${pct>=70?'bg-g':pct>=50?'bg-y':'bg-r'}">%${pct}</span></td></tr>`;
   });
