@@ -1569,33 +1569,35 @@ function sifreDegistir(){
 
 // ===== ÖĞRENCİ YÖNETİMİ (DÜZELTİLMİŞ KISIM) =====
 function renderOgr(list){
-  let data = list || app.d.ogrenciler;
-  document.getElementById('ogrC').textContent=app.d.ogrenciler.length;
+  let data = list || app.d.ogrenciler || [];
+  let ogrC = document.getElementById('ogrC');
+  if (ogrC) ogrC.textContent = data.length;
   
-  // Tabloyu çiz
-  document.getElementById('ogrBody').innerHTML = data.map(o=>`<tr>
-    <td><span style="font-size:11px;color:var(--muted)">${o.okul||app.okul}</span></td>
-    <td><b>${o.no}</b></td>
-    <td>${o.ads}</td>
-    <td><span class="badge bg-b">${o.sinif||''}</span></td>
-    <td>${o.tel||'—'}</td>
-    <td>
-      <button class="btn btn-outline btn-sm" onclick="editOgr('${o.no}', '${o.okul||app.okul}')" title="Düzenle"><i class="fa-solid fa-pen"></i></button>
-      <button class="btn btn-danger btn-sm" onclick="delOgr('${o.no}', '${o.okul||app.okul}')" title="Sil"><i class="fa-solid fa-trash"></i></button>
-    </td>
-  </tr>`).join('');
+  let ogrBody = document.getElementById('ogrBody');
+  if (ogrBody) {
+      ogrBody.innerHTML = data.map(o=>`<tr>
+        <td><span style="font-size:11px;color:var(--muted)">${o.okul||app.okul}</span></td>
+        <td><b>${o.no}</b></td>
+        <td>${o.ads}</td>
+        <td><span class="badge bg-b">${o.sinif||''}</span></td>
+        <td>${o.tel||'—'}</td>
+        <td>
+          <button class="btn btn-outline btn-sm" onclick="editOgr('${o.no}', '${o.okul||app.okul}')" title="Düzenle"><i class="fa-solid fa-pen"></i></button>
+          <button class="btn btn-danger btn-sm" onclick="delOgr('${o.no}', '${o.okul||app.okul}')" title="Sil"><i class="fa-solid fa-trash"></i></button>
+        </td>
+      </tr>`).join('');
+  }
 
-  // Okul dropdownlarını güncelle
-  let db = getDB();
-  let okullarHtml = db.okullar.map(o=>`<option value="${o.ad}">${o.ad}</option>`).join('');
+  // ÇÖZÜLEN HATA: Doğrudan tanımsız olabilecek diziler yerine garantili getOkullar() kullanıldı.
+  let okullarHtml = getOkullar().map(o=>`<option value="${o.ad}">${o.ad}</option>`).join('');
   let mOgrOkul = document.getElementById('mOgrOkul');
   if(mOgrOkul && mOgrOkul.options.length <= 1) {
     mOgrOkul.innerHTML = okullarHtml; 
     mOgrOkul.value = app.okul; // Varsayılan olarak öğretmenin kendi okulu
   }
 
-  // Silme filtreleri için dropdownları güncelle
-  let kayitliOkullar = [...new Set(app.d.ogrenciler.map(o=>o.okul||app.okul))].sort();
+  let ogrenciler = app.d.ogrenciler || [];
+  let kayitliOkullar = [...new Set(ogrenciler.map(o=>o.okul||app.okul))].sort();
   let delOkul = document.getElementById('delOkulFiltre');
   if(delOkul) {
     let mevcutSecim = delOkul.value;
@@ -1607,17 +1609,23 @@ function renderOgr(list){
 
 function filterOgr(){ 
   let q=document.getElementById('ogrSearch').value.toLowerCase(); 
-  renderOgr(app.d.ogrenciler.filter(o=>(o.no+o.ads+o.sinif+(o.okul||'')).toLowerCase().includes(q))); 
+  let ogrenciler = app.d.ogrenciler || [];
+  renderOgr(ogrenciler.filter(o=>(o.no+o.ads+(o.sinif||'')+(o.okul||'')).toLowerCase().includes(q))); 
 }
 
 function updateSinifFiltre() {
-  let seciliOkul = document.getElementById('delOkulFiltre').value;
-  let siniflar = [...new Set(app.d.ogrenciler.filter(o => !seciliOkul || (o.okul||app.okul) === seciliOkul).map(o=>o.sinif).filter(Boolean))].sort();
-  document.getElementById('delSinifFiltre').innerHTML = '<option value="">Tüm Sınıflar</option>' + siniflar.map(s=>`<option value="${s}">${s}</option>`).join('');
+  let seciliOkul = document.getElementById('delOkulFiltre')?.value || '';
+  let ogrenciler = app.d.ogrenciler || [];
+  let siniflar = [...new Set(ogrenciler.filter(o => !seciliOkul || (o.okul||app.okul) === seciliOkul).map(o=>o.sinif).filter(Boolean))].sort();
+  let el = document.getElementById('delSinifFiltre');
+  if(el) {
+    el.innerHTML = '<option value="">Tüm Sınıflar</option>' + siniflar.map(s=>`<option value="${s}">${s}</option>`).join('');
+  }
 }
 
 function editOgr(no, okul) {
-  let o = app.d.ogrenciler.find(x => String(x.no) === String(no) && (x.okul||app.okul) === okul);
+  let ogrenciler = app.d.ogrenciler || [];
+  let o = ogrenciler.find(x => String(x.no) === String(no) && (x.okul||app.okul) === okul);
   if(!o) return;
   document.getElementById('mOldNo').value = o.no;
   document.getElementById('mOldOkul').value = o.okul || app.okul;
@@ -1657,8 +1665,10 @@ function addOgrManuel(){
 
   if(!no || !ads || !okul){ alert('Okul, Okul No ve Adı Soyadı zorunlu alanlardır.'); return; }
 
+  if (!app.d.ogrenciler) app.d.ogrenciler = [];
+
   if(oldNo && oldOkul) {
-    // Düzenleme (Güncelleme) Modu
+    // Düzenleme Modu
     let idx = app.d.ogrenciler.findIndex(o => String(o.no) === String(oldNo) && (o.okul||app.okul) === oldOkul);
     if(idx > -1) {
       if((oldNo !== no || oldOkul !== okul) && app.d.ogrenciler.find(o => String(o.no) === String(no) && (o.okul||app.okul) === okul)){
@@ -1680,6 +1690,7 @@ function addOgrManuel(){
 
 function delOgr(no, okul){ 
   if(!confirm("Öğrenci silinsin mi?")) return;
+  if(!app.d.ogrenciler) return;
   app.d.ogrenciler = app.d.ogrenciler.filter(o => !(String(o.no) === String(no) && (o.okul||app.okul) === okul)); 
   renderOgr(); saveAll(); 
 }
@@ -1687,6 +1698,8 @@ function delOgr(no, okul){
 function delHedefliOgr(){ 
   let seciliOkul = document.getElementById('delOkulFiltre').value;
   let seciliSinif = document.getElementById('delSinifFiltre').value;
+
+  if (!app.d.ogrenciler) return;
 
   if(!seciliOkul && !seciliSinif) {
     if(confirm("TÜM okullardaki TÜM öğrencileri silmek istediğinize emin misiniz? (Bu işlem geri alınamaz!)")) {
