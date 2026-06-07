@@ -142,7 +142,6 @@ tr:hover td{background:#F8FAFC}
   max-height:620px;display:flex;justify-content:center;-webkit-overflow-scrolling:touch}
 .pdf-doc{background:#fff;width:210mm;min-height:297mm;padding:18mm;
   box-shadow:0 10px 25px rgba(0,0,0,.18);transform-origin:top center;transition:transform .2s;color:#000;
-  /* Düzeltme: Taşan grafikleri ve metinleri sınırlamak için */
   overflow: hidden;
 }
 .pdf-h{text-align:center;border-bottom:2px solid #1E293B;padding-bottom:15px;margin-bottom:20px}
@@ -994,7 +993,30 @@ async function fetchCloud() {
 
 // ===== YAZDIRMA (PRINT) FONKSİYONU =====
 function yazdirBolum(id) {
-  let content = document.getElementById(id).innerHTML;
+  let container = document.getElementById(id);
+  
+  // Kanvasları (Grafikleri) resme çevirerek kopyalama işlemi (Yazdırmada boş çıkmasını önler)
+  let canvases = container.querySelectorAll('canvas');
+  canvases.forEach(c => {
+    let img = document.createElement('img');
+    img.src = c.toDataURL('image/png');
+    img.style.width = '100%';
+    img.style.maxWidth = '700px';
+    img.style.height = 'auto';
+    img.className = 'temp-print-img';
+    c.parentNode.insertBefore(img, c);
+    c.style.display = 'none'; // Geçici olarak kanvası gizle
+  });
+
+  let content = container.innerHTML;
+
+  // İşlem bitince resimleri silip kanvasları geri getir
+  canvases.forEach(c => {
+    c.style.display = '';
+    let img = c.parentNode.querySelector('.temp-print-img');
+    if(img) img.remove();
+  });
+
   let printWindow = window.open('', '', 'width=1000,height=800');
   printWindow.document.write('<html><head><title>Dargeçit Sınav Analiz - Rapor</title>');
   printWindow.document.write(`
@@ -1011,19 +1033,19 @@ function yazdirBolum(id) {
       th { background-color: #f1f5f9; font-weight: bold; }
       
       /* Kartların ortadan kesilmesini engeller */
-      .sinif-ozet-card, .ai-yorum-box, .karne-card { page-break-inside: avoid !important; break-inside: avoid !important; }
+      .sinif-ozet-card, .ai-yorum-box, .karne-card, .g2 { page-break-inside: avoid !important; break-inside: avoid !important; }
       
       .ct { font-size: 18px; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 5px; }
-      .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+      .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #ccc; }
       .bg-g { color: #065F46; background: #D1FAE5; }
       .bg-r { color: #991B1B; background: #FEE2E2; }
       .bg-y { color: #92400E; background: #FEF3C7; }
       .score-high { color: #065F46; font-weight: bold; }
       .score-mid { color: #92400E; font-weight: bold; }
       .score-low { color: #991B1B; font-weight: bold; }
-      canvas { max-width: 100% !important; }
-      .karne-card { margin-bottom: 40px; border: 1px solid #000; padding: 20px; border-radius: 8px; }
-      .karne-header { text-align: center; border-bottom: 1px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
+      .temp-print-img { max-width: 100% !important; margin: 0 auto; display: block; }
+      .karne-card { margin-bottom: 40px; border: 2px solid #000; padding: 20px; border-radius: 8px; }
+      .karne-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
       
       /* Arayüz (ekran) elemanlarını yazıcıda gizle */
       .btn, .chart-zoom-bar, .alert, input, select { display: none !important; }
@@ -1039,6 +1061,7 @@ function yazdirBolum(id) {
   printWindow.focus();
   setTimeout(() => { printWindow.print(); printWindow.close(); }, 800);
 }
+
 // ===== AUTH =====
 function showLogin(){ document.getElementById('loginForm').style.display='flex'; document.getElementById('regForm').style.display='none'; }
 function showReg(){ document.getElementById('loginForm').style.display='none'; document.getElementById('regForm').style.display='flex'; }
@@ -2131,7 +2154,6 @@ function buildNotTable(){
   let mevcut=app.d.sinavlar[senId]||[];
 
   let head='<table id="notTbl"><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
-  // Düzeltme: Tablo sütun başlıklarında Konu / Puan yazacak
   det.forEach((k,i)=>head+=`<th>Soru ${i+1}<br><small style="font-weight:400;font-size:10px">${k.konu || 'Konu Yok'}<br>Max: ${k.maxPuan} Puan</small></th>`);
   head+='<th>Toplam</th><th>%</th></tr></thead><tbody>';
 
@@ -2204,6 +2226,7 @@ function initAnaliz(){
   Object.keys(app.d.sinavlar).forEach(k=>el.innerHTML+=`<option value="${k}">${k}</option>`);
   document.getElementById('anizKap').style.display='none';
 }
+
 function buildAnaliz(){
   let senId=document.getElementById('anSec').value;
   let baraj=parseFloat(document.getElementById('anBaraj').value)||50;
@@ -2219,10 +2242,29 @@ function buildAnaliz(){
   document.getElementById('anizKap').style.display='block';
   
   drawOzetTable(data,det,baraj);
+  
+  // ÇÖZÜM: Grafikler gizli sekmedeyken boyutu 0 kalmasın diye geçici olarak görünür yapıp çizdiriyoruz
+  let grafTab = document.getElementById('tan-graf');
+  let isHidden = window.getComputedStyle(grafTab).display === 'none';
+  if(isHidden) {
+    grafTab.style.display = 'block';
+    grafTab.style.position = 'absolute';
+    grafTab.style.visibility = 'hidden';
+    grafTab.style.zIndex = '-9999';
+  }
+  
   drawGraphs(data,det,baraj);
+  
+  if(isHidden) {
+    grafTab.style.display = '';
+    grafTab.style.position = '';
+    grafTab.style.visibility = '';
+    grafTab.style.zIndex = '';
+  }
+  
   drawManuelTable(data,det);
   drawTopluSonuclar(data,det,baraj);
-  drawKarneler(data, det, baraj); // Karneleri oluştur
+  drawKarneler(data, det, baraj);
   
   addLog('Analiz görüntülendi: '+senId);
 }
@@ -2232,7 +2274,6 @@ function qKey(k,i){ return `Soru ${i+1} [Max:${k.maxPuan}]`; }
 function drawOzetTable(data,det,baraj){
   let maxTop=det.reduce((a,k)=>a+k.maxPuan,0);
   let h='<table><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
-  // Düzeltme: Tablo Sütunlarında artık Konu / Puan yazıyor
   det.forEach((k,i)=>h+=`<th>Soru ${i+1}<br><small style="font-weight:400;font-size:10px">${k.konu || 'Konu Yok'}<br>Max: ${k.maxPuan} Puan</small></th>`);
   h+='<th>Toplam</th><th>%</th></tr></thead><tbody>';
 
@@ -2273,7 +2314,7 @@ function drawOzetTable(data,det,baraj){
   anState.soruPct=soruPct; anState.pie=pie; anState.subeler=subeler;
 }
 
-// ===== ÖĞRENCİ KARNELERİ (YENİ) =====
+// ===== ÖĞRENCİ KARNELERİ =====
 function drawKarneler(data, det, baraj) {
   let maxTop = det.reduce((a, k) => a + k.maxPuan, 0);
   let wrap = document.getElementById('karneWrap');
@@ -2308,10 +2349,8 @@ function drawKarneler(data, det, baraj) {
     let genPct = maxTop ? Math.round(tot / maxTop * 100) : 0;
     let genDurum = genPct >= baraj ? '<span style="color:#10B981;">✓ BAŞARILI</span>' : '<span style="color:#EF4444;">✗ GELİŞTİRİLMELİ</span>';
     
-    // Öğretmen Yorumu Oluşturma
     let yorum = "";
     if (eksikler.length > 0) {
-      // Sadece ilk 3 eksiği göster kalabalık olmasın
       let gosterilenEksikler = eksikler.slice(0, 3).join(', ');
       let eklenti = eksikler.length > 3 ? ' ve diğer' : '';
       yorum = `Öğrencinin özellikle <b>${gosterilenEksikler}</b>${eklenti} konularında eksikleri tespit edilmiştir. İlgili kazanımların tekrar edilmesi öğrencinin gelişimi için faydalı olacaktır.`;
@@ -2320,8 +2359,8 @@ function drawKarneler(data, det, baraj) {
     }
 
     html += `
-      <div class="karne-card" style="border: 2px solid #E2E8F0; border-top: 5px solid #4F46E5; border-radius: 12px; padding: 25px; margin-bottom: 30px; background: #fff; page-break-inside: avoid;">
-        <div class="karne-header" style="text-align: center; border-bottom: 2px solid #E2E8F0; padding-bottom: 15px; margin-bottom: 20px;">
+      <div class="karne-card">
+        <div class="karne-header">
           <h2 style="margin: 0 0 5px 0; color: #1E293B; font-size: 20px;">ÖĞRENCİ SINAV SONUÇ KARNESİ</h2>
           <div style="font-size: 14px; color: #64748B;">Sınav: ${anState.senId}</div>
         </div>
@@ -2368,7 +2407,7 @@ function drawKarneler(data, det, baraj) {
   }
 }
 
-// ===== GRAFİK ZOOM =====
+// ===== GRAFİKLER =====
 const chartHeights={bar:300,pie:300,sube:380,line:300,topluBar:300,topluSoru:300};
 function zoomChart(name,delta){
   chartHeights[name]=Math.max(150,Math.min(700,(chartHeights[name]||300)+delta));
@@ -2385,7 +2424,6 @@ function drawGraphs(data,det,baraj){
   let labels=det.map((k,i)=>'S'+(i+1));
   let colors=soruPct.map(p=>p>=baraj?'#10B981':p>=baraj/2?'#F59E0B':'#EF4444');
   
-  // Düzeltme: animation: false eklendi. PDF çıktısında grafikleri kesin görebilmek için animasyon kapatıldı.
   if(app.charts.bar){app.charts.bar.destroy();}
   app.charts.bar=new Chart(document.getElementById('cBar'),{type:'bar',data:{labels,datasets:[{label:'Başarı %',data:soruPct,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},options:{animation: false, responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`%${c.raw}`}}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}},x:{ticks:{font:{size:11}}}}}});
   
@@ -2591,17 +2629,17 @@ async function pdfOnizleOlustur(){
   for(let bolumId of seciliBolumler){
     switch(bolumId){
       case 'kapak':
-        html+=`<div style="text-align:center;border-bottom:3px solid #1E293B;padding-bottom:20px;margin-bottom:24px">
-          <div style="font-size:${fs-1}px;font-weight:600;color:#555;margin-bottom:6px">T.C. MİLLİ EĞİTİM BAKANLIĞI</div>
-          <h1 style="font-size:${fs+8}px;font-weight:800;margin-bottom:6px">${app.okul}</h1>
-          <h2 style="font-size:${fs+4}px;font-weight:700;color:#4F46E5;margin-bottom:4px">${senId}</h2>
-          <p style="font-size:${fs}px;color:#555">Sınav Analiz · İstatistik · Zümre Raporu</p>
-          <p style="font-size:${fs-1}px;color:#777;margin-top:4px">Başarı Barajı: %${baraj} &nbsp;|&nbsp; Toplam Öğrenci: ${data.length} &nbsp;|&nbsp; Soru Sayısı: ${det.length}</p>
+        html+=`<div style="text-align:center;border-bottom:3px solid #1E293B;padding-bottom:15px;margin-bottom:20px">
+          <div style="font-size:${fs-1}px;font-weight:600;color:#555;margin-bottom:4px">T.C. MİLLİ EĞİTİM BAKANLIĞI</div>
+          <h1 style="font-size:${fs+6}px;font-weight:800;margin-bottom:4px;margin-top:0;">${app.okul}</h1>
+          <h2 style="font-size:${fs+2}px;font-weight:700;color:#4F46E5;margin-bottom:2px;margin-top:0;">${senId}</h2>
+          <p style="font-size:${fs}px;color:#555;margin:4px 0;">Sınav Analiz · İstatistik · Zümre Raporu</p>
+          <p style="font-size:${fs-1}px;color:#777;margin:4px 0 0 0;">Başarı Barajı: %${baraj} &nbsp;|&nbsp; Toplam Öğrenci: ${data.length} &nbsp;|&nbsp; Soru Sayısı: ${det.length}</p>
         </div>`; break;
 
       case 'istatistik':
         html+=`<h2 style="${h2Stil}">İstatistiksel Özet</h2>
-        <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px;page-break-inside:avoid;">
           <tr><td style="${tdStil}background:#EEF2FF"><b>Sınıf Ortalaması</b></td><td style="${tdStil}font-weight:700;color:#4F46E5">%${ort}</td>
           <td style="${tdStil}background:#EEF2FF"><b>Standart Sapma</b></td><td style="${tdStil}font-weight:700">±${ss}</td></tr>
           <tr><td style="${tdStil}background:#EEF2FF"><b>En Yüksek</b></td><td style="${tdStil}color:#10B981;font-weight:700">%${enYuksek}</td>
@@ -2613,42 +2651,42 @@ async function pdfOnizleOlustur(){
       case 'sinifkart':
         if(Object.keys(subeMap).length>0){
           html+=`<h2 style="${h2Stil}">Şube Bazlı Sonuçlar</h2>
-          <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
-            <thead><tr><th style="${thStil}">Şube</th><th style="${thStil}">Öğrenci</th><th style="${thStil}">Ortalama</th><th style="${thStil}">Başarılı</th><th style="${thStil}">Başarısız</th><th style="${thStil}">Durum</th></tr></thead><tbody>`;
-          Object.keys(subeMap).sort().forEach(sb=>{ let s=subeMap[sb]; let so=Math.round(s.t/s.n); html+=`<tr><td style="${tdStil}font-weight:700">${sb}</td><td style="${tdStil}text-align:center">${s.n}</td><td style="${tdStil}text-align:center;font-weight:700;color:${so>=baraj?'#10B981':'#EF4444'}">${so}%</td><td style="${tdStil}text-align:center;color:#10B981;font-weight:700">${s.bas}</td><td style="${tdStil}text-align:center;color:#EF4444;font-weight:700">${s.n-s.bas}</td><td style="${tdStil}text-align:center">${so>=baraj?'✓ Başarılı':'✗ Zayıf'}</td></tr>`; });
+          <table style="width:100%;border-collapse:collapse;margin-bottom:16px;page-break-inside:auto;">
+            <thead style="display:table-header-group;"><tr><th style="${thStil}">Şube</th><th style="${thStil}">Öğrenci</th><th style="${thStil}">Ortalama</th><th style="${thStil}">Başarılı</th><th style="${thStil}">Başarısız</th><th style="${thStil}">Durum</th></tr></thead><tbody>`;
+          Object.keys(subeMap).sort().forEach(sb=>{ let s=subeMap[sb]; let so=Math.round(s.t/s.n); html+=`<tr style="page-break-inside:avoid;"><td style="${tdStil}font-weight:700">${sb}</td><td style="${tdStil}text-align:center">${s.n}</td><td style="${tdStil}text-align:center;font-weight:700;color:${so>=baraj?'#10B981':'#EF4444'}">${so}%</td><td style="${tdStil}text-align:center;color:#10B981;font-weight:700">${s.bas}</td><td style="${tdStil}text-align:center;color:#EF4444;font-weight:700">${s.n-s.bas}</td><td style="${tdStil}text-align:center">${so>=baraj?'✓ Başarılı':'✗ Zayıf'}</td></tr>`; });
           html+='</tbody></table>';
         } break;
 
       case 'ogrenciTbl':
         html+=`<h2 style="${h2Stil}">Öğrenci Sonuç Tablosu</h2>
-        <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
-          <thead><tr><th style="${thStil}">Sıra</th><th style="${thStil}">Okul No</th><th style="${thStil}">Adı Soyadı</th><th style="${thStil}">Sınıf</th><th style="${thStil}">Toplam</th><th style="${thStil}">Yüzlük</th><th style="${thStil}">Durum</th></tr></thead><tbody>`;
-        ogrSonuc.forEach((o,i)=>{ let c=o.pct>=baraj?'#D1FAE5':o.pct>=50?'#FEF3C7':'#FEE2E2'; let tc=o.pct>=baraj?'#065F46':o.pct>=50?'#92400E':'#991B1B'; html+=`<tr style="background:${i%2===0?'#fff':'#F8FAFC'}"><td style="${tdStil}text-align:center;font-weight:700">${i+1}</td><td style="${tdStil}">${o.no}</td><td style="${tdStil}font-weight:600">${o.ads}</td><td style="${tdStil}text-align:center">${o.sinif}</td><td style="${tdStil}text-align:center">${o.tot}/${o.maxTop}</td><td style="${tdStil}text-align:center;background:${c};color:${tc};font-weight:800">${o.pct}%</td><td style="${tdStil}text-align:center;background:${c};color:${tc};font-size:11px;font-weight:700">${o.pct>=baraj?'✓ Başarılı':'✗ Başarısız'}</td></tr>`; });
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px;page-break-inside:auto;">
+          <thead style="display:table-header-group;"><tr><th style="${thStil}">Sıra</th><th style="${thStil}">Okul No</th><th style="${thStil}">Adı Soyadı</th><th style="${thStil}">Sınıf</th><th style="${thStil}">Toplam</th><th style="${thStil}">Yüzlük</th><th style="${thStil}">Durum</th></tr></thead><tbody>`;
+        ogrSonuc.forEach((o,i)=>{ let c=o.pct>=baraj?'#D1FAE5':o.pct>=50?'#FEF3C7':'#FEE2E2'; let tc=o.pct>=baraj?'#065F46':o.pct>=50?'#92400E':'#991B1B'; html+=`<tr style="background:${i%2===0?'#fff':'#F8FAFC'};page-break-inside:avoid;"><td style="${tdStil}text-align:center;font-weight:700">${i+1}</td><td style="${tdStil}">${o.no}</td><td style="${tdStil}font-weight:600">${o.ads}</td><td style="${tdStil}text-align:center">${o.sinif}</td><td style="${tdStil}text-align:center">${o.tot}/${o.maxTop}</td><td style="${tdStil}text-align:center;background:${c};color:${tc};font-weight:800">${o.pct}%</td><td style="${tdStil}text-align:center;background:${c};color:${tc};font-size:11px;font-weight:700">${o.pct>=baraj?'✓ Başarılı':'✗ Başarısız'}</td></tr>`; });
         html+='</tbody></table>'; break;
 
       case 'soruTbl':
         html+=`<h2 style="${h2Stil}">Soru / Kazanım Başarı Tablosu</h2>
-        <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
-          <thead><tr><th style="${thStil}">#</th><th style="${thStil}">Konu</th><th style="${thStil}">Kazanım</th><th style="${thStil}">Max</th><th style="${thStil}">Başarı %</th><th style="${thStil}">Değerlendirme</th></tr></thead><tbody>`;
-        soruStat.forEach((s,i)=>{ let c=s.basariPct>=baraj?'#D1FAE5':s.basariPct>=50?'#FEF3C7':'#FEE2E2'; let tc=s.basariPct>=baraj?'#065F46':s.basariPct>=50?'#92400E':'#991B1B'; html+=`<tr style="background:${i%2===0?'#fff':'#F8FAFC'}"><td style="${tdStil}text-align:center;font-weight:700">${s.no}</td><td style="${tdStil}font-size:${fs-1}px">${s.konu||'—'}</td><td style="${tdStil}font-size:${fs-1}px">${s.kazanim.substring(0,70)}${s.kazanim.length>70?'…':''}</td><td style="${tdStil}text-align:center">${s.maxPuan}</td><td style="${tdStil}text-align:center;background:${c};color:${tc};font-weight:800">${s.basariPct}%</td><td style="${tdStil}background:${c};color:${tc};font-size:${fs-1}px;font-weight:700">${s.basariPct>=baraj+20?'Çok İyi':s.basariPct>=baraj?'Yeterli':s.basariPct>=30?'Geliştirilmeli':'Başarısız'}</td></tr>`; });
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px;page-break-inside:auto;">
+          <thead style="display:table-header-group;"><tr><th style="${thStil}">#</th><th style="${thStil}">Konu</th><th style="${thStil}">Kazanım</th><th style="${thStil}">Max</th><th style="${thStil}">Başarı %</th><th style="${thStil}">Değerlendirme</th></tr></thead><tbody>`;
+        soruStat.forEach((s,i)=>{ let c=s.basariPct>=baraj?'#D1FAE5':s.basariPct>=50?'#FEF3C7':'#FEE2E2'; let tc=s.basariPct>=baraj?'#065F46':s.basariPct>=50?'#92400E':'#991B1B'; html+=`<tr style="background:${i%2===0?'#fff':'#F8FAFC'};page-break-inside:avoid;"><td style="${tdStil}text-align:center;font-weight:700">${s.no}</td><td style="${tdStil}font-size:${fs-1}px">${s.konu||'—'}</td><td style="${tdStil}font-size:${fs-1}px">${s.kazanim.substring(0,70)}${s.kazanim.length>70?'…':''}</td><td style="${tdStil}text-align:center">${s.maxPuan}</td><td style="${tdStil}text-align:center;background:${c};color:${tc};font-weight:800">${s.basariPct}%</td><td style="${tdStil}background:${c};color:${tc};font-size:${fs-1}px;font-weight:700">${s.basariPct>=baraj+20?'Çok İyi':s.basariPct>=baraj?'Yeterli':s.basariPct>=30?'Geliştirilmeli':'Başarısız'}</td></tr>`; });
         html+='</tbody></table>'; break;
 
-      case 'grafBar': html+=`<h2 style="${h2Stil}">Kazanım Başarı Sütun Grafiği</h2>`+pdfGrafikHTML('cBar',gh,'%90','inline'); break;
-      case 'grafPie': html+=`<h2 style="${h2Stil}">Başarı Dağılımı</h2>`+pdfGrafikHTML('cPie',gh,'45%','inline'); break;
-      case 'grafSube': if(Object.keys(subeMap).length>1){ html+=`<h2 style="${h2Stil}">Şubeler Arası Karşılaştırma</h2>`+pdfGrafikHTML('cSube',gh,'%90','inline'); } break;
-      case 'grafLine': html+=`<h2 style="${h2Stil}">Kazanım Başarı Çizgi Grafiği</h2>`+pdfGrafikHTML('cLine',gh,'%90','inline'); break;
+      case 'grafBar': html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Kazanım Başarı Sütun Grafiği</h2>`+pdfGrafikHTML('cBar',gh,'%90','inline')+'</div>'; break;
+      case 'grafPie': html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Başarı Dağılımı</h2>`+pdfGrafikHTML('cPie',gh,'45%','inline')+'</div>'; break;
+      case 'grafSube': if(Object.keys(subeMap).length>1){ html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Şubeler Arası Karşılaştırma</h2>`+pdfGrafikHTML('cSube',gh,'%90','inline')+'</div>'; } break;
+      case 'grafLine': html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Kazanım Başarı Çizgi Grafiği</h2>`+pdfGrafikHTML('cLine',gh,'%90','inline')+'</div>'; break;
 
       case 'grafYorum':
-        html+=`<h2 style="${h2Stil}">Grafik Yorumları</h2>`;
+        html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Grafik Yorumları</h2>`;
         let enKotSoru=soruStat.reduce((a,b)=>a.basariPct<b.basariPct?a:b);
         let enIyiSoru=soruStat.reduce((a,b)=>a.basariPct>b.basariPct?a:b);
         html+=`<div style="background:#EEF2FF;border-left:4px solid #4F46E5;padding:10px 14px;margin-bottom:10px;border-radius:0 6px 6px 0;font-size:${fs}px"><b>📊 Kazanım Grafiği:</b><br>En başarılı: Soru ${enIyiSoru.no} (%${enIyiSoru.basariPct}). En düşük: Soru ${enKotSoru.no} (%${enKotSoru.basariPct}). ${soruStat.filter(s=>s.basariPct<baraj).length} kazanım baraj altında.</div>`;
         let basariliPct=Math.round(basarili/data.length*100);
-        html+=`<div style="background:#F0FDF4;border-left:4px solid #10B981;padding:10px 14px;margin-bottom:10px;border-radius:0 6px 6px 0;font-size:${fs}px"><b>🟢 Dağılım:</b><br>%${basariliPct} başarı barajını aştı. ${ort>=baraj?`Sınıf ortalaması (%${ort}) baraj üzerinde.`:`Sınıf ortalaması (%${ort}) baraj altında — müdahale gerekli.`}</div>`;
+        html+=`<div style="background:#F0FDF4;border-left:4px solid #10B981;padding:10px 14px;margin-bottom:10px;border-radius:0 6px 6px 0;font-size:${fs}px"><b>🟢 Dağılım:</b><br>%${basariliPct} başarı barajını aştı. ${ort>=baraj?`Sınıf ortalaması (%${ort}) baraj üzerinde.`:`Sınıf ortalaması (%${ort}) baraj altında — müdahale gerekli.`}</div></div>`;
         break;
 
       case 'konuAnaliz':
-        html+=`<h2 style="${h2Stil}">Konu Bazlı Derinlemeli Analiz</h2>`;
+        html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Konu Bazlı Derinlemeli Analiz</h2>`;
         let uniteMap={};
         soruStat.forEach(s=>{ let u=s.unite||'Genel'; if(!uniteMap[u]) uniteMap[u]=[]; uniteMap[u].push(s); });
         Object.keys(uniteMap).forEach(u=>{
@@ -2657,30 +2695,30 @@ async function pdfOnizleOlustur(){
           html+=`<div style="background:${uRenk};border-radius:6px;padding:10px 14px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b style="color:${uTC};font-size:${fs+1}px">${u}</b><span style="background:#fff;color:${uTC};border-radius:20px;padding:2px 10px;font-weight:700;font-size:${fs}px">${uOrt}%</span></div>`;
           sorular.forEach(s=>{ html+=`<div style="font-size:${fs-1}px;color:#333;padding:2px 0">• <b>Soru ${s.no}:</b> ${s.kazanim.substring(0,80)}… — <b style="color:${uTC}">${s.basariPct}%</b></div>`; });
           html+='</div>';
-        }); break;
+        }); 
+        html+='</div>'; break;
 
       case 'aiYorum':
-        html+=`<h2 style="${h2Stil}">Pedagojik Değerlendirme & Yorum</h2>
-        <div style="background:#EEF2FF;border:2px solid #C7D2FE;border-radius:8px;padding:14px 16px;font-size:${fs}px;line-height:1.8">${yorumMetni.replace(/<b>/g,'<b style="color:#1E293B">').replace(/\n/g,'<br>')}</div>`; break;
+        html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Pedagojik Değerlendirme & Yorum</h2>
+        <div style="background:#EEF2FF;border:2px solid #C7D2FE;border-radius:8px;padding:14px 16px;font-size:${fs}px;line-height:1.8">${yorumMetni.replace(/<b>/g,'<b style="color:#1E293B">').replace(/\n/g,'<br>')}</div></div>`; break;
 
       case 'eylemPlan':
-        html+=`<h2 style="${h2Stil}">Zümre Eylem Planı Önerileri</h2>`;
+        html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Zümre Eylem Planı Önerileri</h2>`;
         let eylemler=[];
         soruStat.filter(s=>s.basariPct<baraj).forEach(s=>{ eylemler.push(`<b>Soru ${s.no} — ${s.kazanim.substring(0,50)}:</b> Ek etkinlik önerilir. Başarı: %${s.basariPct}.`); });
-        if(eylemler.length){ html+=`<ol style="padding-left:18px;line-height:2;font-size:${fs}px">`; eylemler.forEach(e=>html+=`<li style="margin-bottom:6px">${e}</li>`); html+=`</ol>`; }
-        else{ html+=`<div style="background:#D1FAE5;border-radius:8px;padding:12px 16px;font-size:${fs}px;color:#065F46"><b>✓ Tüm kazanımlar başarı barajını geçmiştir.</b></div>`; }
+        if(eylemler.length){ html+=`<ol style="padding-left:18px;line-height:2;font-size:${fs}px">`; eylemler.forEach(e=>html+=`<li style="margin-bottom:6px">${e}</li>`); html+=`</ol></div>`; }
+        else{ html+=`<div style="background:#D1FAE5;border-radius:8px;padding:12px 16px;font-size:${fs}px;color:#065F46"><b>✓ Tüm kazanımlar başarı barajını geçmiştir.</b></div></div>`; }
         break;
     }
   }
 
-  // İmza bloğu
-  html += `<div style="margin-top:50px;display:flex;justify-content:space-between;align-items:flex-end;font-size:${fs+1}px;padding:0 20px">
-    <div><b style="color:#4F46E5">Kurum:</b> ${app.okul}<br><b style="color:#4F46E5">Tarih:</b> ${new Date().toLocaleDateString('tr-TR')}</div>
-    <div style="text-align:center;width:220px">
+  // YENİ İMZA DÜZENİ
+  html += `<div style="margin-top:50px; text-align:right; font-size:${fs+1}px; padding:0 20px; page-break-inside: avoid; break-inside: avoid;">
+    <div style="display:inline-block; text-align:center; width:250px;">
+      <div style="margin-bottom: 40px; font-weight: 600;">Tarih: ${new Date().toLocaleDateString('tr-TR')}</div>
+      <div style="border-bottom:1px dotted #000; margin-bottom: 5px;"></div>
       <b style="font-size:${fs+2}px">${app.adSoyad||app.user}</b><br>
-      <span style="color:#555;font-size:${fs-1}px">Branş Öğretmeni${app.brans?' — '+app.brans:''}</span><br>
-      <div style="border-bottom:1px dashed #000;margin-top:40px"></div>
-      <div style="font-size:${fs-2}px;margin-top:5px;color:#777">(İmza)</div>
+      <span style="color:#555;font-size:${fs-1}px">Branş Öğretmeni${app.brans?' — '+app.brans:''}</span>
     </div>
   </div>`;
 
@@ -2695,7 +2733,7 @@ async function pdfOnizleOlustur(){
 function pdfGrafikHTML(canvasId, h, w, display){
   try{
     let canvas=document.getElementById(canvasId);
-    if(!canvas) return `<p style="color:#999;font-size:11px">[Grafik mevcut değil — önce Grafikler sekmesini açın]</p>`;
+    if(!canvas) return `<p style="color:#999;font-size:11px">[Grafik mevcut değil]</p>`;
     let img=canvas.toDataURL('image/png');
     return `<img src="${img}" style="width:${w};height:${h}px;display:${display};margin-bottom:12px;border:1px solid #eee;border-radius:4px">`;
   }catch(e){ return `<p style="color:#999;font-size:11px">[Grafik alınamadı]</p>`; }
