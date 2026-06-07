@@ -764,10 +764,16 @@ textarea.sen-edit-inp { resize: vertical; }
                     <button class="btn btn-outline btn-sm" onclick="pdfAyar('yazi',+1)">+</button>
                   </div>
                   <div style="display:flex;align-items:center;gap:8px;font-size:13px">
-                    <span style="color:var(--muted);font-weight:600">Satır Yüksekliği:</span>
-                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('satir',-1)">−</button>
-                    <span id="pdfSatirBoy" style="font-weight:700;color:var(--primary);min-width:40px;text-align:center">22px</span>
-                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('satir',+1)">+</button>
+                    <span style="color:var(--muted);font-weight:600">Sayfa Kenar Boşluğu:</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('kenar',-2)">−</button>
+                    <span id="pdfKenarBoy" style="font-weight:700;color:var(--primary);min-width:40px;text-align:center">10mm</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('kenar',+2)">+</button>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+                    <span style="color:var(--muted);font-weight:600">PDF Sığdırma Ölçeği:</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('olcek',-0.05)">−</button>
+                    <span id="pdfOlcekBoy" style="font-weight:700;color:var(--primary);min-width:40px;text-align:center">1.00</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('olcek',+0.05)">+</button>
                   </div>
                 </div>
               </div>
@@ -2310,7 +2316,7 @@ function gosterYorum(html,baslik){
 // GELİŞMİŞ PDF RAPOR OLUŞTURUCU
 // ===================================================
 
-let pdfAyarlar = { grafik: 180, yazi: 12, satir: 22 };
+let pdfAyarlar = { grafik: 180, yazi: 12, satir: 22, kenar: 10, olcek: 1.0 };
 let zoomLevel = 0.75;
 
 const PDF_BOLUMLER = [
@@ -2363,6 +2369,8 @@ function pdfAyar(tip, delta){
   if(tip==='grafik'){ pdfAyarlar.grafik=Math.max(80,Math.min(350,pdfAyarlar.grafik+delta)); document.getElementById('pdfGrafikBoy').textContent=pdfAyarlar.grafik+'px'; }
   else if(tip==='yazi'){ pdfAyarlar.yazi=Math.max(8,Math.min(18,pdfAyarlar.yazi+delta)); document.getElementById('pdfYaziBoy').textContent=pdfAyarlar.yazi+'px'; }
   else if(tip==='satir'){ pdfAyarlar.satir=Math.max(14,Math.min(40,pdfAyarlar.satir+delta)); document.getElementById('pdfSatirBoy').textContent=pdfAyarlar.satir+'px'; }
+  else if(tip==='kenar'){ pdfAyarlar.kenar=Math.max(0,Math.min(40,pdfAyarlar.kenar+delta)); document.getElementById('pdfKenarBoy').textContent=pdfAyarlar.kenar+'mm'; document.getElementById('pdfDoc').style.padding = pdfAyarlar.kenar + 'mm'; }
+  else if(tip==='olcek'){ pdfAyarlar.olcek=Math.max(0.5,Math.min(1.5,pdfAyarlar.olcek+delta)); document.getElementById('pdfOlcekBoy').textContent=pdfAyarlar.olcek.toFixed(2); }
 }
 
 async function pdfOnizleOlustur(){
@@ -2400,7 +2408,7 @@ async function pdfOnizleOlustur(){
   let h2Stil=`font-size:${fs+4}px;font-weight:800;color:#1E293B;border-left:5px solid #4F46E5;padding-left:12px;margin:20px 0 10px;`;
   let h3Stil=`font-size:${fs+2}px;font-weight:700;color:#4F46E5;margin:16px 0 8px;`;
 
-  let html=`<div style="${stil}">`;
+  let html=`<div style="${stil} zoom: ${pdfAyarlar.olcek};">`;
 
   for(let bolumId of seciliBolumler){
     switch(bolumId){
@@ -2500,6 +2508,7 @@ async function pdfOnizleOlustur(){
 
   html+='</div>';
   document.getElementById('pdfDoc').innerHTML=html;
+  document.getElementById('pdfDoc').style.padding = pdfAyarlar.kenar + 'mm';
   document.getElementById('pdfDoc').style.transform=`scale(${zoomLevel})`;
   document.getElementById('pdfAlan').style.display='block';
   document.getElementById('zoomVal').textContent=zoomLevel.toFixed(2);
@@ -2526,7 +2535,7 @@ function dlPdf(){
   let el=document.getElementById('pdfDoc');
   let ot=el.style.transform; el.style.transform='scale(1)';
   html2pdf().set({
-    margin:10,
+    margin: 5,
     filename:`Rapor_${anState.senId?.substring(0,25)||'Sinav'}_${new Date().toLocaleDateString('tr-TR').replace(/\./g,'-')}.pdf`,
     image:{type:'jpeg',quality:0.98},
     html2canvas:{scale:2,useCORS:true,logging:false},
