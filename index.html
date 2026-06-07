@@ -1,5 +1,3 @@
-html
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -98,13 +96,15 @@ body{background:var(--light);color:var(--text);overflow:hidden}
 .stat-val{font-size:38px;font-weight:800;color:var(--dark);margin-bottom:4px}
 .stat-lbl{color:var(--muted);font-size:13px;font-weight:600}
 
-.tr-wrap{overflow-x:auto;background:#fff;border-radius:var(--radius);
+/* DÜZELTİLDİ: Sabit (Sticky) Başlık ve Tablo Yapısı */
+.tr-wrap{overflow-x:auto; overflow-y:auto; max-height:550px; background:#fff;border-radius:var(--radius);
   border:1px solid var(--border);margin-bottom:14px;-webkit-overflow-scrolling:touch;width:100%}
-table{width:100%;border-collapse:collapse;min-width:600px}
-th{background:#F8FAFC;padding:12px 14px;text-align:left;font-size:12px;
-  font-weight:600;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap}
+table{width:100%;border-collapse:collapse;min-width:600px; position:relative;}
+thead th { position:sticky; top:0; z-index:10; background:#F8FAFC;padding:12px 14px;text-align:left;font-size:12px;
+  font-weight:600;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap; box-shadow:0 2px 4px rgba(0,0,0,0.1);}
 td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;color:var(--dark)}
 tr:hover td{background:#F8FAFC}
+
 .ic{width:65px;padding:7px;border:1.5px solid var(--border);border-radius:7px;
   text-align:center;outline:none;font-size:13px;font-weight:600;color:var(--dark);background:#fff}
 .ic:focus{border-color:var(--primary)}
@@ -201,11 +201,12 @@ tr:hover td{background:#F8FAFC}
 
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
 
-/* *** YENİ: Senaryo inline düzenleme satırı *** */
+/* *** Senaryo inline düzenleme satırı *** */
 .sen-edit-row td { background:#EEF2FF !important; }
-.sen-edit-inp { width:100%;padding:5px 8px;border:1.5px solid var(--primary);border-radius:6px;font-size:12px;color:var(--dark);background:#fff;outline:none; }
+.sen-edit-inp { width:100%;padding:5px 8px;border:1.5px solid var(--primary);border-radius:6px;font-size:12px;color:var(--dark);background:#fff;outline:none; font-family: inherit; }
+textarea.sen-edit-inp { resize: vertical; }
 
-/* *** YENİ: Branş rozeti ***  */
+/* *** Branş rozeti *** */
 .brans-tag { background:#EDE9FE;color:#5b21b6;padding:3px 9px;border-radius:12px;font-size:11px;font-weight:700; }
 
 /* =========================================
@@ -251,10 +252,8 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
 </head>
 <body>
 
-<!-- MOBİL SİDEBAR OVERLAY -->
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-<!-- ===================== GİRİŞ EKRANI ===================== -->
 <div class="auth-wrap" id="authScreen">
   <div class="auth-box">
     <div class="auth-left">
@@ -269,7 +268,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
       </ul>
     </div>
 
-    <!-- GİRİŞ FORMU -->
     <div class="auth-right" id="loginForm">
       <h2 class="auth-title">Sisteme Giriş</h2>
       <p class="auth-sub">Öğretmen veya yönetici hesabınızla erişin.</p>
@@ -280,7 +278,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
       <div class="auth-sw">Hesabınız yok mu? <a onclick="showReg()">Öğretmen Kaydı Oluştur</a></div>
     </div>
 
-    <!-- KAYIT FORMU -->
     <div class="auth-right" id="regForm" style="display:none; padding:20px 35px; overflow-y:auto; max-height:95vh;">
       <h2 class="auth-title">Öğretmen Kaydı</h2>
       <p class="auth-sub">Kurumunuzu ve branşınızı seçerek kayıt oluşturun.</p>
@@ -318,7 +315,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
   </div>
 </div>
 
-<!-- ===================== ANA UYGULAMA ===================== -->
 <div class="app-layout" id="mainApp" style="display:none">
   <div class="sidebar">
     <div class="sb-head"><i class="fa-solid fa-chart-line"></i> Dargeçit Analiz</div>
@@ -353,7 +349,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
 
     <div class="pcont">
 
-      <!-- DASHBOARD -->
       <div class="page active" id="page-dashboard">
         <div class="ph"><h2>Sistem Özeti</h2><p>Kurumunuza ait genel istatistikler</p></div>
         <div class="g3">
@@ -367,7 +362,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
         </div>
       </div>
 
-      <!-- ADMİN -->
       <div class="page" id="page-admin">
         <div class="ph"><h2><i class="fa-solid fa-user-shield" style="color:var(--primary)"></i> Öğretmen Yönetim Paneli</h2><p>Kayıt olan öğretmenleri onaylayın, düzenleyin, izinleri yönetin veya silin.</p></div>
         <div class="card">
@@ -385,7 +379,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
             </table>
           </div>
         </div>
-        <!-- Öğretmen Verisi Görüntüle Modal -->
         <div id="adminVeriModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:2000;overflow-y:auto;padding:30px 15px">
           <div style="background:#fff;border-radius:16px;max-width:900px;margin:0 auto;padding:30px;box-shadow:0 25px 50px rgba(0,0,0,0.3)">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:14px">
@@ -395,7 +388,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
             <div id="veriModalIcerik"></div>
           </div>
         </div>
-        <!-- Öğretmen Düzenle Modal -->
         <div id="adminDuzModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:2000;overflow-y:auto;padding:30px 15px">
           <div style="background:#fff;border-radius:16px;max-width:540px;margin:0 auto;padding:30px;box-shadow:0 25px 50px rgba(0,0,0,0.3)">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:14px">
@@ -423,7 +415,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
         </div>
       </div>
 
-      <!-- ÖĞRENCİ -->
       <div class="page" id="page-ogrenci">
         <div class="ph"><h2>Öğrenci Yönetimi</h2><p>Öğrencileri okullarına ve sınıflarına göre ekleyin, düzenleyin.</p></div>
         <div class="tabs">
@@ -471,7 +462,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
         </div>
       </div>
 
-      <!-- SENARYO -->
       <div class="page" id="page-senaryo">
         <div class="ph"><h2>Senaryo Havuzu</h2><p>Yapay zeka ile metni çözümle, puanları düzenle, havuza kaydet.</p></div>
         <div class="tabs">
@@ -480,14 +470,12 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
           <button class="tab-btn" onclick="swTab('tsen-xl',this)"><i class="fa-solid fa-file-excel"></i> Excel'den Yükle</button>
         </div>
 
-        <!-- AI SEKMESİ -->
         <div class="tc active" id="tsen-ai">
           <div class="card">
             <div class="ct">Metni Yapıştır — Gemini Analiz Etsin</div>
             <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> PDF veya Word belgeden kopyalayıp yapıştırın. Ünite, konu, kazanım ve soru sayısı gibi bilgiler otomatik ayrıştırılır.</div>
             <div class="g2" style="margin-bottom:14px">
               <div class="fg" style="margin:0"><label>Sınav / Senaryo Adı (Havuza kaydedilecek isim)</label><input class="fc" id="aiSenAdi" placeholder="Örn: 6.Sınıf Matematik 2.Dönem 2.Ortak - Senaryo 4"></div>
-              <!-- YENİ: Branş seçimi AI sekmesinde -->
               <div class="fg" style="margin:0"><label>Branş <span style="color:var(--danger)">*</span> <small style="color:var(--muted)">(senaryonun ait olduğu branş)</small></label>
                 <select class="fc" id="aiBrans">
                   <option value="">-- Branş Seçin --</option>
@@ -504,7 +492,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
           </div>
         </div>
 
-        <!-- MANUEL TABLO -->
         <div class="tc" id="tsen-m">
           <div class="card">
             <div class="ct">Manuel Senaryo Tablosu</div>
@@ -512,7 +499,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
               <div class="fg" style="margin:0"><label>Sınav Adı</label><input class="fc" id="mSenSinav" placeholder="6.Sınıf Matematik 2.Dönem 2.Ortak"></div>
               <div class="fg" style="margin:0"><label>Senaryo Adı</label><input class="fc" id="mSenSen" placeholder="Senaryo 4"></div>
             </div>
-            <!-- YENİ: Branş seçimi Manuel tabloda -->
             <div class="fg" style="margin-bottom:14px">
               <label>Branş <span style="color:var(--danger)">*</span> <small style="color:var(--muted)">(senaryonun ait olduğu branş)</small></label>
               <select class="fc" id="mSenBrans" style="max-width:320px">
@@ -532,13 +518,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
           </div>
         </div>
 
-        <!-- EXCEL -->
         <div class="tc" id="tsen-xl">
           <div class="g2">
             <div class="card"><div class="ct">1. Şablon İndir</div><button class="btn btn-primary btn-full" onclick="dlTemplate('senaryo')"><i class="fa-solid fa-download"></i> Boş Senaryo Şablonu İndir</button></div>
             <div class="card"><div class="ct">2. Doldurulmuş Senaryo Yükle</div>
               <div class="fg"><label>Havuza Eklenecek Senaryo Adı</label><input class="fc" id="xlSenAdi" placeholder="Örn: 6.Sınıf Mat Senaryo 4"></div>
-              <!-- YENİ: Branş seçimi Excel yükle sekmesinde -->
               <div class="fg"><label>Branş <span style="color:var(--danger)">*</span></label>
                 <select class="fc" id="xlSenBrans">
                   <option value="">-- Branş Seçin --</option>
@@ -552,7 +536,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
           </div>
         </div>
 
-        <!-- YENİ: Havuz üst filtresi -->
         <div class="card">
           <div class="ct">
             <span><i class="fa-solid fa-database"></i> Havuzdaki Senaryolar</span>
@@ -567,7 +550,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
         </div>
       </div>
 
-      <!-- SINAV NOT GİRİŞİ -->
       <div class="page" id="page-sinav">
         <div class="ph"><h2>Sınav Not Girişi</h2><p>Öğrenci puanlarını sisteme işleyin. Notlar öğrenci adıyla eşleştirilir.</p></div>
         <div class="tabs">
@@ -578,7 +560,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
         <div class="tc active" id="tnot-m">
           <div class="card">
             <div class="g2" style="margin-bottom:14px">
-              <!-- YENİ: Branş filtresi + Senaryo seçici -->
               <div class="fg" style="margin:0">
                 <label>Branş Filtrele <small style="color:var(--muted)">(senaryo listesini daraltır)</small></label>
                 <select class="fc" id="mnBransFil" onchange="initSinavSenaryolar()">
@@ -614,7 +595,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
         </div>
       </div>
 
-      <!-- ANALİZ -->
       <div class="page" id="page-analiz">
         <div class="ph"><h2>Detaylı Analiz & Raporlar</h2><p>Kazanım bazlı başarı, çeldirici tespiti, zümre raporu.</p></div>
         <div class="card" style="margin-bottom:14px">
@@ -634,7 +614,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
             <button class="tab-btn" onclick="swTab('tan-pdf',this)"><i class="fa-solid fa-file-pdf"></i> AI Rapor (PDF)</button>
           </div>
 
-          <!-- SONUÇ TABLOSU -->
           <div class="tc active" id="tan-ozet">
             <div class="card">
               <div class="ct"><span>Öğrenci × Soru Analiz Tablosu</span>
@@ -648,7 +627,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
             </div>
           </div>
 
-          <!-- TOPLU SINIF SONUÇLARI -->
           <div class="tc" id="tan-toplu">
             <div class="card">
               <div class="ct">
@@ -700,7 +678,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
             </div>
           </div>
 
-          <!-- GRAFİKLER -->
           <div class="tc" id="tan-graf">
             <div class="g2">
               <div class="card">
@@ -750,7 +727,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
             </div>
           </div>
 
-          <!-- MANUEL ANALİZ DÜZENLE -->
           <div class="tc" id="tan-manuel">
             <div class="card">
               <div class="ct"><span><i class="fa-solid fa-pen-to-square"></i> Manuel Puan Düzenleme</span><button class="btn btn-success btn-sm" onclick="saveManuelAnaliz()"><i class="fa-solid fa-floppy-disk"></i> Kaydet</button></div>
@@ -759,7 +735,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
             </div>
           </div>
 
-          <!-- GELİŞMİŞ PDF RAPOR OLUŞTURUCU -->
           <div class="tc" id="tan-pdf">
             <div class="card" id="pdfBuilder">
               <div class="ct">
@@ -819,7 +794,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
         </div>
       </div>
 
-      <!-- OKUL YÖNETİMİ -->
       <div class="page" id="page-okulyon">
         <div class="ph"><h2><i class="fa-solid fa-school-flag" style="color:var(--primary)"></i> Okul Yönetimi</h2><p>İlçeye bağlı okulları ekleyin, düzenleyin veya silin. Bu liste kayıt formunda kullanılır.</p></div>
         <div class="card">
@@ -854,7 +828,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
         </div>
       </div>
 
-      <!-- BRANŞ YÖNETİMİ -->
       <div class="page" id="page-bransyon">
         <div class="ph"><h2><i class="fa-solid fa-book-open" style="color:var(--secondary)"></i> Branş Yönetimi</h2><p>Sistemde tanımlı branşları yönetin. Öğretmen kayıt formunda seçim olarak listelenir.</p></div>
         <div class="card">
@@ -893,7 +866,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
         </div>
       </div>
 
-      <!-- PROFİL SAYFASI -->
       <div class="page" id="page-profil">
         <div class="ph"><h2><i class="fa-solid fa-user-pen" style="color:var(--primary)"></i> Profilim</h2><p>Kişisel bilgilerinizi ve şifrenizi güncelleyebilirsiniz.</p></div>
         <div class="g2">
@@ -923,11 +895,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
         </div>
       </div>
 
-    </div><!-- /pcont -->
-  </div><!-- /main -->
-</div><!-- /app-layout -->
-
-<script>
+    </div></div></div><script>
 // ===== KONFİGÜRASYON =====
 const GEM_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 const GEM_KEY = 'AIzaSyD6K8QfWs2nVxPZ1RmTkHeLpJqYbXcN4Ew';
@@ -952,7 +920,20 @@ function closeSidebar() {
 }
 
 // ===== DB HELPERS =====
-function getDB(){ try{ let d=localStorage.getItem(DBK); if(!d) return {users:[],okulData:{}}; let p=JSON.parse(d); if(!p.okulData) p.okulData={}; if(!p.users) p.users=[]; return p; } catch(e){ return {users:[],okulData:{}}; } }
+function getDB(){ 
+  try {
+    let d = localStorage.getItem(DBK);
+    let p = d ? JSON.parse(d) : { users: [], okulData: {}, okullar: [], branslar: [] };
+    if (!p.okulData) p.okulData = {};
+    if (!p.users) p.users = [];
+    // Asla mevcut listeyi ezme. Eğer dizi yoksa veya boşsa varsayılanları yükle.
+    if (!p.okullar || p.okullar.length === 0) p.okullar = [...VARSAYILAN_OKULLAR];
+    if (!p.branslar || p.branslar.length === 0) p.branslar = [...VARSAYILAN_BRANSLAR];
+    return p;
+  } catch(e) {
+    return { users: [], okulData: {}, okullar: [...VARSAYILAN_OKULLAR], branslar: [...VARSAYILAN_BRANSLAR] };
+  }
+}
 function setDB(db){ try{ localStorage.setItem(DBK,JSON.stringify(db)); }catch(e){ console.error('localStorage kayıt hatası:',e); } }
 function errMsg(id,msg){ let e=document.getElementById(id); if(e){ e.textContent=msg; } }
 function addLog(msg){ app.logs.unshift((new Date()).toLocaleTimeString('tr')+" — "+msg); let el=document.getElementById('dashLog'); if(el) el.innerHTML=app.logs.slice(0,8).map(l=>'<div>'+l+'</div>').join(''); }
@@ -1398,11 +1379,13 @@ function syncOkulSelect(){
   let opts=list.map(o=>`<option value="${o.ad}">${o.ad}</option>`).join('');
   let sel=document.getElementById('regOkul');
   if(sel){ let mevcut=sel.value; sel.innerHTML=opts+'<option value="diger">Yeni Okul Ekle (Diğer)...</option>'; if(mevcut) sel.value=mevcut; }
-  // Öğrenci ekleme okul seçicisi
-  let mOkul=document.getElementById('mOkul');
-  if(mOkul){ mOkul.innerHTML='<option value="">-- Otomatik (kendi okulun) --</option>'+opts; }
+  
+  // DÜZELTİLDİ: Öğrenci ekleme okul seçicisi ID'si mOgrOkul olarak güncellendi.
+  let mOkul=document.getElementById('mOgrOkul');
+  if(mOkul){ let mmev=mOkul.value; mOkul.innerHTML=opts; if(mmev) mOkul.value=mmev; else mOkul.value=app.okul; }
+  
   // Öğrenci filtre
-  let ogrOkul=document.getElementById('ogrOkulFil');
+  let ogrOkul=document.getElementById('delOkulFiltre');
   if(ogrOkul){ let mev=ogrOkul.value; ogrOkul.innerHTML='<option value="">Tüm Okullar</option>'+opts; if(mev) ogrOkul.value=mev; }
 }
 
@@ -1502,7 +1485,7 @@ function syncBransSelect(){
 // ===== YENİ: Öğrenci okul filtresi senkron =====
 function syncOgrOkulFil(){
   let list=getOkullar();
-  let el=document.getElementById('ogrOkulFil');
+  let el=document.getElementById('delOkulFiltre');
   if(!el) return;
   let mev=el.value;
   el.innerHTML='<option value="">Tüm Okullar</option>'+list.map(o=>`<option value="${o.ad}">${o.ad}</option>`).join('');
@@ -1584,7 +1567,7 @@ function sifreDegistir(){
   addLog('Şifre değiştirildi.');
 }
 
-// ===== ÖĞRENCİ =====
+// ===== ÖĞRENCİ YÖNETİMİ (DÜZELTİLMİŞ KISIM) =====
 function renderOgr(list){
   let data = list || app.d.ogrenciler;
   document.getElementById('ogrC').textContent=app.d.ogrenciler.length;
@@ -1678,7 +1661,6 @@ function addOgrManuel(){
     // Düzenleme (Güncelleme) Modu
     let idx = app.d.ogrenciler.findIndex(o => String(o.no) === String(oldNo) && (o.okul||app.okul) === oldOkul);
     if(idx > -1) {
-      // Numara veya okul değiştirildiyse, bu yeni kombinasyonun başkasına ait olup olmadığını kontrol et (Mükerrer engeli)
       if((oldNo !== no || oldOkul !== okul) && app.d.ogrenciler.find(o => String(o.no) === String(no) && (o.okul||app.okul) === okul)){
         alert('Bu okulda bu numaraya sahip başka bir öğrenci zaten kayıtlı!'); return;
       }
@@ -1764,7 +1746,7 @@ function xlUpload(inp, tip){
           let sinif=String(row['Sınıf']||'').trim();
           let okul=String(row['Okul']||'').trim() || app.okul;
           if(!no){ return; }
-          if(app.d.ogrenciler.find(o=>String(o.no)===no)){ at++; return; }
+          if(app.d.ogrenciler.find(o=>String(o.no)===no && (o.okul||app.okul)===okul)){ at++; return; }
           app.d.ogrenciler.push({no,ads,sinif,okul}); ek++;
         });
         renderOgr(); localSave(); alert(`${ek} öğrenci eklendi. ${at} mükerrer kayıt engellendi.`); addLog(`Öğrenci Excel yüklendi: +${ek}`);
@@ -1854,7 +1836,7 @@ function renderSen(){
   document.getElementById('senList').innerHTML=h;
 }
 
-// *** YENİ: Senaryo satır inline düzenleme ***
+// DÜZELTİLDİ: Senaryo satır inline düzenleme textarea yapıldı
 function editSenSatir(senId, rowIdx){
   let sen=app.d.senaryolar[senId];
   if(!sen || !sen.detaylar || !sen.detaylar[rowIdx]) return;
@@ -1863,7 +1845,6 @@ function editSenSatir(senId, rowIdx){
   let tr=document.getElementById(`senRow_${safeId}_${rowIdx}`);
   if(!tr) return;
 
-  // Eğer zaten düzenleme modundaysa kapat
   if(tr.classList.contains('sen-edit-row')){ renderSen(); return; }
 
   tr.classList.add('sen-edit-row');
@@ -1871,8 +1852,8 @@ function editSenSatir(senId, rowIdx){
     <td><b>${rowIdx+1}</b></td>
     <td><input class="sen-edit-inp" id="sedit_u_${rowIdx}" value="${x.unite||''}"></td>
     <td><input class="sen-edit-inp" id="sedit_k_${rowIdx}" value="${x.konu||''}"></td>
-    <td><input class="sen-edit-inp" id="sedit_c_${rowIdx}" value="${x.kazanim||''}" style="width:240px"></td>
-    <td><input class="sen-edit-inp" id="sedit_b_${rowIdx}" value="${x.surec||''}"></td>
+    <td><textarea class="sen-edit-inp" id="sedit_c_${rowIdx}" style="min-width:240px; min-height:40px">${x.kazanim||''}</textarea></td>
+    <td><textarea class="sen-edit-inp" id="sedit_b_${rowIdx}" style="min-width:150px; min-height:40px">${x.surec||''}</textarea></td>
     <td><input type="number" class="sen-edit-inp" id="sedit_p_${rowIdx}" value="${x.maxPuan||20}" style="width:60px"></td>
     <td style="white-space:nowrap">
       <button class="btn btn-success btn-sm" style="padding:3px 8px" onclick="saveSenSatir('${senId}',${rowIdx})"><i class="fa-solid fa-check" style="font-size:10px"></i></button>
@@ -1903,7 +1884,6 @@ function editSen(id){
   let s=app.d.senaryolar[id]; if(!s) return;
   document.getElementById('mSenSinav').value=id.split(' - ')[0]||id;
   document.getElementById('mSenSen').value=id.split(' - ').slice(1).join(' - ')||'';
-  // Branş set et
   let bSel=document.getElementById('mSenBrans');
   if(bSel && s.brans) bSel.value=s.brans;
   let body=document.getElementById('mSenBody'); body.innerHTML='';
@@ -1974,7 +1954,6 @@ ${metin}`;
     parsed.forEach((item,i)=>{ body.insertAdjacentHTML('beforeend',mSenRowHTML(i+1,item)); });
     document.getElementById('mSenSinav').value=ad;
     document.getElementById('mSenSen').value='';
-    // Branşı Manuel tabloya aktar
     let mBrans=document.getElementById('mSenBrans');
     if(mBrans) mBrans.value=brans;
     swTab('tsen-m', document.querySelectorAll('#page-senaryo .tab-btn')[1]);
@@ -1988,8 +1967,7 @@ ${metin}`;
 }
 
 // ===== SINAV NOT GİRİŞİ =====
-
-// YENİ: Branş filtresine göre senaryo listesini güncelle
+// DÜZELTİLDİ: Senaryo Atama Hatası
 function initSinavSenaryolar(){
   let bransFil=document.getElementById('mnBransFil')?.value||'';
   let keys=Object.keys(app.d.senaryolar);
@@ -1998,18 +1976,23 @@ function initSinavSenaryolar(){
     keys=keys.filter(k=>{ let b=app.d.senaryolar[k].brans||''; return !b || b===app.brans; });
   }
   let mnSen=document.getElementById('mnSen');
-  if(mnSen){ mnSen.innerHTML='<option value="">-- Senaryo seçin --</option>'; keys.forEach(k=>{ let bTag=app.d.senaryolar[k].brans?` [${app.d.senaryolar[k].brans}]`:''; mnSen.innerHTML+=`<option>${k}${bTag}</option>`; }); }
+  if(mnSen){ 
+    mnSen.innerHTML='<option value="">-- Senaryo seçin --</option>'; 
+    keys.forEach(k=>{ 
+      let bTag=app.d.senaryolar[k].brans?` [${app.d.senaryolar[k].brans}]`:''; 
+      mnSen.innerHTML+=`<option value="${k}">${k}${bTag}</option>`; 
+    }); 
+  }
   buildNotTable();
 }
 
 function initSinav(){
   syncBransSelect();
-  // Öğretmenin branşını varsayılan seç
   let mnBrans=document.getElementById('mnBransFil');
   if(mnBrans && app.brans && app.role!=='Süper Yönetici') mnBrans.value=app.brans;
 
   let allKeys=Object.keys(app.d.senaryolar);
-  ['xlNotSen','xlNotSenUp'].forEach(id=>{ let el=document.getElementById(id); if(el){ el.innerHTML='<option value="">-- Senaryo seçin --</option>'; allKeys.forEach(k=>el.innerHTML+=`<option>${k}</option>`); } });
+  ['xlNotSen','xlNotSenUp'].forEach(id=>{ let el=document.getElementById(id); if(el){ el.innerHTML='<option value="">-- Senaryo seçin --</option>'; allKeys.forEach(k=>el.innerHTML+=`<option value="${k}">${k}</option>`); } });
 
   let siniflar=[...new Set(app.d.ogrenciler.map(o=>o.sinif).filter(Boolean))].sort();
   ['mnSinif','xlNotSinif'].forEach(id=>{ let el=document.getElementById(id); if(el){ el.innerHTML='<option value="">Tümü</option>'; siniflar.forEach(s=>el.innerHTML+=`<option>${s}</option>`); } });
@@ -2017,13 +2000,12 @@ function initSinav(){
   initSinavSenaryolar();
 }
 
+// DÜZELTİLDİ: Tablo Hizalaması ve Puan Kayıt Hatası
 function buildNotTable(){
-  // Senaryo ismi seçicide [Branş] eki olabilir, kırp
-  let rawSen=(document.getElementById('mnSen')?.value||'').replace(/\s*\[.*?\]\s*$/,'').trim();
+  let senId=document.getElementById('mnSen').value;
   let sinif=document.getElementById('mnSinif').value;
   let wrap=document.getElementById('notTableWrap'); wrap.innerHTML='';
-  if(!rawSen || !app.d.senaryolar[rawSen]) return;
-  let senId=rawSen;
+  if(!senId || !app.d.senaryolar[senId]) return;
   let det=app.d.senaryolar[senId]?.detaylar||[];
   let ogr=sinif?app.d.ogrenciler.filter(o=>o.sinif===sinif):app.d.ogrenciler;
   let mevcut=app.d.sinavlar[senId]||[];
@@ -2053,8 +2035,8 @@ function buildNotTable(){
 function calcRow(inp){
   let tr=inp.closest('tr');
   let inputs=tr.querySelectorAll('.ni');
-  let rawSen=(document.getElementById('mnSen')?.value||'').replace(/\s*\[.*?\]\s*$/,'').trim();
-  let det=app.d.senaryolar[rawSen]?.detaylar||[];
+  let senId=document.getElementById('mnSen').value;
+  let det=app.d.senaryolar[senId]?.detaylar||[];
   let maxTop=det.reduce((a,k)=>a+k.maxPuan,0);
   let tot=0;
   inputs.forEach(i=>{ let v=parseFloat(i.value)||0; let mx=parseFloat(i.dataset.max)||20; if(v>mx){i.value=mx;v=mx;} tot+=v; });
@@ -2065,9 +2047,8 @@ function calcRow(inp){
 }
 
 function saveNot(){
-  let rawSen=(document.getElementById('mnSen')?.value||'').replace(/\s*\[.*?\]\s*$/,'').trim();
-  if(!rawSen){ alert('Senaryo seçin.'); return; }
-  let senId=rawSen;
+  let senId=document.getElementById('mnSen').value;
+  if(!senId){ alert('Senaryo seçin.'); return; }
   if(!app.d.sinavlar[senId]) app.d.sinavlar[senId]=[];
   let trows=document.querySelectorAll('#notTbl tbody tr');
   trows.forEach(tr=>{
@@ -2098,7 +2079,7 @@ function dlNotTemplate(){
 let anState={senId:null,data:null,det:null};
 function initAnaliz(){
   let el=document.getElementById('anSec'); el.innerHTML='<option value="">-- Sınav seçin --</option>';
-  Object.keys(app.d.sinavlar).forEach(k=>el.innerHTML+=`<option>${k}</option>`);
+  Object.keys(app.d.sinavlar).forEach(k=>el.innerHTML+=`<option value="${k}">${k}</option>`);
   document.getElementById('anizKap').style.display='none';
 }
 function buildAnaliz(){
