@@ -1028,8 +1028,10 @@ async function doLogin(){
 }
 
 function bootApp(db){
+  if(!db.genelSenaryolar) db.genelSenaryolar = {}; // Herkes için ortak senaryo havuzu eklendi
   if(!db.okulData[app.okul]) db.okulData[app.okul]={ogrenciler:[],senaryolar:{},sinavlar:{}};
   app.d = db.okulData[app.okul];
+  app.d.senaryolar = db.genelSenaryolar; // Artık herkes ortak havuzu kullanacak
   setDB(db);
   document.getElementById('authScreen').style.display='none';
   document.getElementById('mainApp').style.display='flex';
@@ -1774,7 +1776,7 @@ function xlUpload(inp, tip){
           surec:String(row['Süreç Bileşeni']||row['Surec']||'').trim(),
           maxPuan:parseInt(row['Max Puan']||row['maxPuan'])||20
         })).filter(d=>d.kazanim);
-        app.d.senaryolar[ad]={detaylar, brans}; renderSen(); localSave(); alert('Senaryo eklendi: '+ad); addLog('Senaryo Excel: '+ad);
+        app.d.senaryolar[ad]={detaylar, brans, olusturan: app.adSoyad || app.user}; renderSen(); localSave(); alert('Senaryo eklendi: '+ad); addLog('Senaryo Excel: '+ad);
       } else if(tip==='not'){
         let senId=document.getElementById('xlNotSenUp').value; if(!senId){ alert('Senaryo seçin.'); return; }
         if(!app.d.sinavlar[senId]) app.d.sinavlar[senId]=[];
@@ -1817,11 +1819,13 @@ function renderSen(){
     let sen=app.d.senaryolar[id];
     let det=sen.detaylar||[];
     let bransRozet=sen.brans?`<span class="brans-tag">${sen.brans}</span>`:'';
+    let olusturanRozet=sen.olusturan?`<span class="badge bg-b" style="font-size:10px"><i class="fa-solid fa-user"></i> ${sen.olusturan}</span>`:'';
     h+=`<div style="border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:var(--radius);padding:16px 18px;margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:10px">
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
           <b style="color:var(--primary);font-size:14px">${id}</b>
           ${bransRozet}
+          ${olusturanRozet}
           <span style="font-size:12px;color:var(--muted)">${det.length} soru</span>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -1929,7 +1933,7 @@ function saveMSen(){
   let rows=document.querySelectorAll('#mSenBody tr'), detaylar=[];
   rows.forEach(tr=>{ let c=tr.querySelector('.s-c').value.trim(); if(c) detaylar.push({unite:tr.querySelector('.s-u').value.trim(),konu:tr.querySelector('.s-k').value.trim(),kazanim:c,surec:tr.querySelector('.s-b').value.trim(),maxPuan:parseInt(tr.querySelector('.s-p').value)||20}); });
   if(!detaylar.length){ alert('En az 1 öğrenme çıktısı ekleyin.'); return; }
-  app.d.senaryolar[ad]={detaylar, brans}; renderSen(); localSave(); alert('Senaryo kaydedildi: '+ad); addLog('Senaryo kaydedildi: '+ad);
+  app.d.senaryolar[ad]={detaylar, brans, olusturan: app.adSoyad || app.user}; renderSen(); localSave(); alert('Senaryo kaydedildi: '+ad); addLog('Senaryo kaydedildi: '+ad);
 }
 
 // ===== AI SENARYO =====
