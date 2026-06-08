@@ -2154,7 +2154,7 @@ function buildNotTable(){
   let mevcut=app.d.sinavlar[senId]||[];
 
   let head='<table id="notTbl"><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
-det.forEach((k,i)=>head+=`<th>Soru ${i+1}<br><small style="font-weight:400;font-size:10px">(Max: ${k.maxPuan})</small></th>`);
+det.forEach((k,i)=>head+=`<th>Soru ${i+1}<br><small style="font-weight:400;font-size:11px">(${k.maxPuan})</small></th>`);
   head+='<th>Toplam</th><th>%</th></tr></thead><tbody>';
 
   let body='';
@@ -2274,7 +2274,7 @@ function qKey(k,i){ return `Soru ${i+1} [Max:${k.maxPuan}]`; }
 function drawOzetTable(data,det,baraj){
   let maxTop=det.reduce((a,k)=>a+k.maxPuan,0);
   let h='<table><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
-  det.forEach((k,i)=>h+=`<th>Soru ${i+1}<br><small style="font-weight:400;font-size:10px">(Max: ${k.maxPuan})</small></th>`);
+  det.forEach((k,i)=>h+=`<th>Soru ${i+1}<br><small style="font-weight:400;font-size:11px">(${k.maxPuan})</small></th>`);
   h+='<th>Toplam</th><th>%</th></tr></thead><tbody>';
 
   let soruToplam=det.map(()=>0);
@@ -2441,7 +2441,7 @@ function drawGraphs(data,det,baraj){
 
 function drawManuelTable(data,det){
   let h='<table id="manuelAnTbl"><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
-  det.forEach((k,i)=>h+=`<th>Soru ${i+1}<br><small style="font-size:10px;font-weight:400">(Max:${k.maxPuan})</small></th>`);
+  det.forEach((k,i)=>h+=`<th>Soru ${i+1}<br><small style="font-size:11px;font-weight:400">(${k.maxPuan})</small></th>`);
   h+='</tr></thead><tbody>';
   data.forEach(r=>{
     h+=`<tr data-no="${r['Okul No']}"><td><b>${r['Okul No']}</b></td><td>${r['Adı Soyadı']||''}</td><td>${r['Sınıf']||''}</td>`;
