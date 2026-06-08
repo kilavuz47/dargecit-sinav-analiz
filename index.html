@@ -475,7 +475,7 @@ textarea.sen-edit-inp { resize: vertical; }
         <div class="tc active" id="tsen-ai">
           <div class="card">
             <div class="ct">Metni Yapıştır — Gemini Analiz Etsin</div>
-            <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> PDF veya Word belgeden kopyalayıp yapıştırın. Ünite, konu, kazanım ve soru sayısı gibi bilgiler otomatik ayrıştırılır.</div>
+            <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> PDF veya Word belgeden kopyalayıp yapıştırın. Ünite, konu, Öğrenme Çıktısı ve soru sayısı gibi bilgiler otomatik ayrıştırılır.</div>
             <div class="g2" style="margin-bottom:14px">
               <div class="fg" style="margin:0"><label>Sınav / Senaryo Adı (Havuza kaydedilecek isim)</label><input class="fc" id="aiSenAdi" placeholder="Örn: 6.Sınıf Matematik 2.Dönem 2.Ortak - Senaryo 4"></div>
               <div class="fg" style="margin:0"><label>Branş <span style="color:var(--danger)">*</span></label>
@@ -509,7 +509,7 @@ textarea.sen-edit-inp { resize: vertical; }
             </div>
             <div class="tr-wrap" style="margin-bottom:16px;max-height:400px;overflow-y:auto">
               <table id="mSenTable">
-                <thead><tr><th>No</th><th>Ünite/Tema</th><th>Konu</th><th>Öğrenme Çıktısı (Kazanım)</th><th>Süreç Bileşeni</th><th>Max Puan</th><th></th></tr></thead>
+                <thead><tr><th>No</th><th>Ünite/Tema</th><th>Konu</th><th>Öğrenme Çıktısı (Öğrenme Çıktısı)</th><th>Süreç Bileşeni</th><th>Max Puan</th><th></th></tr></thead>
                 <tbody id="mSenBody"></tbody>
               </table>
             </div>
@@ -598,7 +598,7 @@ textarea.sen-edit-inp { resize: vertical; }
       </div>
 
       <div class="page" id="page-analiz">
-        <div class="ph"><h2>Detaylı Analiz & Raporlar</h2><p>Kazanım bazlı başarı, çeldirici tespiti, zümre raporu ve öğrenci karneleri.</p></div>
+        <div class="ph"><h2>Detaylı Analiz & Raporlar</h2><p>Öğrenme Çıktısı bazlı başarı, çeldirici tespiti, zümre raporu ve öğrenci karneleri.</p></div>
         <div class="card" style="margin-bottom:14px">
           <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end">
             <div class="fg" style="margin:0;flex:2;min-width:220px"><label>Analiz Edilecek Sınav</label><select class="fc" id="anSec" onchange="buildAnaliz()"></select></div>
@@ -692,7 +692,7 @@ textarea.sen-edit-inp { resize: vertical; }
               <div class="g2">
                 <div class="card">
                   <div class="chart-zoom-bar">
-                    <span>Kazanım Başarı Sütun Grafiği</span>
+                    <span>Öğrenme Çıktısı Başarı Sütun Grafiği</span>
                     <div class="chart-zoom-btns">
                       <button onclick="zoomChart('bar',-50)">−</button>
                       <span class="zoom-val" id="zvBar">300px</span>
@@ -726,7 +726,7 @@ textarea.sen-edit-inp { resize: vertical; }
               </div>
               <div class="card">
                 <div class="chart-zoom-bar">
-                  <span>Kazanım Başarı Yüzde Çizgi Grafiği</span>
+                  <span>Öğrenme Çıktısı Başarı Yüzde Çizgi Grafiği</span>
                   <div class="chart-zoom-btns">
                     <button onclick="zoomChart('line',-50)">−</button>
                     <span class="zoom-val" id="zvLine">300px</span>
@@ -742,9 +742,12 @@ textarea.sen-edit-inp { resize: vertical; }
             <div class="card">
               <div class="ct">
                 <span>Öğrenci Karneleri</span>
-                <button class="btn btn-outline btn-sm" onclick="yazdirBolum('karneWrap')"><i class="fa-solid fa-print"></i> Tüm Karneleri Yazdır</button>
+                <div>
+                  <button class="btn btn-primary btn-sm" id="btnAiKarne" onclick="aiKarneleriOlustur()"><i class="fa-solid fa-brain"></i> AI ile Karneleri Doldur</button>
+                  <button class="btn btn-outline btn-sm" onclick="yazdirBolum('karneWrap')"><i class="fa-solid fa-print"></i> Yazdır</button>
+                </div>
               </div>
-              <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> Her öğrenci için konuya ve kazanıma özel olarak hazırlanmış sınav karnesidir. Çıktı alıp öğrencilere dağıtabilirsiniz.</div>
+              <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> Öğrenme çıktılarına göre analiz edilir. "AI ile Karneleri Doldur" butonuna basarak her öğrenciye özel pedagojik tavsiyeler üretebilirsiniz.</div>
               <div id="karneWrap"></div>
             </div>
           </div>
@@ -1866,7 +1869,7 @@ function dlTemplate(t){
     XLSX.utils.book_append_sheet(wb,ws,'Ogrenciler'); XLSX.writeFile(wb,'Ogrenci_Listesi_Sablonu.xlsx');
   }
   else if(t==='senaryo'){
-    ws=XLSX.utils.aoa_to_sheet([['Soru No','Ünite/Tema','Konu','Öğrenme Çıktısı (Kazanım)','Süreç Bileşeni','Max Puan'],['1','Cebirsel İfadeler','MAT.6.2.1','Gerçek yaşam...','a) ...','20'],['2','Uzunluk ve Alan','MAT.6.4.1','Uzunluk birimleri...','','20']]);
+    ws=XLSX.utils.aoa_to_sheet([['Soru No','Ünite/Tema','Konu','Öğrenme Çıktısı (Öğrenme Çıktısı)','Süreç Bileşeni','Max Puan'],['1','Cebirsel İfadeler','MAT.6.2.1','Gerçek yaşam...','a) ...','20'],['2','Uzunluk ve Alan','MAT.6.4.1','Uzunluk birimleri...','','20']]);
     XLSX.utils.book_append_sheet(wb,ws,'Senaryo'); XLSX.writeFile(wb,'Senaryo_Sablonu.xlsx');
   }
 }
@@ -1911,7 +1914,7 @@ function xlUpload(inp, tip){
         let detaylar=data.map((row,i)=>({
           unite:String(row['Ünite/Tema']||row['Unite']||'').trim(),
           konu:String(row['Konu']||'').trim(),
-          kazanim:String(row['Öğrenme Çıktısı (Kazanım)']||row['Kazanım']||row['kazanim']||'').trim(),
+          kazanim:String(row['Öğrenme Çıktısı (Öğrenme Çıktısı)']||row['Öğrenme Çıktısı']||row['kazanim']||'').trim(),
           surec:String(row['Süreç Bileşeni']||row['Surec']||'').trim(),
           maxPuan:parseInt(row['Max Puan']||row['maxPuan'])||20
         })).filter(d=>d.kazanim);
@@ -1964,7 +1967,7 @@ function renderSen(){
         </div>
       </div>
       <div class="tr-wrap"><table style="font-size:12px">
-        <thead><tr><th>#</th><th>Ünite/Tema</th><th>Konu</th><th>Kazanım</th><th>Süreç Bileşeni</th><th>Max Puan</th><th>Düzenle</th></tr></thead>
+        <thead><tr><th>#</th><th>Ünite/Tema</th><th>Konu</th><th>Öğrenme Çıktısı</th><th>Süreç Bileşeni</th><th>Max Puan</th><th>Düzenle</th></tr></thead>
         <tbody id="senTbody_${id.replace(/[^a-z0-9]/gi,'_')}">`;
     det.forEach((x,i)=>{
       let safeId=id.replace(/[^a-z0-9]/gi,'_');
@@ -2076,7 +2079,7 @@ async function aiCoz(){
   let btn=document.getElementById('btnAi');
   btn.innerHTML='<span class="spin"></span> Gemini analiz ediyor...'; btn.disabled=true;
 
-  let prompt=`Sen bir MEB sınav uzmanısın. Aşağıdaki metni analiz et. Her bir soru için JSON objesi oluştur. Eğer "Soru Sayısı" veya benzer bir sütunda 2 yazıyorsa, o kazanım için 2 ayrı obje ekle. Sadece saf JSON dizisi döndür, başka hiçbir şey yazma, markdown kullanma.
+  let prompt=`Sen bir MEB sınav uzmanısın. Aşağıdaki metni analiz et. Her bir soru için JSON objesi oluştur. Eğer "Soru Sayısı" veya benzer bir sütunda 2 yazıyorsa, o Öğrenme Çıktısı için 2 ayrı obje ekle. Sadece saf JSON dizisi döndür, başka hiçbir şey yazma, markdown kullanma.
 
 Format:
 [{"unite":"Ünite veya Tema adı","konu":"Konu başlığı","kazanim":"Öğrenme çıktısı tam metni","surec":"Süreç bileşeni varsa (yoksa boş string)"}]
@@ -2315,6 +2318,9 @@ function drawOzetTable(data,det,baraj){
 }
 
 // ===== ÖĞRENCİ KARNELERİ =====
+// Global AI Karne durumu
+let karneAiYorumlari = {}; 
+
 function drawKarneler(data, det, baraj) {
   let maxTop = det.reduce((a, k) => a + k.maxPuan, 0);
   let wrap = document.getElementById('karneWrap');
@@ -2332,14 +2338,14 @@ function drawKarneler(data, det, baraj) {
       let durum = pct >= baraj ? '<span class="badge bg-g">Yeterli</span>' : '<span class="badge bg-r">Eksik</span>';
       
       if (pct < baraj) {
-        eksikler.push(k.konu || `Soru ${i+1} Kazanımı`);
+        eksikler.push({konu: k.konu || 'Genel', cikti: k.kazanim});
       }
       
       rows += `
         <tr>
           <td><b>Soru ${i+1}</b></td>
           <td>${k.konu || 'Genel Konu'}</td>
-          <td style="font-size: 11px;">${k.kazanim.substring(0, 50)}...</td>
+          <td style="font-size: 11px;">${k.kazanim}</td>
           <td><b>${v}</b> / ${k.maxPuan}</td>
           <td>${durum}</td>
         </tr>
@@ -2350,12 +2356,19 @@ function drawKarneler(data, det, baraj) {
     let genDurum = genPct >= baraj ? '<span style="color:#10B981;">✓ BAŞARILI</span>' : '<span style="color:#EF4444;">✗ GELİŞTİRİLMELİ</span>';
     
     let yorum = "";
-    if (eksikler.length > 0) {
-      let gosterilenEksikler = eksikler.slice(0, 3).join(', ');
-      let eklenti = eksikler.length > 3 ? ' ve diğer' : '';
-      yorum = `Öğrencinin özellikle <b>${gosterilenEksikler}</b>${eklenti} konularında eksikleri tespit edilmiştir. İlgili kazanımların tekrar edilmesi öğrencinin gelişimi için faydalı olacaktır.`;
+    let okulNo = r['Okul No'];
+
+    // Eğer Yapay Zeka yorum ürettiyse onu kullan, yoksa sistemsel detaylı yorumu ver
+    if(karneAiYorumlari[okulNo]) {
+      yorum = karneAiYorumlari[okulNo];
     } else {
-      yorum = `Öğrenci sınavdaki tüm konu ve kazanımlarda yeterli başarıyı göstermiştir. Gösterdiği çaba için tebrik eder, başarılarının devamını dilerim.`;
+      if (eksikler.length > 0) {
+        let eksikDetay = eksikler.slice(0, 2).map(e => `<b>${e.konu}</b> konusunda yer alan <i>"${e.cikti.substring(0,60)}..."</i> öğrenme çıktısında`).join(' ve ');
+        let eklenti = eksikler.length > 2 ? ' ile diğer bazı alt becerilerde' : '';
+        yorum = `Sınav analizine göre; özellikle ${eksikDetay}${eklenti} eksiklerin bulunmaktadır. Bu öğrenme çıktılarını (becerileri) pekiştirmek için ilgili kısımlara ağırlık vermen faydalı olacaktır.`;
+      } else {
+        yorum = `Sınavdaki tüm öğrenme çıktılarında yeterli başarıyı gösterdin. Gösterdiğin çaba için tebrik eder, başarılarının devamını dilerim.`;
+      }
     }
 
     html += `
@@ -2368,7 +2381,7 @@ function drawKarneler(data, det, baraj) {
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
           <div>
             <div style="font-size: 18px; font-weight: 800; color: #0F172A;">${r['Adı Soyadı'] || 'İsimsiz Öğrenci'}</div>
-            <div style="font-size: 14px; color: #475569;">Sınıf: <span class="badge bg-b">${r['Sınıf'] || '-'}</span> | Okul No: <b>${r['Okul No']}</b></div>
+            <div style="font-size: 14px; color: #475569;">Sınıf: <span class="badge bg-b">${r['Sınıf'] || '-'}</span> | Okul No: <b>${okulNo}</b></div>
           </div>
           <div style="text-align: right; background: #F8FAFC; padding: 10px 20px; border-radius: 8px; border: 1px solid #E2E8F0;">
             <div style="font-size: 12px; color: #64748B; font-weight: 600;">TOPLAM BAŞARI</div>
@@ -2380,9 +2393,9 @@ function drawKarneler(data, det, baraj) {
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
           <thead>
             <tr style="background: #F1F5F9;">
-              <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: left;">Soru</th>
-              <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: left;">Konu</th>
-              <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: left;">Ölçülen Kazanım</th>
+              <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: center;">Soru</th>
+              <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: left;">Konu Başlığı</th>
+              <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: left;">Öğrenme Çıktısı (Beceri)</th>
               <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: center;">Puan</th>
               <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: center;">Durum</th>
             </tr>
@@ -2393,7 +2406,7 @@ function drawKarneler(data, det, baraj) {
         </table>
         
         <div style="background: #EEF2FF; border-left: 4px solid #4F46E5; padding: 15px; border-radius: 0 8px 8px 0;">
-          <div style="font-size: 12px; font-weight: 800; color: #4338CA; margin-bottom: 5px;"><i class="fa-solid fa-comment-dots"></i> ÖĞRETMEN DEĞERLENDİRMESİ</div>
+          <div style="font-size: 12px; font-weight: 800; color: #4338CA; margin-bottom: 5px;"><i class="fa-solid fa-comment-dots"></i> PEDAGOJİK DEĞERLENDİRME & ÖNERİ</div>
           <div style="font-size: 13px; color: #334155; line-height: 1.5;">${yorum}</div>
         </div>
       </div>
@@ -2406,6 +2419,59 @@ function drawKarneler(data, det, baraj) {
     wrap.innerHTML = html;
   }
 }
+async function aiKarneleriOlustur() {
+  let {data, det, baraj, senId} = anState;
+  if(!data || !det) return;
+  
+  let btn = document.getElementById('btnAiKarne');
+  let oldText = btn.innerHTML;
+  btn.innerHTML = '<span class="spin"></span> Yapay Zeka Değerlendiriyor...'; 
+  btn.disabled = true;
+
+  // Öğrencilerin eksik çıktılarının özetini çıkarıyoruz
+  let ogrenciOzetleri = data.map(r => {
+    let eksikler = [];
+    det.forEach((k,i)=>{
+      let v = parseFloat(r[qKey(k,i)]) || 0;
+      let pct = k.maxPuan ? Math.round(v / k.maxPuan * 100) : 0;
+      if(pct < baraj) eksikler.push(`${k.konu}: ${k.kazanim.substring(0,80)}`);
+    });
+    return { no: r['Okul No'], ad: r['Adı Soyadı'].split(' ')[0], eksikler: eksikler.slice(0,3) };
+  });
+
+  let prompt = `Sen eğitim koçu bir yapay zekasın. Yeni Maarif Modeli'ne (Öğrenme Çıktıları Odaklı) göre öğrencilerin sınav sonuçlarını analiz ediyorsun. 
+  Aşağıda öğrencilerin Okul No, Adı ve eksik olduğu 'Öğrenme Çıktıları' (beceriler) JSON olarak verilmiştir.
+  Her öğrenci için eksik olduğu öğrenme çıktılarını vurgulayarak, doğrudan öğrenciye adıyla hitap eden (örn: "Sevgili Ali, ..."), motive edici ve neye çalışması gerektiğini söyleyen 2 cümlelik pedagojik tavsiye yaz.
+  SADECE AŞAĞIDAKİ GİBİ SAF JSON DÖNDÜR:
+  {"108": "Sevgili Elif, Cebirsel İfadeler konusundaki algoritmaları yorumlama becerinde eksiklikler var. Bu öğrenme çıktısını geliştirmek için...", "368": "..."}
+
+  Öğrenci Verisi:
+  ${JSON.stringify(ogrenciOzetleri)}`;
+
+  try {
+    let res = await fetch(`${GEM_URL}?key=${GEM_KEY}`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json'}})
+    });
+    if(!res.ok) throw new Error('API Hatası');
+    let resData = await res.json();
+    let raw = resData.candidates?.[0]?.content?.parts?.[0]?.text||'{}';
+    let parsed = JSON.parse(raw.replace(/```json|
+```/g,'').trim());
+    
+    // Yorumları state'e aktar ve karneleri baştan çizdir (bu sefer AI yorumlarıyla dolacak)
+    karneAiYorumlari = parsed;
+    drawKarneler(anState.data, anState.det, anState.baraj); 
+    
+    alert('Tüm öğrenciler için yapay zeka destekli pedagojik değerlendirmeler başarıyla oluşturuldu!');
+  } catch(e) {
+    alert('Yapay Zeka Karneleri oluşturulurken hata oluştu. Lütfen tekrar deneyin.');
+    console.error(e);
+  }
+  
+  btn.innerHTML = oldText; 
+  btn.disabled = false;
+}      
 
 // ===== GRAFİKLER =====
 const chartHeights={bar:300,pie:300,sube:380,line:300,topluBar:300,topluSoru:300};
@@ -2516,10 +2582,10 @@ function olusturAlgoritmikYorum(ogrSonuc,soruOzet,subeOzet,baraj,maxTop,det){
   let toplam=ogrSonuc.length; let basarili=ogrSonuc.filter(o=>o.pct>=baraj).length; let ort=toplam?Math.round(ogrSonuc.reduce((s,o)=>s+o.pct,0)/toplam):0;
   let basariOrani=Math.round(basarili/toplam*100); let zayifSorular=soruOzet.filter(s=>s.ort<baraj); let gucluSorular=soruOzet.filter(s=>s.ort>=baraj+20);
   let genel=''; if(ort>=70) genel=`Sınav genel itibarıyla <b>başarılı</b> geçmiştir. Sınıf ortalaması %${ort} ile barajın belirgin üzerindedir.`; else if(ort>=baraj) genel=`Sınav <b>kabul edilebilir</b> bir düzeyde tamamlanmıştır. Sınıf ortalaması %${ort} ile başarı barajını geçmiştir; ancak gelişime açık alanlar mevcuttur.`; else genel=`Sınav sonuçları <b>endişe verici</b> bir tablo ortaya koymaktadır. Sınıf ortalaması %${ort} ile başarı barajının (%${baraj}) altında kalmış, öğrencilerin %${100-basariOrani}'i hedefi yakalayamamıştır.`;
-  let kazanimYorum=''; if(zayifSorular.length){ kazanimYorum+=`<br><br><b>⚠ Zayıf Kazanımlar:</b><br>`; zayifSorular.forEach(s=>kazanimYorum+=`• Soru ${s.soru} (%${s.ort}): "${s.kazanim}" — Tekrar çalışması önerilir.<br>`); }
-  if(gucluSorular.length){ kazanimYorum+=`<br><b>✓ Güçlü Kazanımlar:</b><br>`; gucluSorular.forEach(s=>kazanimYorum+=`• Soru ${s.soru} (%${s.ort}): "${s.kazanim}"<br>`); }
+  let kazanimYorum=''; if(zayifSorular.length){ kazanimYorum+=`<br><br><b>⚠ Zayıf Öğrenme Çıktıları:</b><br>`; zayifSorular.forEach(s=>kazanimYorum+=`• Soru ${s.soru} (%${s.ort}): "${s.kazanim}" — Tekrar çalışması önerilir.<br>`); }
+  if(gucluSorular.length){ kazanimYorum+=`<br><b>✓ Güçlü Öğrenme Çıktıları:</b><br>`; gucluSorular.forEach(s=>kazanimYorum+=`• Soru ${s.soru} (%${s.ort}): "${s.kazanim}"<br>`); }
   let subeYorum=''; if(subeOzet.length>1){ let enIyi=subeOzet.reduce((a,b)=>a.ort>b.ort?a:b); let enKotu=subeOzet.reduce((a,b)=>a.ort<b.ort?a:b); subeYorum=`<br><br><b>📊 Şube Karşılaştırması:</b><br>En başarılı: <b>${enIyi.sinif}</b> (%${enIyi.ort}) — En düşük: <b>${enKotu.sinif}</b> (%${enKotu.ort})<br>`; if(enIyi.ort-enKotu.ort>15) subeYorum+=`<span style="color:#EF4444">⚠ Şubeler arası ${enIyi.ort-enKotu.ort} puanlık fark tespit edildi.</span><br>`; }
-  let oneriler=`<br><br><b>🎯 Öneriler:</b><br>`; if(zayifSorular.length) oneriler+=`• Zayıf kazanımlarda tekrar dersi veya ek çalışma kağıdı hazırlanması önerilir.<br>`; if(100-basariOrani>30) oneriler+=`• Başarısız öğrenci oranı yüksek (%${100-basariOrani}). Bireysel destek planı oluşturulabilir.<br>`; oneriler+=`• Güçlü kazanımlarda zenginleştirici etkinliklerle üst düzey düşünme becerileri geliştirilebilir.<br>`;
+  let oneriler=`<br><br><b>🎯 Öneriler:</b><br>`; if(zayifSorular.length) oneriler+=`• Zayıf Öğrenme Çıktılarıda tekrar dersi veya ek çalışma kağıdı hazırlanması önerilir.<br>`; if(100-basariOrani>30) oneriler+=`• Başarısız öğrenci oranı yüksek (%${100-basariOrani}). Bireysel destek planı oluşturulabilir.<br>`; oneriler+=`• Güçlü Öğrenme Çıktılarıda zenginleştirici etkinliklerle üst düzey düşünme becerileri geliştirilebilir.<br>`;
   return genel+kazanimYorum+subeYorum+oneriler;
 }
 
@@ -2540,11 +2606,11 @@ const PDF_BOLUMLER = [
   { id:'istatistik',label:'İstatistiksel Özet (Ort · SS · Min · Max)', icon:'fa-calculator', varsayilan:true },
   { id:'sinifkart', label:'Şube Özet Kartları',                icon:'fa-school',         varsayilan:true },
   { id:'ogrenciTbl',label:'Öğrenci Sonuç Tablosu (Sıralı)',   icon:'fa-table',          varsayilan:true },
-  { id:'soruTbl',   label:'Soru / Kazanım Başarı Tablosu',     icon:'fa-list-check',     varsayilan:true },
-  { id:'grafBar',   label:'Kazanım Başarı Sütun Grafiği',      icon:'fa-chart-bar',      varsayilan:true },
+  { id:'soruTbl',   label:'Soru / Öğrenme Çıktısı Başarı Tablosu',     icon:'fa-list-check',     varsayilan:true },
+  { id:'grafBar',   label:'Öğrenme Çıktısı Başarı Sütun Grafiği',      icon:'fa-chart-bar',      varsayilan:true },
   { id:'grafPie',   label:'Başarı Dağılımı Daire Grafiği',     icon:'fa-chart-pie',      varsayilan:true },
   { id:'grafSube',  label:'Şubeler Arası Karşılaştırma Grafiği',icon:'fa-chart-column',  varsayilan:true },
-  { id:'grafLine',  label:'Kazanım Çizgi Grafiği',             icon:'fa-chart-line',     varsayilan:false},
+  { id:'grafLine',  label:'Öğrenme Çıktısı Çizgi Grafiği',             icon:'fa-chart-line',     varsayilan:false},
   { id:'grafYorum', label:'Grafik Altı Otomatik Yorumlar',     icon:'fa-comment-dots',   varsayilan:true },
   { id:'konuAnaliz',label:'Konu Bazlı Derinlemeli Analiz',     icon:'fa-magnifying-glass-chart', varsayilan:true },
   { id:'aiYorum',   label:'Yapay Zeka Pedagojik Yorumu',       icon:'fa-brain',          varsayilan:true },
@@ -2665,22 +2731,22 @@ async function pdfOnizleOlustur(){
         html+='</tbody></table>'; break;
 
       case 'soruTbl':
-        html+=`<h2 style="${h2Stil}">Soru / Kazanım Başarı Tablosu</h2>
+        html+=`<h2 style="${h2Stil}">Soru / Öğrenme Çıktısı Başarı Tablosu</h2>
         <table style="width:100%;border-collapse:collapse;margin-bottom:16px;page-break-inside:auto;">
-          <thead style="display:table-header-group;"><tr><th style="${thStil}">#</th><th style="${thStil}">Konu</th><th style="${thStil}">Kazanım</th><th style="${thStil}">Max</th><th style="${thStil}">Başarı %</th><th style="${thStil}">Değerlendirme</th></tr></thead><tbody>`;
+          <thead style="display:table-header-group;"><tr><th style="${thStil}">#</th><th style="${thStil}">Konu</th><th style="${thStil}">Öğrenme Çıktısı</th><th style="${thStil}">Max</th><th style="${thStil}">Başarı %</th><th style="${thStil}">Değerlendirme</th></tr></thead><tbody>`;
         soruStat.forEach((s,i)=>{ let c=s.basariPct>=baraj?'#D1FAE5':s.basariPct>=50?'#FEF3C7':'#FEE2E2'; let tc=s.basariPct>=baraj?'#065F46':s.basariPct>=50?'#92400E':'#991B1B'; html+=`<tr style="background:${i%2===0?'#fff':'#F8FAFC'};page-break-inside:avoid;"><td style="${tdStil}text-align:center;font-weight:700">${s.no}</td><td style="${tdStil}font-size:${fs-1}px">${s.konu||'—'}</td><td style="${tdStil}font-size:${fs-1}px">${s.kazanim.substring(0,70)}${s.kazanim.length>70?'…':''}</td><td style="${tdStil}text-align:center">${s.maxPuan}</td><td style="${tdStil}text-align:center;background:${c};color:${tc};font-weight:800">${s.basariPct}%</td><td style="${tdStil}background:${c};color:${tc};font-size:${fs-1}px;font-weight:700">${s.basariPct>=baraj+20?'Çok İyi':s.basariPct>=baraj?'Yeterli':s.basariPct>=30?'Geliştirilmeli':'Başarısız'}</td></tr>`; });
         html+='</tbody></table>'; break;
 
-      case 'grafBar': html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Kazanım Başarı Sütun Grafiği</h2>`+pdfGrafikHTML('cBar',gh,'%90','inline')+'</div>'; break;
+      case 'grafBar': html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Öğrenme Çıktısı Başarı Sütun Grafiği</h2>`+pdfGrafikHTML('cBar',gh,'%90','inline')+'</div>'; break;
       case 'grafPie': html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Başarı Dağılımı</h2>`+pdfGrafikHTML('cPie',gh,'45%','inline')+'</div>'; break;
       case 'grafSube': if(Object.keys(subeMap).length>1){ html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Şubeler Arası Karşılaştırma</h2>`+pdfGrafikHTML('cSube',gh,'%90','inline')+'</div>'; } break;
-      case 'grafLine': html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Kazanım Başarı Çizgi Grafiği</h2>`+pdfGrafikHTML('cLine',gh,'%90','inline')+'</div>'; break;
+      case 'grafLine': html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Öğrenme Çıktısı Başarı Çizgi Grafiği</h2>`+pdfGrafikHTML('cLine',gh,'%90','inline')+'</div>'; break;
 
       case 'grafYorum':
         html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Grafik Yorumları</h2>`;
         let enKotSoru=soruStat.reduce((a,b)=>a.basariPct<b.basariPct?a:b);
         let enIyiSoru=soruStat.reduce((a,b)=>a.basariPct>b.basariPct?a:b);
-        html+=`<div style="background:#EEF2FF;border-left:4px solid #4F46E5;padding:10px 14px;margin-bottom:10px;border-radius:0 6px 6px 0;font-size:${fs}px"><b>📊 Kazanım Grafiği:</b><br>En başarılı: Soru ${enIyiSoru.no} (%${enIyiSoru.basariPct}). En düşük: Soru ${enKotSoru.no} (%${enKotSoru.basariPct}). ${soruStat.filter(s=>s.basariPct<baraj).length} kazanım baraj altında.</div>`;
+        html+=`<div style="background:#EEF2FF;border-left:4px solid #4F46E5;padding:10px 14px;margin-bottom:10px;border-radius:0 6px 6px 0;font-size:${fs}px"><b>📊 Öğrenme Çıktısı Grafiği:</b><br>En başarılı: Soru ${enIyiSoru.no} (%${enIyiSoru.basariPct}). En düşük: Soru ${enKotSoru.no} (%${enKotSoru.basariPct}). ${soruStat.filter(s=>s.basariPct<baraj).length} Öğrenme Çıktısı baraj altında.</div>`;
         let basariliPct=Math.round(basarili/data.length*100);
         html+=`<div style="background:#F0FDF4;border-left:4px solid #10B981;padding:10px 14px;margin-bottom:10px;border-radius:0 6px 6px 0;font-size:${fs}px"><b>🟢 Dağılım:</b><br>%${basariliPct} başarı barajını aştı. ${ort>=baraj?`Sınıf ortalaması (%${ort}) baraj üzerinde.`:`Sınıf ortalaması (%${ort}) baraj altında — müdahale gerekli.`}</div></div>`;
         break;
@@ -2707,7 +2773,7 @@ async function pdfOnizleOlustur(){
         let eylemler=[];
         soruStat.filter(s=>s.basariPct<baraj).forEach(s=>{ eylemler.push(`<b>Soru ${s.no} — ${s.kazanim.substring(0,50)}:</b> Ek etkinlik önerilir. Başarı: %${s.basariPct}.`); });
         if(eylemler.length){ html+=`<ol style="padding-left:18px;line-height:2;font-size:${fs}px">`; eylemler.forEach(e=>html+=`<li style="margin-bottom:6px">${e}</li>`); html+=`</ol></div>`; }
-        else{ html+=`<div style="background:#D1FAE5;border-radius:8px;padding:12px 16px;font-size:${fs}px;color:#065F46"><b>✓ Tüm kazanımlar başarı barajını geçmiştir.</b></div></div>`; }
+        else{ html+=`<div style="background:#D1FAE5;border-radius:8px;padding:12px 16px;font-size:${fs}px;color:#065F46"><b>✓ Tüm Öğrenme Çıktıları başarı barajını geçmiştir.</b></div></div>`; }
         break;
     }
   }
