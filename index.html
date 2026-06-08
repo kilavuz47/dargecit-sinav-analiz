@@ -12,21 +12,20 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root {
-  /* Ana tema renkleri güncellendi */
-  --primary:#059669; --primary-h:#047857; --secondary:#3B82F6; --danger:#EF4444;
-  --warning:#F59E0B; --info:#0EA5E9; --dark:#1E293B; --light:#F8FAFC;
-  --border:#E2E8F0; --text:#334155; --muted:#64748B; --radius:10px;
+  --primary:#4F46E5;--primary-h:#4338CA;--secondary:#10B981;--danger:#EF4444;
+  --warning:#F59E0B;--info:#0EA5E9;--dark:#1E293B;--light:#F8FAFC;
+  --border:#E2E8F0;--text:#334155;--muted:#64748B;--radius:10px;
   --shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
 body{background:var(--light);color:var(--text);overflow:hidden}
 
 /* AUTH */
-.auth-wrap{display:flex;min-height:100vh;background:linear-gradient(135deg,#D1FAE5,#A7F3D0);
+.auth-wrap{display:flex;min-height:100vh;background:linear-gradient(135deg,#EEF2FF,#C7D2FE);
   align-items:center;justify-content:center;padding:20px;position:fixed;inset:0;z-index:1000;overflow-y:auto}
 .auth-box{display:flex;background:#fff;border-radius:16px;box-shadow:0 25px 50px -12px rgba(0,0,0,.25);
   overflow:hidden;max-width:960px;width:100%;min-height:560px}
-.auth-left{flex:1.2;background:linear-gradient(135deg,var(--primary),#064E3B);color:#fff;
+.auth-left{flex:1.2;background:linear-gradient(135deg,var(--primary),#312E81);color:#fff;
   padding:45px;display:flex;flex-direction:column;justify-content:center}
 .auth-left h1{font-size:32px;font-weight:800;margin-bottom:16px;line-height:1.2}
 .auth-left p{font-size:14px;opacity:.9;margin-bottom:28px;line-height:1.6}
@@ -42,7 +41,7 @@ body{background:var(--light);color:var(--text);overflow:hidden}
 .fg label{display:block;font-size:12px;font-weight:600;margin-bottom:5px;color:var(--text)}
 .fc{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius);
   outline:none;transition:.2s;background:#F8FAFC;font-size:13px;color:var(--text)}
-.fc:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(5, 150, 105, 0.1)}
+.fc:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(79,70,229,.1)}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;
   padding:11px 18px;border-radius:var(--radius);font-size:13px;font-weight:600;
@@ -128,7 +127,7 @@ tr:hover td{background:#F8FAFC}
 
 .upbox{border:2px dashed #CBD5E1;border-radius:var(--radius);padding:36px 20px;
   text-align:center;cursor:pointer;transition:.2s;background:#F8FAFC;width:100%}
-.upbox:hover{border-color:var(--primary);background:#D1FAE5}
+.upbox:hover{border-color:var(--primary);background:#EEF2FF}
 .upbox i{font-size:34px;color:var(--primary);margin-bottom:12px;display:block}
 .upbox p{font-size:13px;color:var(--muted)}
 
@@ -183,7 +182,7 @@ tr:hover td{background:#F8FAFC}
 /* Toplu Sınıf Sonuç Tablosu */
 .sonuc-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px}
 .sinif-ozet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:18px}
-.sinif-ozet-card{background:linear-gradient(135deg,#D1FAE5,#fff);border:1px solid #A7F3D0;
+.sinif-ozet-card{background:linear-gradient(135deg,#EEF2FF,#fff);border:1px solid #C7D2FE;
   border-radius:10px;padding:14px 16px;text-align:center}
 .sinif-ozet-card .soc-sinif{font-size:14px;font-weight:800;color:var(--primary);margin-bottom:6px}
 .sinif-ozet-card .soc-ort{font-size:28px;font-weight:800;color:var(--dark)}
@@ -192,7 +191,7 @@ tr:hover td{background:#F8FAFC}
 .sinif-ozet-card .soc-fill{height:100%;border-radius:3px;transition:width .6s}
 
 /* AI Yorum Kutusu */
-.ai-yorum-box{background:linear-gradient(135deg,#D1FAE5,#F8FAFC);border:2px solid #A7F3D0;
+.ai-yorum-box{background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border:2px solid #C7D2FE;
   border-radius:12px;padding:20px 22px;margin-top:18px}
 .ai-yorum-box .ay-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .ai-yorum-box .ay-icon{background:var(--primary);color:#fff;width:36px;height:36px;
@@ -205,7 +204,7 @@ tr:hover td{background:#F8FAFC}
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:auto}
 
 /* *** Senaryo inline düzenleme satırı *** */
-.sen-edit-row td { background:#D1FAE5 !important; }
+.sen-edit-row td { background:#EEF2FF !important; }
 .sen-edit-inp { width:100%;padding:5px 8px;border:1.5px solid var(--primary);border-radius:6px;font-size:12px;color:var(--dark);background:#fff;outline:none; font-family: inherit; }
 textarea.sen-edit-inp { resize: vertical; }
 
@@ -278,9 +277,7 @@ textarea.sen-edit-inp { resize: vertical; }
       <div class="fg"><label>Şifre</label><input class="fc" type="password" id="loginPass" placeholder="••••••••"></div>
       <button class="btn btn-primary btn-full" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> Sisteme Gir</button>
       <div id="loginErr" style="color:var(--danger);margin-top:12px;font-size:13px;font-weight:600;text-align:center"></div>
-      <div class="auth-sw">
-    Zaten üye misiniz? <a onclick="showLogin(); return false;">Giriş Yap</a>
-</div>
+      <div class="auth-sw">Hesabınız yok mu? <a onclick="showReg()">Öğretmen Kaydı Oluştur</a></div>
     </div>
 
     <div class="auth-right" id="regForm" style="display:none; padding:20px 35px; overflow-y:auto; max-height:95vh;">
@@ -729,7 +726,7 @@ textarea.sen-edit-inp { resize: vertical; }
               </div>
               <div class="card">
                 <div class="chart-zoom-bar">
-                  <span>Öğrenme Çıktısı Başarı Çizgi Grafiği</span>
+                  <span>Öğrenme Çıktısı Başarı Yüzde Çizgi Grafiği</span>
                   <div class="chart-zoom-btns">
                     <button onclick="zoomChart('line',-50)">−</button>
                     <span class="zoom-val" id="zvLine">300px</span>
@@ -948,7 +945,6 @@ try { if(typeof supabase !== 'undefined') supa = window.supabase.createClient(SU
 
 // ===== APP STATE =====
 let app = { user:null, role:null, okul:null, adSoyad:null, brans:null, d:{ ogrenciler:[], senaryolar:{}, sinavlar:{} }, charts:{}, logs:[] };
-let karneAiYorumlari = {}; // Yapay zeka karne yorumları için eklendi
 
 // ===== MOBİL MENU =====
 function toggleSidebar() {
@@ -1002,7 +998,6 @@ async function fetchCloud() {
 function yazdirBolum(id) {
   let container = document.getElementById(id);
   
-  // Kanvasları (Grafikleri) resme çevirerek kopyalama işlemi (Yazdırmada boş çıkmasını önler)
   let canvases = container.querySelectorAll('canvas');
   canvases.forEach(c => {
     let img = document.createElement('img');
@@ -1012,49 +1007,29 @@ function yazdirBolum(id) {
     img.style.height = 'auto';
     img.className = 'temp-print-img';
     c.parentNode.insertBefore(img, c);
-    c.style.display = 'none'; // Geçici olarak kanvası gizle
+    c.style.display = 'none'; 
   });
 
   let content = container.innerHTML;
 
-  // İşlem bitince resimleri silip kanvasları geri getir
   canvases.forEach(c => {
     c.style.display = '';
     let img = c.parentNode.querySelector('.temp-print-img');
     if(img) img.remove();
   });
 
-  // Dinamik İmza Ekleme (Sadece Rapor ve Tablolar için - Karnede Zaten Var)
-  let imza = '';
-  if(id !== 'karneWrap') {
-      imza = `<div style="margin-top:50px; text-align:right; font-size:14px; padding:0 20px; page-break-inside: avoid; break-inside: avoid;">
-        <div style="display:inline-block; text-align:center; width:250px;">
-          <div style="margin-bottom: 40px; font-weight: 600;">Tarih: ${new Date().toLocaleDateString('tr-TR')}</div>
-          <div style="border-bottom:1px dotted #000; margin-bottom: 5px;"></div>
-          <b style="font-size:16px">${app.adSoyad||app.user}</b><br>
-          <span style="color:#555;font-size:12px">Branş Öğretmeni${app.brans?' — '+app.brans:''}</span>
-        </div>
-      </div>`;
-  }
-
   let printWindow = window.open('', '', 'width=1000,height=800');
   printWindow.document.write('<html><head><title>Dargeçit Sınav Analiz - Rapor</title>');
   printWindow.document.write(`
     <style>
       body { font-family: 'Arial', sans-serif; color: #000; margin: 20px; }
-      
-      /* --- TABLO BÖLÜNME HATASINI KESİN ÇÖZEN KISIM --- */
       table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px; page-break-inside: auto !important; }
       tr { page-break-inside: avoid !important; break-inside: avoid !important; page-break-after: auto !important; }
       td, th { page-break-inside: avoid !important; break-inside: avoid !important; border: 1px solid #ccc; padding: 8px; text-align: center; }
-      thead { display: table-header-group !important; } /* Sayfa atladığında başlıkları tekrar eder */
+      thead { display: table-header-group !important; } 
       tfoot { display: table-footer-group !important; }
-      
       th { background-color: #f1f5f9; font-weight: bold; }
-      
-      /* Kartların ortadan kesilmesini engeller */
       .sinif-ozet-card, .ai-yorum-box, .karne-card, .g2 { page-break-inside: avoid !important; break-inside: avoid !important; }
-      
       .ct { font-size: 18px; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 5px; }
       .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #ccc; }
       .bg-g { color: #065F46; background: #D1FAE5; }
@@ -1066,8 +1041,6 @@ function yazdirBolum(id) {
       .temp-print-img { max-width: 100% !important; margin: 0 auto; display: block; }
       .karne-card { margin-bottom: 40px; border: 2px solid #000; padding: 20px; border-radius: 8px; }
       .karne-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
-      
-      /* Arayüz (ekran) elemanlarını yazıcıda gizle */
       .btn, .chart-zoom-bar, .alert, input, select { display: none !important; }
       @media print {
         .karne-card { page-break-after: always; }
@@ -1075,7 +1048,7 @@ function yazdirBolum(id) {
     </style>
   `);
   printWindow.document.write('</head><body>');
-  printWindow.document.write(content + imza);
+  printWindow.document.write(content);
   printWindow.document.write('</body></html>');
   printWindow.document.close();
   printWindow.focus();
@@ -1984,7 +1957,7 @@ function renderSen(){
         </div>
       </div>
       <div class="tr-wrap"><table style="font-size:12px">
-        <thead><tr><th>#</th><th>Ünite/Tema</th><th>Konu</th><th>Kazanım</th><th>Süreç Bileşeni</th><th>Max Puan</th><th>Düzenle</th></tr></thead>
+        <thead><tr><th>#</th><th>Ünite/Tema</th><th>Konu</th><th>Öğrenme Çıktısı (Kazanım)</th><th>Süreç Bileşeni</th><th>Max Puan</th><th>Düzenle</th></tr></thead>
         <tbody id="senTbody_${id.replace(/[^a-z0-9]/gi,'_')}">`;
     det.forEach((x,i)=>{
       let safeId=id.replace(/[^a-z0-9]/gi,'_');
@@ -2174,7 +2147,6 @@ function buildNotTable(){
   let mevcut=app.d.sinavlar[senId]||[];
 
   let head='<table id="notTbl"><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
-  // Düzeltme: Tablo Sütunlarında sadece "Soru 1 (20)" formatı var
   det.forEach((k,i)=>head+=`<th>Soru ${i+1}<br><small style="font-weight:400;font-size:11px">(${k.maxPuan})</small></th>`);
   head+='<th>Toplam</th><th>%</th></tr></thead><tbody>';
 
@@ -2234,7 +2206,7 @@ function dlNotTemplate(){
   let det=app.d.senaryolar[rawSen]?.detaylar||[];
   let myOgr = getMyOgr();
   let ogr=sinif?myOgr.filter(o=>o.sinif===sinif):myOgr;
-  let hdr=['Okul No','Adı Soyadı','Sınıf']; det.forEach((k,i)=>hdr.push(`Soru ${i+1} (${k.maxPuan})`));
+  let hdr=['Okul No','Adı Soyadı','Sınıf']; det.forEach((k,i)=>hdr.push(`Soru ${i+1} [Max:${k.maxPuan}]`));
   let rows=[hdr]; ogr.forEach(o=>{ let r=[o.no,o.ads,o.sinif||'']; det.forEach(()=>r.push('')); rows.push(r); });
   let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),'Notlar');
   XLSX.writeFile(wb,`NotSablonu_${rawSen.substring(0,30)}.xlsx`);
@@ -2264,7 +2236,6 @@ function buildAnaliz(){
   
   drawOzetTable(data,det,baraj);
   
-  // ÇÖZÜM: Grafikler gizli sekmedeyken boyutu 0 kalmasın diye geçici olarak görünür yapıp çizdiriyoruz
   let grafTab = document.getElementById('tan-graf');
   let isHidden = window.getComputedStyle(grafTab).display === 'none';
   if(isHidden) {
@@ -2295,7 +2266,6 @@ function qKey(k,i){ return `Soru ${i+1} [Max:${k.maxPuan}]`; }
 function drawOzetTable(data,det,baraj){
   let maxTop=det.reduce((a,k)=>a+k.maxPuan,0);
   let h='<table><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
-  // Düzeltme: Tablo Sütunlarında sadece "Soru 1 (20)" formatı var
   det.forEach((k,i)=>h+=`<th>Soru ${i+1}<br><small style="font-weight:400;font-size:11px">(${k.maxPuan})</small></th>`);
   h+='<th>Toplam</th><th>%</th></tr></thead><tbody>';
 
@@ -2336,7 +2306,9 @@ function drawOzetTable(data,det,baraj){
   anState.soruPct=soruPct; anState.pie=pie; anState.subeler=subeler;
 }
 
-// ===== ÖĞRENCİ KARNELERİ =====
+// ===== ÖĞRENCİ KARNELERİ (YENİ VE YAPAY ZEKA DESTEKLİ) =====
+let karneAiYorumlari = {}; 
+
 function drawKarneler(data, det, baraj) {
   let maxTop = det.reduce((a, k) => a + k.maxPuan, 0);
   let wrap = document.getElementById('karneWrap');
@@ -2346,7 +2318,6 @@ function drawKarneler(data, det, baraj) {
     let tot = 0;
     let rows = '';
     let eksikler = [];
-    let okulNo = r['Okul No'];
     
     det.forEach((k, i) => {
       let v = parseFloat(r[qKey(k, i)]) || 0;
@@ -2373,13 +2344,15 @@ function drawKarneler(data, det, baraj) {
     let genDurum = genPct >= baraj ? '<span style="color:#10B981;">✓ BAŞARILI</span>' : '<span style="color:#EF4444;">✗ GELİŞTİRİLMELİ</span>';
     
     let yorum = "";
+    let okulNo = r['Okul No'];
+
     if(karneAiYorumlari[okulNo]) {
       yorum = karneAiYorumlari[okulNo];
     } else {
       if (eksikler.length > 0) {
         let eksikDetay = eksikler.slice(0, 2).map(e => `<b>${e.konu}</b> konusunda yer alan <i>"${e.cikti.substring(0,60)}..."</i> öğrenme çıktısında`).join(' ve ');
         let eklenti = eksikler.length > 2 ? ' ile diğer bazı alt becerilerde' : '';
-        yorum = `Sınav analizine göre; özellikle ${eksikDetay}${eklenti} eksiklerin bulunmaktadır. Bu öğrenme çıktılarını pekiştirmek için ilgili kısımlara ağırlık vermen faydalı olacaktır.`;
+        yorum = `Sınav analizine göre; özellikle ${eksikDetay}${eklenti} eksiklerin bulunmaktadır. Bu öğrenme çıktılarını (becerileri) pekiştirmek için ilgili kısımlara ağırlık vermen faydalı olacaktır.`;
       } else {
         yorum = `Sınavdaki tüm öğrenme çıktılarında yeterli başarıyı gösterdin. Gösterdiğin çaba için tebrik eder, başarılarının devamını dilerim.`;
       }
@@ -2409,7 +2382,7 @@ function drawKarneler(data, det, baraj) {
             <tr style="background: #F1F5F9;">
               <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: center;">Soru</th>
               <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: left;">Konu Başlığı</th>
-              <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: left;">Öğrenme Çıktısı</th>
+              <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: left;">Öğrenme Çıktısı (Beceri)</th>
               <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: center;">Puan</th>
               <th style="padding: 10px; border: 1px solid #CBD5E1; text-align: center;">Durum</th>
             </tr>
@@ -2419,8 +2392,8 @@ function drawKarneler(data, det, baraj) {
           </tbody>
         </table>
         
-        <div style="background: #ECFDF5; border-left: 4px solid #059669; padding: 15px; border-radius: 0 8px 8px 0;">
-          <div style="font-size: 12px; font-weight: 800; color: #047857; margin-bottom: 5px;"><i class="fa-solid fa-comment-dots"></i> PEDAGOJİK DEĞERLENDİRME & ÖNERİ</div>
+        <div style="background: #EEF2FF; border-left: 4px solid #4F46E5; padding: 15px; border-radius: 0 8px 8px 0;">
+          <div style="font-size: 12px; font-weight: 800; color: #4338CA; margin-bottom: 5px;"><i class="fa-solid fa-comment-dots"></i> PEDAGOJİK DEĞERLENDİRME & ÖNERİ</div>
           <div style="font-size: 13px; color: #334155; line-height: 1.5;">${yorum}</div>
         </div>
       </div>
@@ -2434,10 +2407,9 @@ function drawKarneler(data, det, baraj) {
   }
 }
 
-// ===== GERÇEK AI KARNE OLUŞTURUCU =====
 async function aiKarneleriOlustur() {
   let {data, det, baraj, senId} = anState;
-  if(!data || !det) { alert("Önce sınav seçip analizi görüntüleyin."); return; }
+  if(!data || !det) return;
   
   let btn = document.getElementById('btnAiKarne');
   let oldText = btn.innerHTML;
@@ -2449,16 +2421,16 @@ async function aiKarneleriOlustur() {
     det.forEach((k,i)=>{
       let v = parseFloat(r[qKey(k,i)]) || 0;
       let pct = k.maxPuan ? Math.round(v / k.maxPuan * 100) : 0;
-      if(pct < baraj) eksikler.push(`${k.konu || 'Genel'}: ${k.kazanim.substring(0,80)}`);
+      if(pct < baraj) eksikler.push(`${k.konu}: ${k.kazanim.substring(0,80)}`);
     });
-    return { no: r['Okul No'], ad: (r['Adı Soyadı']||'').split(' ')[0], eksikler: eksikler.slice(0,3) };
+    return { no: r['Okul No'], ad: r['Adı Soyadı'].split(' ')[0], eksikler: eksikler.slice(0,3) };
   });
 
-  let prompt = `Sen eğitim koçu bir yapay zekasın. Yeni Maarif Modeli'ne göre öğrencilerin sınav sonuçlarını analiz ediyorsun. 
+  let prompt = `Sen eğitim koçu bir yapay zekasın. Yeni Maarif Modeli'ne (Öğrenme Çıktıları Odaklı) göre öğrencilerin sınav sonuçlarını analiz ediyorsun. 
   Aşağıda öğrencilerin Okul No, Adı ve eksik olduğu 'Öğrenme Çıktıları' (beceriler) JSON olarak verilmiştir.
-  Her öğrenci için eksik olduğu öğrenme çıktılarını vurgulayarak, doğrudan öğrenciye adıyla hitap eden (örn: "Sevgili Ali, ..."), motive edici ve neye çalışması gerektiğini söyleyen 2 cümlelik pedagojik tavsiye yaz. Eksik çıktısı yoksa tebrik et.
+  Her öğrenci için eksik olduğu öğrenme çıktılarını vurgulayarak, doğrudan öğrenciye adıyla hitap eden (örn: "Sevgili Ali, ..."), motive edici ve neye çalışması gerektiğini söyleyen 2 cümlelik pedagojik tavsiye yaz.
   SADECE AŞAĞIDAKİ GİBİ SAF JSON DÖNDÜR:
-  {"108": "Sevgili Elif, Cebirsel İfadeler algoritmalarını yorumlama becerinde eksiklikler var. Bu öğrenme çıktısını geliştirmek için...", "368": "..."}
+  {"108": "Sevgili Elif, Cebirsel İfadeler konusundaki algoritmaları yorumlama becerinde eksiklikler var. Bu öğrenme çıktısını geliştirmek için...", "368": "..."}
 
   Öğrenci Verisi:
   ${JSON.stringify(ogrenciOzetleri)}`;
@@ -2471,8 +2443,7 @@ async function aiKarneleriOlustur() {
     if(!res.ok) throw new Error('API Hatası');
     let resData = await res.json();
     let raw = resData.candidates?.[0]?.content?.parts?.[0]?.text||'{}';
-    let parsed = JSON.parse(raw.replace(/```json|
-```/g,'').trim());
+    let parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
     
     karneAiYorumlari = parsed;
     drawKarneler(anState.data, anState.det, anState.baraj); 
@@ -2521,7 +2492,6 @@ function drawGraphs(data,det,baraj){
 
 function drawManuelTable(data,det){
   let h='<table id="manuelAnTbl"><thead><tr><th>Okul No</th><th>Adı Soyadı</th><th>Sınıf</th>';
-  // Düzeltme: Tablo Sütunlarında sadece "Soru 1 (20)" formatı var
   det.forEach((k,i)=>h+=`<th>Soru ${i+1}<br><small style="font-size:11px;font-weight:400">(${k.maxPuan})</small></th>`);
   h+='</tr></thead><tbody>';
   data.forEach(r=>{
@@ -2608,9 +2578,11 @@ function gosterYorum(html,baslik){
   let box=document.getElementById('topluYorumBox'); box.style.display='block';
   box.innerHTML=`<div class="ai-yorum-box"><div class="ay-header"><div class="ay-icon"><i class="fa-solid fa-brain"></i></div><div><div class="ay-title">${baslik}</div><div class="ay-sub">Sınav verileri üzerinden otomatik üretilmiştir</div></div></div><div class="ai-yorum-content">${html.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<b>$1</b>')}</div></div>`;
 }
+
 // ===================================================
 // GELİŞMİŞ PDF RAPOR OLUŞTURUCU
 // ===================================================
+
 let pdfAyarlar = { grafik: 180, yazi: 12, satir: 22, kenar: 10, olcek: 1.0 };
 let zoomLevel = 0.75;
 
@@ -2789,6 +2761,7 @@ async function pdfOnizleOlustur(){
         break;
     }
   }
+
   // YENİ İMZA DÜZENİ (Raporun Son Sayfası İçin)
   html += `<div style="margin-top:50px; text-align:right; font-size:${fs+1}px; padding:0 20px; page-break-inside: avoid; break-inside: avoid;">
     <div style="display:inline-block; text-align:center; width:250px;">
@@ -2828,7 +2801,7 @@ function dlPdf(){
   let ot=el.style.transform; el.style.transform='scale(1)';
   html2pdf().set({
     margin: 5,
-    filename:\`Rapor_\${anState.senId?.substring(0,25)||'Sinav'}_\${new Date().toLocaleDateString('tr-TR').replace(/\\./g,'-')}.pdf\`,
+    filename:`Rapor_${anState.senId?.substring(0,25)||'Sinav'}_${new Date().toLocaleDateString('tr-TR').replace(/\./g,'-')}.pdf`,
     image:{type:'jpeg',quality:0.98},
     html2canvas:{scale:2,useCORS:true,logging:false},
     jsPDF:{format:'a4',orientation:'portrait'}
@@ -2839,6 +2812,8 @@ function dlPdf(){
 window.onload=function(){
   document.getElementById('loginPass').addEventListener('keydown',function(e){ if(e.key==='Enter') doLogin(); });
   initPdfBuilder();
+  syncBransSelect();
+  syncOkulSelect();
 };
 </script>
 </body>
