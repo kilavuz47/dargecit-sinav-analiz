@@ -278,7 +278,9 @@ textarea.sen-edit-inp { resize: vertical; }
       <div class="fg"><label>Şifre</label><input class="fc" type="password" id="loginPass" placeholder="••••••••"></div>
       <button class="btn btn-primary btn-full" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> Sisteme Gir</button>
       <div id="loginErr" style="color:var(--danger);margin-top:12px;font-size:13px;font-weight:600;text-align:center"></div>
-      <div class="auth-sw">Hesabınız yok mu? <a onclick="showReg()">Öğretmen Kaydı Oluştur</a></div>
+      <div class="auth-sw">
+    Zaten üye misiniz? <a onclick="showLogin(); return false;">Giriş Yap</a>
+</div>
     </div>
 
     <div class="auth-right" id="regForm" style="display:none; padding:20px 35px; overflow-y:auto; max-height:95vh;">
