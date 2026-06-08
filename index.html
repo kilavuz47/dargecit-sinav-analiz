@@ -2606,11 +2606,9 @@ function gosterYorum(html,baslik){
   let box=document.getElementById('topluYorumBox'); box.style.display='block';
   box.innerHTML=`<div class="ai-yorum-box"><div class="ay-header"><div class="ay-icon"><i class="fa-solid fa-brain"></i></div><div><div class="ay-title">${baslik}</div><div class="ay-sub">Sınav verileri üzerinden otomatik üretilmiştir</div></div></div><div class="ai-yorum-content">${html.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<b>$1</b>')}</div></div>`;
 }
-
 // ===================================================
 // GELİŞMİŞ PDF RAPOR OLUŞTURUCU
 // ===================================================
-
 let pdfAyarlar = { grafik: 180, yazi: 12, satir: 22, kenar: 10, olcek: 1.0 };
 let zoomLevel = 0.75;
 
@@ -2789,7 +2787,6 @@ async function pdfOnizleOlustur(){
         break;
     }
   }
-
   // YENİ İMZA DÜZENİ (Raporun Son Sayfası İçin)
   html += `<div style="margin-top:50px; text-align:right; font-size:${fs+1}px; padding:0 20px; page-break-inside: avoid; break-inside: avoid;">
     <div style="display:inline-block; text-align:center; width:250px;">
