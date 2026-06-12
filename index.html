@@ -3044,10 +3044,7 @@ function renderGelisimEslesme() {
   html += '</tbody></table><button class="btn btn-success" onclick="saveGelisimEslesme()"><i class="fa-solid fa-link"></i> Eşleştirmeyi Kaydet</button>';
   wrap.innerHTML = html;
   
-  document.querySelectorAll('.ges-sel').forEach(sel => showGelisimPreview(sel));
-}
-  
-  document.querySelectorAll('.ges-sel').forEach(sel => showGelisimPreview(sel));
+ document.querySelectorAll('.ges-sel').forEach(sel => showGelisimPreview(sel));
 }
 
 function showGelisimPreview(sel) {
@@ -3331,6 +3328,9 @@ function yazdirGelisimPDF() {
 
 window.onload=function(){
   document.getElementById('loginPass')?.addEventListener('keydown',function(e){ if(e.key==='Enter') doLogin(); });
+  initPdfBuilder();
+  syncBransSelect();
+  syncOkulSelect();
 };
 </script>
 </body>
