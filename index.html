@@ -2914,11 +2914,421 @@ function dlPdf(){
   }).from(el).save().then(()=>{ el.style.transform=ot; });
 }
 
+// ===================================================
+// YENİ: GELİŞİM RAPORLARI (RUBRİK) YÖNETİMİ
+// ===================================================
+
+function initGelisim() {
+  if(!app.d.gelisimHavuzu) app.d.gelisimHavuzu = {};
+  renderGelisimHavuzu();
+  
+  let senKeys = Object.keys(app.d.senaryolar || {});
+  
+  let els = ['gelEslesmeSenaryo', 'gelRaporSenaryo'];
+  els.forEach(id => {
+    let el = document.getElementById(id);
+    if(el) {
+      el.innerHTML = '<option value="">-- Senaryo/Sınav Seçin --</option>';
+      senKeys.forEach(k => el.innerHTML += `<option value="${k}">${k}</option>`);
+    }
+  });
+
+  let cbList = document.getElementById('gelGirisSenaryolar');
+  if(cbList) {
+    let cbHtml = '';
+    senKeys.forEach(k => {
+      cbHtml += `<label class="cb-item"><input type="checkbox" value="${k}" class="gel-sinav-cb"> ${k}</label>`;
+    });
+    if(senKeys.length === 0) cbHtml = '<div style="color:#888; font-size:12px;">Önce sınav oluşturun.</div>';
+    cbList.innerHTML = cbHtml;
+  }
+
+  let myOgr = getMyOgr();
+  let siniflar = [...new Set(myOgr.map(o=>o.sinif).filter(Boolean))].sort();
+  let els2 = ['gelGirisSinif', 'gelRaporSinif'];
+  els2.forEach(id => {
+    let el = document.getElementById(id);
+    if(el) {
+      el.innerHTML = '<option value="">-- Sınıf Seçin --</option>';
+      siniflar.forEach(s => el.innerHTML += `<option value="${s}">${s}</option>`);
+    }
+  });
+}
+
+function addGelisimHavuzM() {
+  let konu = document.getElementById('mGelKonu').value.trim();
+  let cikti = document.getElementById('mGelCikti').value.trim();
+  let s1 = document.getElementById('mGelS1').value.trim();
+  let s2 = document.getElementById('mGelS2').value.trim();
+  let s3 = document.getElementById('mGelS3').value.trim();
+  let s4 = document.getElementById('mGelS4').value.trim();
+  if(!cikti) { alert("Öğrenme çıktısı boş olamaz."); return; }
+  
+  let id = 'G' + Date.now();
+  if(!app.d.gelisimHavuzu) app.d.gelisimHavuzu = {};
+  app.d.gelisimHavuzu[id] = { unite:"", konu, cikti, s1, s2, s3, s4 };
+  saveAll(); 
+  renderGelisimHavuzu();
+  
+  document.getElementById('mGelKonu').value = ''; document.getElementById('mGelCikti').value = '';
+  document.getElementById('mGelS1').value = ''; document.getElementById('mGelS2').value = '';
+  document.getElementById('mGelS3').value = ''; document.getElementById('mGelS4').value = '';
+  alert("Havuza eklendi ✓");
+}
+
+function delGelisimHavuz(id) {
+  if(!confirm("Bu gelişim kriterini havuzdan silmek istediğinize emin misiniz?")) return;
+  delete app.d.gelisimHavuzu[id];
+  saveAll();
+  renderGelisimHavuzu();
+}
+
+function renderGelisimHavuzu() {
+  if(!app.d.gelisimHavuzu) app.d.gelisimHavuzu = {};
+  let keys = Object.keys(app.d.gelisimHavuzu);
+  let html = '<table style="min-width:100%; table-layout:fixed;"><thead><tr><th style="width:80px">Kod</th><th style="width:200px">Ünite / Konu</th><th>Öğrenme Çıktısı (Kazanım)</th><th style="width:60px">İşlem</th></tr></thead><tbody>';
+  
+  if(keys.length === 0) {
+    html += '<tr><td colspan="4" style="text-align:center;color:#888;">Havuzda gelişim kriteri bulunmuyor. Yeni bir Excel yükleyin veya manuel ekleyin.</td></tr>';
+  } else {
+    keys.forEach(k => {
+      let g = app.d.gelisimHavuzu[k];
+      let uniteKonu = (g.unite ? `<b>Ünite:</b> ${g.unite}<br>` : '') + (g.konu ? `<b>Konu:</b> ${g.konu}` : 'Genel Konu');
+      
+      html += `<tr>
+        <td><span class="badge bg-p" style="white-space:normal; word-break:break-all;">${k}</span></td>
+        <td style="font-size:12px; color:var(--primary); line-height:1.5; white-space:normal; word-wrap:break-word;">${uniteKonu}</td>
+        <td style="font-size:13px; line-height:1.5; white-space:normal; word-wrap:break-word;">${g.cikti}</td>
+        <td><button class="btn btn-danger btn-sm" onclick="delGelisimHavuz('${k}')"><i class="fa-solid fa-trash"></i></button></td>
+      </tr>`;
+    });
+  }
+  html += '</tbody></table>';
+  let listEl = document.getElementById('gelisimHavuzListesi');
+  if(listEl) listEl.innerHTML = html;
+}
+
+function renderGelisimEslesme() {
+  let senId = document.getElementById('gelEslesmeSenaryo').value;
+  let wrap = document.getElementById('gelEslesmeWrap');
+  if(!senId || !app.d.senaryolar[senId]) { wrap.innerHTML = ''; return; }
+  
+  let det = app.d.senaryolar[senId].detaylar || [];
+  let existingMap = app.d.senaryolar[senId].gelisimMap || {};
+  let havuzKeys = Object.keys(app.d.gelisimHavuzu || {});
+  
+  let optHtml = '<option value="">-- Gelişim Kriteri İle Eşleştirme Yapılmadı --</option>';
+  havuzKeys.forEach(k => {
+    let g = app.d.gelisimHavuzu[k];
+    let label = `[${g.unite || g.konu || 'Genel'}] ${g.cikti.substring(0, 60)}...`;
+    optHtml += `<option value="${k}">${label}</option>`;
+  });
+  
+  let html = '<table style="margin-bottom:15px; width:100%; table-layout:fixed;"><thead><tr><th style="width:80px">Soru</th><th style="width:40%">Sınavdaki Soru (Ünite / Konu / Çıktı)</th><th>Havuzdaki Gelişim Kriteri Karşılığı</th></tr></thead><tbody>';
+  
+  det.forEach((k, i) => {
+    let val = existingMap[i] || '';
+    let senaryoUniteKonu = (k.unite ? `<b>Ünite:</b> ${k.unite}<br>` : '') + (k.konu ? `<b>Konu:</b> ${k.konu}` : '');
+    
+    html += `<tr>
+      <td><b>Soru ${i+1}</b><br><small>(${k.maxPuan} Puan)</small></td>
+      <td style="font-size:13px; line-height:1.5; white-space:normal; word-wrap:break-word;">
+        <div style="color:var(--primary); margin-bottom:6px; font-size:12px;">${senaryoUniteKonu}</div>
+        ${k.kazanim}
+      </td>
+      <td style="white-space:normal; word-wrap:break-word;">
+        <select class="fc ges-sel" data-idx="${i}" onchange="showGelisimPreview(this)" style="white-space:normal;">${optHtml.replace(`value="${val}"`, `value="${val}" selected`)}</select>
+        <div class="rubrik-preview" id="preview_${i}" style="background: #F8FAFC; border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 6px; padding: 12px; margin-top: 8px; font-size: 12px; line-height: 1.5; color: var(--text); display: none;"></div>
+      </td>
+    </tr>`;
+  });
+  html += '</tbody></table><button class="btn btn-success" onclick="saveGelisimEslesme()"><i class="fa-solid fa-link"></i> Eşleştirmeyi Kaydet</button>';
+  wrap.innerHTML = html;
+  
+  document.querySelectorAll('.ges-sel').forEach(sel => showGelisimPreview(sel));
+}
+
+function showGelisimPreview(sel) {
+  let id = sel.value;
+  let previewDiv = document.getElementById('preview_' + sel.dataset.idx);
+  if(!id || !app.d.gelisimHavuzu[id]) { previewDiv.style.display = 'none'; return; }
+  
+  let g = app.d.gelisimHavuzu[id];
+  previewDiv.style.display = 'block';
+  previewDiv.innerHTML = `
+    <div style="color:var(--primary); margin-bottom:6px; font-size:11px;">
+      ${g.unite ? `<b>Ünite:</b> ${g.unite} | ` : ''}<b>Konu:</b> ${g.konu || 'Genel'}
+    </div>
+    <i>${g.cikti}</i>
+    <div style="display: flex; gap: 8px; margin-top: 4px; padding-top: 4px; border-top: 1px dashed #E2E8F0;"><b>1:</b> ${g.s1}</div>
+    <div style="display: flex; gap: 8px; margin-top: 4px; padding-top: 4px; border-top: 1px dashed #E2E8F0;"><b>2:</b> ${g.s2}</div>
+    <div style="display: flex; gap: 8px; margin-top: 4px; padding-top: 4px; border-top: 1px dashed #E2E8F0;"><b>3:</b> ${g.s3}</div>
+    <div style="display: flex; gap: 8px; margin-top: 4px; padding-top: 4px; border-top: 1px dashed #E2E8F0;"><b>4:</b> ${g.s4}</div>
+  `;
+}
+
+function saveGelisimEslesme() {
+  let senId = document.getElementById('gelEslesmeSenaryo').value;
+  if(!senId) return;
+  let selects = document.querySelectorAll('.ges-sel');
+  let map = {};
+  selects.forEach(sel => {
+    let idx = sel.dataset.idx;
+    if(sel.value) map[idx] = sel.value;
+  });
+  app.d.senaryolar[senId].gelisimMap = map;
+  saveAll();
+  alert("Sınav - Gelişim eşleştirmeleri başarıyla kaydedildi ✓");
+}
+
+function renderGelisimGiris() {
+  let sinif = document.getElementById('gelGirisSinif').value;
+  let cbs = document.querySelectorAll('.gel-sinav-cb:checked');
+  let selectedExams = Array.from(cbs).map(cb => cb.value);
+  let wrap = document.getElementById('gelGirisWrap');
+  
+  if(!sinif) { wrap.innerHTML = '<div style="padding:20px; text-align:center; color:var(--muted)">Lütfen Sınıf Seçin.</div>'; return; }
+  if(selectedExams.length === 0) { wrap.innerHTML = '<div style="padding:20px; text-align:center; color:var(--muted)">Hesaplamaya dahil edilecek en az bir sınav seçin ve "Hesapla" butonuna basın.</div>'; return; }
+  
+  let mappedIdsSet = new Set();
+  selectedExams.forEach(senId => {
+    let map = app.d.senaryolar[senId]?.gelisimMap || {};
+    Object.values(map).forEach(id => mappedIdsSet.add(id));
+  });
+  let mappedIds = Array.from(mappedIdsSet);
+  
+  if(mappedIds.length === 0) {
+    wrap.innerHTML = '<div class="alert alert-warn">Seçili sınavlarda herhangi bir Gelişim Kriteri eşleştirmesi bulunamadı. Lütfen 2. sekmeden eşleştirme yapın.</div>'; return;
+  }
+  
+  let ogrList = getMyOgr().filter(o => o.sinif === sinif);
+  
+  let html = '<table style="min-width:100%; font-size:12px;"><thead><tr><th style="width:70px">Okul No</th><th style="width:160px">Adı Soyadı</th>';
+  mappedIds.forEach(id => {
+    let g = app.d.gelisimHavuzu[id];
+    let baslik = g.unite ? `${g.unite}` : `${g.konu}`;
+    html += `<th style="text-align:center; font-weight:600; font-size:11px; padding:6px 4px; vertical-align:bottom;" title="${g.cikti}"><div style="color:var(--primary)">[${baslik}]</div><div style="font-size:10px; font-weight:normal; color:#666; height:32px; overflow:hidden;">${g.cikti.substring(0,40)}...</div></th>`;
+  });
+  html += '</tr></thead><tbody>';
+  
+  ogrList.forEach(o => {
+    let no = String(o.no);
+    let oGelisim = app.d.gelisimNotlari[no] || {};
+    html += `<tr><td><b>${no}</b></td><td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px;">${o.ads}</td>`;
+    
+    mappedIds.forEach(id => {
+      let val = parseInt(oGelisim[id]) || 0;
+      html += `<td style="padding:4px;">
+        <div class="rb-group">
+          <div class="rb-btn r1 ${val===1?'active':''}" onclick="setGelisimNot('${no}', '${id}', 1, this)">1</div>
+          <div class="rb-btn r2 ${val===2?'active':''}" onclick="setGelisimNot('${no}', '${id}', 2, this)">2</div>
+          <div class="rb-btn r3 ${val===3?'active':''}" onclick="setGelisimNot('${no}', '${id}', 3, this)">3</div>
+          <div class="rb-btn r4 ${val===4?'active':''}" onclick="setGelisimNot('${no}', '${id}', 4, this)">4</div>
+        </div>
+      </td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+function setGelisimNot(no, id, val, el) {
+  if(!app.d.gelisimNotlari[no]) app.d.gelisimNotlari[no] = {};
+  app.d.gelisimNotlari[no][id] = val;
+  
+  let group = el.closest('.rb-group');
+  group.querySelectorAll('.rb-btn').forEach(btn => btn.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function saveGelisimNotlari() {
+  saveAll();
+  alert("Manuel yapılan tüm not değişiklikleri kaydedildi ✓");
+}
+
+function autoCalcGelisim() {
+  let sinif = document.getElementById('gelGirisSinif').value;
+  let cbs = document.querySelectorAll('.gel-sinav-cb:checked');
+  let selectedExams = Array.from(cbs).map(cb => cb.value);
+  
+  if(!sinif) { alert("Sınıf seçiniz."); return; }
+  if(selectedExams.length === 0) { alert("Hesaplamaya dahil edilecek en az bir sınav seçmelisiniz."); return; }
+  
+  let ogrList = getMyOgr().filter(o => o.sinif === sinif);
+  let hesaplananCount = 0;
+  
+  ogrList.forEach(o => {
+    let no = String(o.no);
+    if(!app.d.gelisimNotlari[no]) app.d.gelisimNotlari[no] = {};
+    
+    let puanlarById = {};
+    
+    selectedExams.forEach(senId => {
+      let sinavNotlari = app.d.sinavlar[senId] || [];
+      let sNot = sinavNotlari.find(x => String(x['Okul No']) === no);
+      if(!sNot) return; 
+      
+      let map = app.d.senaryolar[senId]?.gelisimMap || {};
+      let det = app.d.senaryolar[senId]?.detaylar || [];
+      
+      Object.keys(map).forEach(idx => {
+        let gId = map[idx];
+        let k = det[idx];
+        if(!k) return;
+        let colName = `Soru ${parseInt(idx)+1} [Max:${k.maxPuan}]`;
+        let alinan = parseFloat(sNot[colName]) || 0;
+        let max = k.maxPuan;
+        
+        if(!puanlarById[gId]) puanlarById[gId] = { topAlinan: 0, topMax: 0 };
+        puanlarById[gId].topAlinan += alinan;
+        puanlarById[gId].topMax += max;
+      });
+    });
+    
+    Object.keys(puanlarById).forEach(gId => {
+      let p = puanlarById[gId];
+      if(p.topMax > 0) {
+        let pct = (p.topAlinan / p.topMax) * 100;
+        let seviye = 1;
+        if(pct >= 80) seviye = 4;
+        else if(pct >= 60) seviye = 3;
+        else if(pct >= 40) seviye = 2;
+        
+        app.d.gelisimNotlari[no][gId] = seviye;
+        hesaplananCount++;
+      }
+    });
+  });
+  
+  saveAll();
+  renderGelisimGiris(); 
+  alert(`Çoklu sınav birleştirme tamamlandı. Sınıftaki öğrenciler için puanlar yüzdelik hesaplama yapılarak listeye yansıtıldı ✓`);
+}
+
+function syncGelisimRaporOgr() {
+  let sinif = document.getElementById('gelRaporSinif').value;
+  let oSel = document.getElementById('gelRaporOgr');
+  let ogrList = getMyOgr().filter(o => o.sinif === sinif);
+  
+  oSel.innerHTML = '<option value="">-- Öğrenci Seçin --</option>';
+  ogrList.forEach(o => {
+    oSel.innerHTML += `<option value="${o.no}">${o.no} - ${o.ads}</option>`;
+  });
+}
+
+function renderGelisimRapor() {
+  let no = document.getElementById('gelRaporOgr').value;
+  let senId = document.getElementById('gelRaporSenaryo').value; 
+  let wrap = document.getElementById('gelRaporPrintArea');
+  
+  if(!no || !senId) { wrap.innerHTML = '<div style="color:var(--muted); text-align:center">Öğrenci ve Sınav Dönemi Seçin.</div>'; return; }
+  
+  let o = getMyOgr().find(x => String(x.no) === String(no));
+  if(!o) return;
+  
+  let map = app.d.senaryolar[senId]?.gelisimMap || {};
+  let mappedIds = [...new Set(Object.values(map))];
+  
+  if(mappedIds.length === 0) {
+    wrap.innerHTML = '<div class="alert alert-warn">Bu sınav/dönem için değerlendirilmiş gelişim kriteri bulunamadı.</div>'; return;
+  }
+  
+  let notlar = app.d.gelisimNotlari[no] || {};
+  
+  let html = `
+    <div id="gelisimPdfContent" style="color:#000; font-family:'Arial',sans-serif; background:#fff; padding:20mm;">
+      <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px; margin-bottom:20px;">
+        <h2 style="margin:0; font-size:22px;">ÖĞRENCİ GELİŞİM DÜZEYİ RAPORU</h2>
+        <h3 style="margin:5px 0 0 0; color:#555; font-size:16px;">${app.okul}</h3>
+      </div>
+      
+      <div style="display:flex; justify-content:space-between; margin-bottom:30px; font-size:14px; background:#F8FAFC; padding:15px; border:1px solid #E2E8F0; border-radius:8px;">
+        <div><b>Öğrenci:</b> ${o.ads}<br><b>Okul No:</b> ${o.no}<br><b>Sınıf:</b> ${o.sinif}</div>
+        <div style="text-align:right"><b>Değerlendirme Dönemi:</b> ${senId}<br><b>Tarih:</b> ${new Date().toLocaleDateString('tr-TR')}</div>
+      </div>
+      
+      <table style="width:100%; border-collapse:collapse; font-size:13px; line-height:1.6;">
+        <thead>
+          <tr style="background:#1E293B; color:#fff;">
+            <th style="padding:12px; border:1px solid #ccc; text-align:left; width:20%">Ünite / Konu</th>
+            <th style="padding:12px; border:1px solid #ccc; text-align:left; width:35%">Öğrenme Çıktısı (Kazanım)</th>
+            <th style="padding:12px; border:1px solid #ccc; text-align:center; width:10%">Seviye</th>
+            <th style="padding:12px; border:1px solid #ccc; text-align:left; width:35%">Gelişim Durumu (Açıklama)</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+  
+  mappedIds.forEach(id => {
+    let g = app.d.gelisimHavuzu[id];
+    let val = notlar[id] || 0;
+    
+    let seviyeMetni = 'Henüz değerlendirilmedi veya eksik veri.';
+    let renk = 'transparent';
+    let spanRenk = '#000';
+    if(val === 1) { seviyeMetni = g.s1; renk = '#FEE2E2'; spanRenk = '#991B1B'; }
+    else if(val === 2) { seviyeMetni = g.s2; renk = '#FEF3C7'; spanRenk = '#92400E'; }
+    else if(val === 3) { seviyeMetni = g.s3; renk = '#E0E7FF'; spanRenk = '#3730A3'; }
+    else if(val === 4) { seviyeMetni = g.s4; renk = '#D1FAE5'; spanRenk = '#065F46'; }
+    
+    html += `
+      <tr>
+        <td style="padding:12px; border:1px solid #ccc;">
+          ${g.unite ? `<b>Ünite:</b> ${g.unite}<br>` : ''}
+          <b>Konu:</b> ${g.konu || 'Genel'}
+        </td>
+        <td style="padding:12px; border:1px solid #ccc;">${g.cikti}</td>
+        <td style="padding:12px; border:1px solid #ccc; text-align:center; background:${renk}; font-weight:bold; font-size:18px; color:${spanRenk}">${val > 0 ? val : '-'}</td>
+        <td style="padding:12px; border:1px solid #ccc; background:${renk}; color:${spanRenk}">${seviyeMetni}</td>
+      </tr>
+    `;
+  });
+  
+  html += `
+        </tbody>
+      </table>
+      
+      <div style="margin-top:20px; font-size:12px; color:#555; background:#F1F5F9; padding:15px; border-radius:8px;">
+        <b style="color:#1E293B">Seviye Açıklamaları (Rubrik Ölçeği):</b><br>
+        <ul style="margin:5px 0 0 0; padding-left:20px;">
+          <li><b>1:</b> Başlangıç düzeyindedir, ilgili beceride yoğun pedagojik desteğe ihtiyacı vardır.</li>
+          <li><b>2:</b> Gelişmekte olan düzeydedir, öğretmen yönlendirmesi ile yapabilir.</li>
+          <li><b>3:</b> Yeterli düzeydedir, ilgili beceriyi bağımsız olarak uygulayabilir.</li>
+          <li><b>4:</b> İleri düzeydedir, bilgiyi transfer edip farklı ve karmaşık bağlamlarda kullanabilir.</li>
+        </ul>
+      </div>
+      
+      <div style="margin-top:50px; text-align:right; padding-right:30px;">
+        <div style="border-bottom:1px dotted #000; width:200px; display:inline-block; margin-bottom:5px;"></div><br>
+        <b>${app.adSoyad || app.user}</b><br>
+        Branş Öğretmeni
+      </div>
+    </div>
+  `;
+  
+  wrap.innerHTML = html;
+}
+
+function yazdirGelisimPDF() {
+  let el = document.getElementById('gelisimPdfContent');
+  if(!el) { alert("Lütfen önce raporu oluşturun."); return; }
+  
+  if(typeof html2pdf === 'undefined'){ alert('PDF kütüphanesi yüklenemedi.'); return; }
+  let ogrNo = document.getElementById('gelRaporOgr').value;
+  let o = getMyOgr().find(x => String(x.no) === String(ogrNo));
+  
+  html2pdf().set({
+    margin: 0,
+    filename:`Gelisim_Raporu_${o.no}_${o.ads.replace(/ /g,'_')}.pdf`,
+    image:{type:'jpeg',quality:1},
+    html2canvas:{scale:2,useCORS:true,logging:false},
+    jsPDF:{format:'a4',orientation:'portrait'}
+  }).from(el).save();
+}
+
 window.onload=function(){
   document.getElementById('loginPass')?.addEventListener('keydown',function(e){ if(e.key==='Enter') doLogin(); });
-  initPdfBuilder();
-  syncBransSelect();
-  syncOkulSelect();
 };
 </script>
 </body>
