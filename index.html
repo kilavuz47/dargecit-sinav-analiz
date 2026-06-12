@@ -907,6 +907,7 @@ textarea.sen-edit-inp { resize: vertical; }
               <div style="display:flex; gap:5px; flex-wrap:wrap;">
                 <button class="btn btn-outline btn-sm" onclick="zoomGelisimToplu(-1)" title="Yazıları Küçült">A-</button>
                 <button class="btn btn-outline btn-sm" onclick="zoomGelisimToplu(1)" title="Yazıları Büyüt">A+</button>
+                <button class="btn btn-info btn-sm" onclick="exportGelisimTopluXl()"><i class="fa-solid fa-file-excel"></i> Excel'e Aktar</button>
                 <button class="btn btn-danger btn-sm" onclick="yazdirGelisimTopluPDF()"><i class="fa-solid fa-file-pdf"></i> Listeyi PDF İndir</button>
                 <button class="btn btn-success btn-sm" onclick="saveGelisimNotlari()"><i class="fa-solid fa-floppy-disk"></i> Manuel Değişiklikleri Kaydet</button>
               </div>
@@ -946,7 +947,7 @@ textarea.sen-edit-inp { resize: vertical; }
             </div>
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
               <button class="btn btn-danger" onclick="yazdirGelisimPDF()"><i class="fa-solid fa-file-pdf"></i> Tek Öğrenci PDF İndir</button>
-              <button class="btn btn-primary" onclick="yazdirTopluGelisimPDF()"><i class="fa-solid fa-file-pdf"></i> Tüm Sınıfı Toplu PDF İndir</button>
+              <button class="btn btn-primary" onclick="yazdirTopluGelisimPrint()"><i class="fa-solid fa-print"></i> Tüm Sınıf Karnelerini Birleştir & PDF Kaydet</button>
             </div>
             <div id="gelRaporPrintArea" style="background:#fff; border:1px solid var(--border); border-radius:12px; padding:30px; margin-top:20px; overflow-x:auto;">
                <div style="color:var(--muted); text-align:center">Öğrenci ve Sınav(ları) Seçin.</div>
@@ -3119,22 +3120,33 @@ function renderGelisimGiris() {
   
   let ogrList = getMyOgr().filter(o => o.sinif === sinif);
   
-  let html = '<table style="min-width:100%; font-size:12px;"><thead><tr><th style="width:70px">Okul No</th><th style="width:160px">Adı Soyadı</th>';
+  // 2 SATIRLI ÜNİTE/KONU ve KAZANIM BAŞLIĞI
+  let html = '<table style="min-width:100%; font-size:12px; border-collapse:collapse;"><thead>';
+  
+  // 1. SATIR: KONULAR
+  html += '<tr><th rowspan="2" style="border:1px solid #CBD5E1; width:70px; padding:6px;">Okul No</th><th rowspan="2" style="border:1px solid #CBD5E1; width:160px; padding:6px;">Adı Soyadı</th>';
   mappedIds.forEach(id => {
     let g = app.d.gelisimHavuzu[id];
-    let baslik = g.unite ? `${g.unite}` : `${g.konu}`;
-    html += `<th style="text-align:center; font-weight:600; font-size:11px; padding:6px 4px; vertical-align:bottom;" title="${g.cikti}"><div style="color:var(--primary)">[${baslik}]</div><div style="font-size:10px; font-weight:normal; color:#666; height:32px; overflow:hidden;">${g.cikti.substring(0,40)}...</div></th>`;
+    let baslik = g.unite ? `${g.unite}` : `${g.konu || 'Genel'}`;
+    html += `<th style="border:1px solid #CBD5E1; text-align:center; font-weight:700; font-size:11px; padding:6px; background:#EEF2FF; color:var(--primary)" title="${g.konu}">${baslik}</th>`;
+  });
+  html += '</tr><tr>';
+  
+  // 2. SATIR: KAZANIMLAR
+  mappedIds.forEach(id => {
+    let g = app.d.gelisimHavuzu[id];
+    html += `<th style="border:1px solid #CBD5E1; text-align:center; font-weight:normal; font-size:10px; padding:6px; background:#F8FAFC; color:var(--text); max-width:150px; overflow:hidden;" title="${g.cikti}">${g.cikti.substring(0,50)}...</th>`;
   });
   html += '</tr></thead><tbody>';
   
   ogrList.forEach(o => {
     let no = String(o.no);
     let oGelisim = app.d.gelisimNotlari[no] || {};
-    html += `<tr><td><b>${no}</b></td><td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px;">${o.ads}</td>`;
+    html += `<tr><td style="border:1px solid #CBD5E1; padding:4px;"><b>${no}</b></td><td style="border:1px solid #CBD5E1; padding:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px;">${o.ads}</td>`;
     
     mappedIds.forEach(id => {
       let val = parseInt(oGelisim[id]) || 0;
-      html += `<td style="padding:4px;">
+      html += `<td style="border:1px solid #CBD5E1; padding:4px;">
         <div class="rb-group">
           <div class="rb-btn r1 ${val===1?'active':''}" onclick="setGelisimNot('${no}', '${id}', 1, this)">1</div>
           <div class="rb-btn r2 ${val===2?'active':''}" onclick="setGelisimNot('${no}', '${id}', 2, this)">2</div>
@@ -3147,6 +3159,7 @@ function renderGelisimGiris() {
   });
   html += '</tbody></table>';
   wrap.innerHTML = html;
+}
 }
 
 function setGelisimNot(no, id, val, el) {
@@ -3162,7 +3175,47 @@ function saveGelisimNotlari() {
   saveAll();
   alert("Manuel yapılan tüm not değişiklikleri kaydedildi ✓");
 }
+function exportGelisimTopluXl() {
+  if(typeof XLSX==='undefined'){ alert('Excel kütüphanesi yüklenemedi.'); return; }
+  let sinif = document.getElementById('gelGirisSinif').value;
+  let cbs = document.querySelectorAll('.gel-sinav-cb:checked');
+  let selectedExams = Array.from(cbs).map(cb => cb.value);
+  if(!sinif || selectedExams.length === 0) { alert("Lütfen Sınıf ve Sınav seçiniz."); return; }
+  
+  let mappedIdsSet = new Set();
+  selectedExams.forEach(senId => {
+    let map = app.d.senaryolar[senId]?.gelisimMap || {};
+    Object.values(map).forEach(id => mappedIdsSet.add(id));
+  });
+  let mappedIds = Array.from(mappedIdsSet);
+  if(mappedIds.length === 0) { alert("Değerlendirilecek rubrik bulunamadı."); return; }
 
+  // Excel Başlıkları (2 Satır)
+  let row1 = ['Okul No', 'Adı Soyadı'];
+  let row2 = ['', ''];
+  mappedIds.forEach(id => {
+    let g = app.d.gelisimHavuzu[id];
+    row1.push(g.unite ? g.unite : (g.konu || 'Genel Konu'));
+    row2.push(g.cikti);
+  });
+
+  let rows = [row1, row2];
+  let ogrList = getMyOgr().filter(o => o.sinif === sinif);
+  
+  ogrList.forEach(o => {
+    let no = String(o.no);
+    let oGelisim = app.d.gelisimNotlari[no] || {};
+    let r = [no, o.ads];
+    mappedIds.forEach(id => {
+      r.push(parseInt(oGelisim[id]) || 0); // Puanları Excel hücresine yazdırır
+    });
+    rows.push(r);
+  });
+
+  let wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), 'e-Okul_Rubrik_Giris_Listesi');
+  XLSX.writeFile(wb, `Gelisim_Toplu_Puan_Listesi_${sinif}.xlsx`);
+}
 function autoCalcGelisim() {
   let sinif = document.getElementById('gelGirisSinif').value;
   let cbs = document.querySelectorAll('.gel-sinav-cb:checked');
