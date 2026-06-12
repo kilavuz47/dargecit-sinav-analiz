@@ -3415,13 +3415,12 @@ function yazdirTopluKarnePDF() {
   }).from(el).save().then(() => { btn.innerHTML = oldText; btn.disabled = false; });
 }
 
-function yazdirTopluGelisimPDF() {
+function yazdirTopluGelisimPrint() {
   let sinif = document.getElementById('gelRaporSinif').value;
   let cbs = document.querySelectorAll('.gel-rapor-cb:checked');
   let selectedExams = Array.from(cbs).map(cb => cb.value);
   
-  if(!sinif || selectedExams.length === 0) { alert("Lütfen Sınıf ve en az bir Sınav Dönemi seçin."); return; }
-  if(typeof html2pdf === 'undefined'){ alert('PDF kütüphanesi yüklenemedi.'); return; }
+  if(!sinif || selectedExams.length === 0) { alert("Lütfen Sınıf ve en az bir Değerlendirme Dönemi seçin."); return; }
   
   let ogrList = getMyOgr().filter(o => o.sinif === sinif);
   if(ogrList.length === 0) { alert("Bu sınıfta öğrenci bulunamadı."); return; }
@@ -3434,12 +3433,8 @@ function yazdirTopluGelisimPDF() {
   let mappedIds = Array.from(mappedIdsSet);
   if(mappedIds.length === 0) { alert("Bu sınav/dönem için değerlendirilmiş gelişim kriteri bulunamadı."); return; }
 
-  let btn = document.querySelector('button[onclick="yazdirTopluGelisimPDF()"]');
-  let oldText = btn.innerHTML;
-  btn.innerHTML = '<span class="spin"></span> PDF Hazırlanıyor...'; btn.disabled = true;
-
-  let donemMetni = selectedExams.join(', ');
-  let topluHtml = '<div style="background:#fff; color:#000;">';
+  let donemMetni = selectedExams.join(' ve ');
+  let topluHtml = '';
   
   ogrList.forEach((o, index) => {
     let notlar = app.d.gelisimNotlari[o.no] || {};
@@ -3464,7 +3459,7 @@ function yazdirTopluGelisimPDF() {
     });
 
     topluHtml += `
-      <div style="padding:20mm; font-family:'Arial',sans-serif;">
+      <div class="karne-page">
         <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px; margin-bottom:20px;">
           <h2 style="margin:0; font-size:22px;">ÖĞRENCİ GELİŞİM DÜZEYİ RAPORU</h2>
           <h3 style="margin:5px 0 0 0; color:#555; font-size:16px;">${app.okul}</h3>
@@ -3473,7 +3468,7 @@ function yazdirTopluGelisimPDF() {
           <div><b>Öğrenci:</b> ${o.ads}<br><b>Okul No:</b> ${o.no}<br><b>Sınıf:</b> ${o.sinif}</div>
           <div style="text-align:right"><b>Değerlendirme:</b> ${donemMetni}<br><b>Tarih:</b> ${new Date().toLocaleDateString('tr-TR')}</div>
         </div>
-        <table style="width:100%; border-collapse:collapse; font-size:13px; line-height:1.6;">
+        <table>
           <thead>
             <tr style="background:#1E293B; color:#fff;">
               <th style="padding:12px; border:1px solid #ccc; text-align:left; width:20%">Ünite / Konu</th>
@@ -3499,47 +3494,28 @@ function yazdirTopluGelisimPDF() {
         </div>
       </div>
     `;
-    if(index < ogrList.length - 1) topluHtml += '<div class="html2pdf__page-break"></div>';
   });
-  topluHtml += '</div>';
 
-  let tempContainer = document.createElement('div');
-  tempContainer.innerHTML = topluHtml;
-  
-  html2pdf().set({
-    margin: 0, filename: `Toplu_Gelisim_Raporlari_${sinif}.pdf`,
-    image: {type:'jpeg', quality:1}, html2canvas: {scale:2, useCORS:true, logging:false},
-    jsPDF: {format:'a4', orientation:'portrait'}
-  }).from(tempContainer).save().then(() => { btn.innerHTML = oldText; btn.disabled = false; });
-}
-
-let topluGirisZoom = 12;
-function zoomGelisimToplu(delta) {
-    topluGirisZoom += delta;
-    if(topluGirisZoom < 8) topluGirisZoom = 8;
-    if(topluGirisZoom > 18) topluGirisZoom = 18;
-    document.getElementById('gelGirisPrintArea').style.fontSize = topluGirisZoom + 'px';
-}
-
-function yazdirGelisimTopluPDF() {
-    let el = document.getElementById('gelGirisPrintArea');
-    if(!el) return;
-    if(typeof html2pdf === 'undefined'){ alert('PDF kütüphanesi yüklenemedi.'); return; }
-    
-    let sinif = document.getElementById('gelGirisSinif').value;
-    if(!sinif) { alert("Önce Sınıfı ve Sınavları seçip listeyi hesaplatın."); return; }
-
-    let btn = document.querySelector('button[onclick="yazdirGelisimTopluPDF()"]');
-    let oldText = btn.innerHTML;
-    btn.innerHTML = '<span class="spin"></span> Hazırlanıyor...'; btn.disabled = true;
-
-    html2pdf().set({
-        margin: 5,
-        filename: `eOkul_Toplu_Giris_Listesi_${sinif}.pdf`,
-        image: { type: 'jpeg', quality: 1 },
-        html2canvas: { scale: 2, useCORS:true, logging:false },
-        jsPDF: { format: 'a4', orientation: 'landscape' }
-    }).from(el).save().then(() => { btn.innerHTML = oldText; btn.disabled = false; });
+  // Tarayıcının güçlü yazdırma motorunu tetikliyoruz. Bu asla boş sayfa çıkartmaz.
+  let printWindow = window.open('', '', 'width=1000,height=800');
+  printWindow.document.write('<html><head><title>Toplu Gelişim Karneleri</title>');
+  printWindow.document.write(`<style>
+    body { font-family: 'Arial', sans-serif; color: #000; margin: 0; padding: 0; background: #fff;}
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; line-height: 1.6; }
+    th, td { padding: 12px; border: 1px solid #ccc; text-align: left; }
+    .karne-page { padding: 20mm; box-sizing: border-box; }
+    @media print {
+        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .karne-page { page-break-after: always; height: 100vh; }
+    }
+  </style>`);
+  printWindow.document.write('</head><body>');
+  printWindow.document.write(topluHtml);
+  printWindow.document.write('</body></html>');
+  printWindow.document.close();
+  printWindow.focus();
+  // Kullanıcı "PDF Olarak Kaydet" seçerek harika karnelere sahip olacak.
+  setTimeout(() => { printWindow.print(); printWindow.close(); }, 800);
 }
 
 window.onload=function(){
