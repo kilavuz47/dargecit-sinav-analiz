@@ -3475,71 +3475,72 @@ function yazdirTopluGelisimPrint() {
     mappedIds.forEach(id => {
       let g = app.d.gelisimHavuzu[id];
       let val = notlar[id] || 0;
-      let seviyeMetni = 'Henüz değerlendirilmedi veya eksik veri.';
-      let renk = 'transparent'; let spanRenk = '#000';
+      let seviyeMetni = 'Değerlendirilmedi veya eksik veri.'; let renk = 'transparent'; let spanRenk = '#000';
       if(val === 1) { seviyeMetni = g.s1; renk = '#FEE2E2'; spanRenk = '#991B1B'; }
       else if(val === 2) { seviyeMetni = g.s2; renk = '#FEF3C7'; spanRenk = '#92400E'; }
       else if(val === 3) { seviyeMetni = g.s3; renk = '#E0E7FF'; spanRenk = '#3730A3'; }
       else if(val === 4) { seviyeMetni = g.s4; renk = '#D1FAE5'; spanRenk = '#065F46'; }
       
+      // SÜTUN GENİŞLİKLERİ VE KESİLMEYİ ÖNLEYEN KOD
       tbody += `
-        <tr>
-          <td style="padding:12px; border:1px solid #ccc;">${g.unite ? `<b>Ünite:</b> ${g.unite}<br>` : ''}<b>Konu:</b> ${g.konu || 'Genel'}</td>
-          <td style="padding:12px; border:1px solid #ccc;">${g.cikti}</td>
-          <td style="padding:12px; border:1px solid #ccc; text-align:center; background:${renk}; font-weight:bold; font-size:18px; color:${spanRenk}">${val > 0 ? val : '-'}</td>
-          <td style="padding:12px; border:1px solid #ccc; background:${renk}; color:${spanRenk}">${seviyeMetni}</td>
+        <tr style="page-break-inside: avoid;">
+          <td style="padding:4px; border:1px solid #ccc; width:13%; word-wrap:break-word;">${g.unite ? `<b>Ünite:</b> ${g.unite}<br>` : ''}<b>Konu:</b> ${g.konu || 'Genel'}</td>
+          <td style="padding:4px; border:1px solid #ccc; width:30%; word-wrap:break-word;">${g.cikti}</td>
+          <td style="padding:4px; border:1px solid #ccc; text-align:center; background:${renk}; font-weight:bold; font-size:12px; color:${spanRenk}; width:7%;">${val > 0 ? val : '-'}</td>
+          <td style="padding:4px; border:1px solid #ccc; background:${renk}; color:${spanRenk}; width:50%; word-wrap:break-word;">${seviyeMetni}</td>
         </tr>`;
     });
 
     topluHtml += `
       <div class="karne-page">
-        <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px; margin-bottom:20px;">
-          <h2 style="margin:0; font-size:22px;">ÖĞRENCİ GELİŞİM DÜZEYİ RAPORU</h2>
-          <h3 style="margin:5px 0 0 0; color:#555; font-size:16px;">${app.okul}</h3>
+        <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:5px; margin-bottom:10px;">
+          <h2 style="margin:0; font-size:18px;">ÖĞRENCİ GELİŞİM DÜZEYİ RAPORU</h2>
+          <h3 style="margin:4px 0 0 0; color:#555; font-size:14px;">${app.okul}</h3>
         </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:30px; font-size:14px; background:#F8FAFC; padding:15px; border:1px solid #E2E8F0; border-radius:8px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:12px; background:#F8FAFC; padding:8px; border:1px solid #E2E8F0; border-radius:6px;">
           <div><b>Öğrenci:</b> ${o.ads}<br><b>Okul No:</b> ${o.no}<br><b>Sınıf:</b> ${o.sinif}</div>
           <div style="text-align:right"><b>Değerlendirme:</b> ${donemMetni}<br><b>Tarih:</b> ${new Date().toLocaleDateString('tr-TR')}</div>
         </div>
         <table>
           <thead>
             <tr style="background:#1E293B; color:#fff;">
-              <th style="padding:12px; border:1px solid #ccc; text-align:left; width:20%">Ünite / Konu</th>
-              <th style="padding:12px; border:1px solid #ccc; text-align:left; width:35%">Öğrenme Çıktısı (Kazanım)</th>
-              <th style="padding:12px; border:1px solid #ccc; text-align:center; width:10%">Seviye</th>
-              <th style="padding:12px; border:1px solid #ccc; text-align:left; width:35%">Gelişim Durumu (Açıklama)</th>
+              <th style="padding:6px; border:1px solid #ccc; text-align:left; width:13%">Ünite / Konu</th>
+              <th style="padding:6px; border:1px solid #ccc; text-align:left; width:30%">Öğrenme Çıktısı (Kazanım)</th>
+              <th style="padding:6px; border:1px solid #ccc; text-align:center; width:7%">Seviye</th>
+              <th style="padding:6px; border:1px solid #ccc; text-align:left; width:50%">Gelişim Durumu (Açıklama)</th>
             </tr>
           </thead>
           <tbody>${tbody}</tbody>
         </table>
-        <div style="margin-top:20px; font-size:12px; color:#555; background:#F1F5F9; padding:15px; border-radius:8px;">
+        <div style="margin-top:10px; font-size:10px; color:#555; background:#F1F5F9; padding:8px; border-radius:6px;">
           <b style="color:#1E293B">Seviye Açıklamaları:</b><br>
-          <ul style="margin:5px 0 0 0; padding-left:20px;">
+          <ul style="margin:3px 0 0 0; padding-left:15px;">
             <li><b>1:</b> Başlangıç düzeyindedir, yoğun desteğe ihtiyacı vardır.</li>
             <li><b>2:</b> Gelişmekte olan düzeydedir, yönlendirme ile yapabilir.</li>
             <li><b>3:</b> Yeterli düzeydedir, beceriyi bağımsız olarak uygulayabilir.</li>
             <li><b>4:</b> İleri düzeydedir, bilgiyi transfer edip farklı bağlamlarda kullanabilir.</li>
           </ul>
         </div>
-        <div style="margin-top:50px; text-align:right; padding-right:30px;">
-          <div style="border-bottom:1px dotted #000; width:200px; display:inline-block; margin-bottom:5px;"></div><br>
+        <div style="margin-top:30px; text-align:right; padding-right:20px; font-size:12px;">
+          <div style="border-bottom:1px dotted #000; width:180px; display:inline-block; margin-bottom:5px;"></div><br>
           <b>${app.adSoyad || app.user}</b><br>Branş Öğretmeni
         </div>
       </div>
     `;
   });
 
-  // Tarayıcının güçlü yazdırma motorunu tetikliyoruz. Bu asla boş sayfa çıkartmaz.
+  // ASLA BOŞ SAYFA ÇIKARTMAYAN DOĞAL YAZDIRMA MOTORU
   let printWindow = window.open('', '', 'width=1000,height=800');
-  printWindow.document.write('<html><head><title>Toplu Gelişim Karneleri</title>');
+  printWindow.document.write('<html><head><title>Toplu Karneler</title>');
   printWindow.document.write(`<style>
     body { font-family: 'Arial', sans-serif; color: #000; margin: 0; padding: 0; background: #fff;}
-    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; line-height: 1.6; }
-    th, td { padding: 12px; border: 1px solid #ccc; text-align: left; }
-    .karne-page { padding: 20mm; box-sizing: border-box; }
-    @media print {
-        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        .karne-page { page-break-after: always; height: 100vh; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 10px; line-height: 1.3; table-layout: fixed; }
+    th, td { border: 1px solid #000; text-align: left; word-wrap: break-word; }
+    .karne-page { padding: 10mm; box-sizing: border-box; page-break-after: always; }
+    tr { page-break-inside: avoid; }
+    @media print { 
+        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } 
+        @page { margin: 0; size: A4 portrait; }
     }
   </style>`);
   printWindow.document.write('</head><body>');
@@ -3547,7 +3548,6 @@ function yazdirTopluGelisimPrint() {
   printWindow.document.write('</body></html>');
   printWindow.document.close();
   printWindow.focus();
-  // Kullanıcı "PDF Olarak Kaydet" seçerek harika karnelere sahip olacak.
   setTimeout(() => { printWindow.print(); printWindow.close(); }, 800);
 }
 
