@@ -2014,19 +2014,24 @@ function xlUpload(inp, tip){
         saveAll(); alert('Notlar yüklendi!'); addLog('Not Excel yüklendi: '+senId);
       } else if(tip==='gelisim'){
         let ek = 0;
+        if(!app.d.gelisimHavuzu) app.d.gelisimHavuzu = {};
         data.forEach(row => {
           let id = String(row['Kod/Sıra'] || row['#Sıra No'] || row['Sıra No'] || '').trim();
-          if (!id) id = 'G' + Date.now() + Math.floor(Math.random()*1000);
+          if (!id) id = 'G' + Date.now() + Math.floor(Math.random()*1000) + ek;
+          
+          let unite = String(row['Ünite/Tema'] || row['Ünite'] || row['Tema'] || '').trim();
           let konu = String(row['Konu'] || '').trim();
-          let cikti = String(row['Öğrenme Çıktısı'] || row['Öğrenme Çıktısı /Süreç Bileşeni'] || row['Öğrenme Çıktısı/Süreç Bileşeni'] || '').trim();
+          let cikti = String(row['Öğrenme Çıktısı'] || row['Öğrenme Çıktısı /Süreç Bileşeni'] || row['Öğrenme Çıktısı/Süreç Bileşeni'] || row['Kazanım'] || '').trim();
           let s1 = String(row['1'] || row['Seviye 1'] || row['Seviye 1 (Başlangıç)'] || '').trim();
           let s2 = String(row['2'] || row['Seviye 2'] || row['Seviye 2 (Gelişmekte)'] || '').trim();
           let s3 = String(row['3'] || row['Seviye 3'] || row['Seviye 3 (Yeterli)'] || '').trim();
           let s4 = String(row['4'] || row['Seviye 4'] || row['Seviye 4 (İleri)'] || '').trim();
           
-          if(cikti) { app.d.gelisimHavuzu[id] = { konu, cikti, s1, s2, s3, s4 }; ek++; }
+          if(cikti) { app.d.gelisimHavuzu[id] = { unite, konu, cikti, s1, s2, s3, s4 }; ek++; }
         });
-        saveAll(); renderGelisimHavuzu(); alert(ek + ' adet gelişim kriteri (rubrik) havuza eklendi.');
+        saveAll(); 
+        if(typeof renderGelisimHavuzu === 'function') renderGelisimHavuzu(); 
+        alert(ek + ' adet gelişim kriteri (rubrik) havuza eklendi.');
       }
     }catch(e){ alert('Dosya okuma hatası: '+e.message); }
     inp.value='';
