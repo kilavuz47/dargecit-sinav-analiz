@@ -3098,6 +3098,15 @@ function saveGelisimEslesme() {
   alert("Sınav - Gelişim eşleştirmeleri başarıyla kaydedildi ✓");
 }
 
+let topluGirisZoom = 12; // Varsayılan yazı boyutu
+
+function zoomGelisimToplu(delta) {
+  topluGirisZoom += delta;
+  if(topluGirisZoom < 8) topluGirisZoom = 8;
+  if(topluGirisZoom > 20) topluGirisZoom = 20;
+  renderGelisimGiris(); // Değişimi anında tabloya yansıt
+}
+
 function renderGelisimGiris() {
   let sinif = document.getElementById('gelGirisSinif').value;
   let cbs = document.querySelectorAll('.gel-sinav-cb:checked');
@@ -3105,7 +3114,7 @@ function renderGelisimGiris() {
   let wrap = document.getElementById('gelGirisWrap');
   
   if(!sinif) { wrap.innerHTML = '<div style="padding:20px; text-align:center; color:var(--muted)">Lütfen Sınıf Seçin.</div>'; return; }
-  if(selectedExams.length === 0) { wrap.innerHTML = '<div style="padding:20px; text-align:center; color:var(--muted)">Hesaplamaya dahil edilecek en az bir sınav seçin ve "Hesapla" butonuna basın.</div>'; return; }
+  if(selectedExams.length === 0) { wrap.innerHTML = '<div style="padding:20px; text-align:center; color:var(--muted)">Hesaplamaya dahil edilecek en az bir sınav seçin.</div>'; return; }
   
   let mappedIdsSet = new Set();
   selectedExams.forEach(senId => {
@@ -3113,40 +3122,35 @@ function renderGelisimGiris() {
     Object.values(map).forEach(id => mappedIdsSet.add(id));
   });
   let mappedIds = Array.from(mappedIdsSet);
-  
-  if(mappedIds.length === 0) {
-    wrap.innerHTML = '<div class="alert alert-warn">Seçili sınavlarda herhangi bir Gelişim Kriteri eşleştirmesi bulunamadı. Lütfen 2. sekmeden eşleştirme yapın.</div>'; return;
-  }
+  if(mappedIds.length === 0) { wrap.innerHTML = '<div class="alert alert-warn">Eşleştirilmiş Gelişim Kriteri bulunamadı.</div>'; return; }
   
   let ogrList = getMyOgr().filter(o => o.sinif === sinif);
   
-  // 2 SATIRLI ÜNİTE/KONU ve KAZANIM BAŞLIĞI
-  let html = '<table style="min-width:100%; font-size:12px; border-collapse:collapse;"><thead>';
+  // TABLO BAŞLIKLARI (DİNAMİK YAZI BOYUTU VE DAR BOŞLUKLAR)
+  let html = `<table style="min-width:100%; font-size:${topluGirisZoom}px; border-collapse:collapse;"><thead>`;
   
-  // 1. SATIR: KONULAR
-  html += '<tr><th rowspan="2" style="border:1px solid #CBD5E1; width:70px; padding:6px;">Okul No</th><th rowspan="2" style="border:1px solid #CBD5E1; width:160px; padding:6px;">Adı Soyadı</th>';
+  html += '<tr><th rowspan="2" style="border:1px solid #CBD5E1; width:60px; padding:4px;">Okul No</th><th rowspan="2" style="border:1px solid #CBD5E1; width:140px; padding:4px;">Adı Soyadı</th>';
   mappedIds.forEach(id => {
     let g = app.d.gelisimHavuzu[id];
-    let baslik = g.unite ? `${g.unite}` : `${g.konu || 'Genel'}`;
-    html += `<th style="border:1px solid #CBD5E1; text-align:center; font-weight:700; font-size:11px; padding:6px; background:#EEF2FF; color:var(--primary)" title="${g.konu}">${baslik}</th>`;
+    let baslik = g.unite ? `${g.unite}` : `${g.konu || 'Genel Konu'}`;
+    html += `<th style="border:1px solid #CBD5E1; text-align:center; font-weight:700; font-size:${topluGirisZoom-1}px; padding:4px; background:#EEF2FF; color:var(--primary)" title="${g.konu}">${baslik}</th>`;
   });
   html += '</tr><tr>';
   
-  // 2. SATIR: KAZANIMLAR
   mappedIds.forEach(id => {
     let g = app.d.gelisimHavuzu[id];
-    html += `<th style="border:1px solid #CBD5E1; text-align:center; font-weight:normal; font-size:10px; padding:6px; background:#F8FAFC; color:var(--text); max-width:150px; overflow:hidden;" title="${g.cikti}">${g.cikti.substring(0,50)}...</th>`;
+    html += `<th style="border:1px solid #CBD5E1; text-align:center; font-weight:normal; font-size:${topluGirisZoom-2}px; padding:4px; background:#F8FAFC; color:var(--text); max-width:150px; overflow:hidden;" title="${g.cikti}">${g.cikti.substring(0,40)}...</th>`;
   });
   html += '</tr></thead><tbody>';
   
   ogrList.forEach(o => {
     let no = String(o.no);
     let oGelisim = app.d.gelisimNotlari[no] || {};
-    html += `<tr><td style="border:1px solid #CBD5E1; padding:4px;"><b>${no}</b></td><td style="border:1px solid #CBD5E1; padding:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px;">${o.ads}</td>`;
+    html += `<tr><td style="border:1px solid #CBD5E1; padding:2px 4px;"><b>${no}</b></td><td style="border:1px solid #CBD5E1; padding:2px 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px;">${o.ads}</td>`;
     
     mappedIds.forEach(id => {
       let val = parseInt(oGelisim[id]) || 0;
-      html += `<td style="border:1px solid #CBD5E1; padding:4px;">
+      html += `<td style="border:1px solid #CBD5E1; padding:2px;">
         <div class="rb-group">
           <div class="rb-btn r1 ${val===1?'active':''}" onclick="setGelisimNot('${no}', '${id}', 1, this)">1</div>
           <div class="rb-btn r2 ${val===2?'active':''}" onclick="setGelisimNot('${no}', '${id}', 2, this)">2</div>
@@ -3284,7 +3288,37 @@ function syncGelisimRaporOgr() {
     oSel.innerHTML += `<option value="${o.no}">${o.no} - ${o.ads}</option>`;
   });
 }
+function yazdirGelisimTopluPDF() {
+  let sinif = document.getElementById('gelGirisSinif').value;
+  let wrap = document.getElementById('gelGirisWrap');
+  
+  if(!sinif || !wrap || wrap.innerHTML.includes('Sınıf ve Sınav(ları) seçerek')) { 
+    alert("Önce Sınıf ve Sınavları seçip listeyi oluşturun."); return; 
+  }
 
+  let printWindow = window.open('', '', 'width=1000,height=800');
+  printWindow.document.write('<html><head><title>Toplu e-Okul Veri Girişi</title>');
+  printWindow.document.write(`<style>
+    @media print { @page { size: landscape; margin: 10mm; } body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+    body { font-family: Arial, sans-serif; color: #000; }
+    table { width: 100%; border-collapse: collapse; font-size: ${topluGirisZoom}px; }
+    th, td { border: 1px solid #000; padding: 4px; text-align: left; }
+    .rb-group { display: flex; gap: 2px; justify-content: center; }
+    .rb-btn { width: 18px; height: 18px; border: 1px solid #ccc; text-align: center; line-height: 18px; font-size: 10px; color: #ccc; }
+    .rb-btn.active { color: #000; border-color: #000; font-weight: bold; }
+    .rb-btn.active.r1 { background: #FCA5A5 !important; }
+    .rb-btn.active.r2 { background: #FDE047 !important; }
+    .rb-btn.active.r3 { background: #93C5FD !important; }
+    .rb-btn.active.r4 { background: #6EE7B7 !important; }
+  </style>`);
+  printWindow.document.write('</head><body>');
+  printWindow.document.write(`<h3 style="text-align:center; font-family: Arial; margin-bottom: 10px;">${sinif} Sınıfı - e-Okul Gelişim Düzeyleri Toplu Listesi</h3>`);
+  printWindow.document.write(wrap.innerHTML);
+  printWindow.document.write('</body></html>');
+  printWindow.document.close();
+  printWindow.focus();
+  setTimeout(() => { printWindow.print(); printWindow.close(); }, 500);
+}
 function renderGelisimRapor() {
   let no = document.getElementById('gelRaporOgr').value;
   let wrap = document.getElementById('gelRaporPrintArea');
