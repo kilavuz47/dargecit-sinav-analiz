@@ -2029,7 +2029,7 @@ function xlUpload(inp, tip){
           if(cikti) { app.d.gelisimHavuzu[id] = { unite, konu, cikti, s1, s2, s3, s4 }; ek++; }
         });
         saveAll(); 
-        if(typeof renderGelisimHavuzu === 'function') renderGelisimHavuzu(); 
+        if(typeof renderGelisimHavuzu === 'function') { renderGelisimHavuzu(); } 
         alert(ek + ' adet gelişim kriteri (rubrik) havuza eklendi.');
       }
     }catch(e){ alert('Dosya okuma hatası: '+e.message); }
@@ -3043,6 +3043,9 @@ function renderGelisimEslesme() {
   });
   html += '</tbody></table><button class="btn btn-success" onclick="saveGelisimEslesme()"><i class="fa-solid fa-link"></i> Eşleştirmeyi Kaydet</button>';
   wrap.innerHTML = html;
+  
+  document.querySelectorAll('.ges-sel').forEach(sel => showGelisimPreview(sel));
+}
   
   document.querySelectorAll('.ges-sel').forEach(sel => showGelisimPreview(sel));
 }
