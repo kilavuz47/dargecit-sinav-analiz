@@ -775,13 +775,76 @@ textarea.sen-edit-inp { resize: vertical; }
             </div>
           </div>
 
-          <div class="tc" id="tan-manuel">
-            <div class="card">
-              <div class="ct"><span><i class="fa-solid fa-pen-to-square"></i> Manuel Puan Düzenleme</span><button class="btn btn-success btn-sm" onclick="saveManuelAnaliz()"><i class="fa-solid fa-floppy-disk"></i> Kaydet</button></div>
-              <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> Tüm puanlar düzenlenebilir. Değiştirip "Kaydet" butonuna basın.</div>
-              <div id="manuelAnWrap" class="tr-wrap" style="max-height:500px;overflow-y:auto"></div>
+          <div class="tc" id="tan-pdf">
+            <div class="card" id="pdfBuilder">
+              <div class="ct">
+                <span><i class="fa-solid fa-file-pdf"></i> PDF Rapor Oluşturucu</span>
+                <button class="btn btn-primary" id="btnPdfOnizle" onclick="pdfOnizleOlustur()">
+                  <i class="fa-solid fa-eye"></i> Önizleme Oluştur
+                </button>
+              </div>
+              <div class="alert alert-info" style="margin-bottom:16px">
+                <i class="fa-solid fa-circle-info"></i>
+                Dahil etmek istediğin bölümleri işaretle. Sırayı değiştirmek için yukarı/aşağı oklarını kullan. "Önizleme Oluştur" ile A4 formatında göster, ardından PDF indir.
+              </div>
+              <div id="pdfBolumListesi" style="margin-bottom:18px"></div>
+              <div style="background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:14px">
+                <div style="font-weight:700;font-size:13px;color:var(--dark);margin-bottom:10px"><i class="fa-solid fa-sliders"></i> Grafik & Yazı Boyutu Ayarları</div>
+                <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center">
+                  <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+                    <span style="color:var(--muted);font-weight:600">Grafik Yükseklik:</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('grafik',-20)">−</button>
+                    <span id="pdfGrafikBoy" style="font-weight:700;color:var(--primary);min-width:40px;text-align:center">180px</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('grafik',+20)">+</button>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+                    <span style="color:var(--muted);font-weight:600">Yazı Boyutu:</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('yazi',-1)">−</button>
+                    <span id="pdfYaziBoy" style="font-weight:700;color:var(--primary);min-width:40px;text-align:center">12px</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('yazi',+1)">+</button>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+                    <span style="color:var(--muted);font-weight:600">Satır Yüksekliği:</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('satir',-1)">−</button>
+                    <span id="pdfSatirBoy" style="font-weight:700;color:var(--primary);min-width:40px;text-align:center">22px</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('satir',+1)">+</button>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+                    <span style="color:var(--muted);font-weight:600">Sayfa Kenar Boşluğu:</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('kenar',-2)">−</button>
+                    <span id="pdfKenarBoy" style="font-weight:700;color:var(--primary);min-width:40px;text-align:center">10mm</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('kenar',+2)">+</button>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+                    <span style="color:var(--muted);font-weight:600">PDF Sığdırma Ölçeği:</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('olcek',-0.05)">−</button>
+                    <span id="pdfOlcekBoy" style="font-weight:700;color:var(--primary);min-width:40px;text-align:center">1.00</span>
+                    <button class="btn btn-outline btn-sm" onclick="pdfAyar('olcek',+0.05)">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="pdfAlan" style="display:none;margin-top:4px">
+              <div class="pdf-bar">
+                <span style="font-weight:600;color:var(--dark)"><i class="fa-solid fa-magnifying-glass"></i> A4 Önizleme</span>
+                <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+                  <div class="zoom-c">
+                    <button onclick="pdfZoom(-0.05)">−</button>
+                    <span id="zoomVal" style="min-width:42px;text-align:center">0.75</span>
+                    <button onclick="pdfZoom(+0.05)">+</button>
+                  </div>
+                  <button class="btn btn-success" onclick="dlPdf()"><i class="fa-solid fa-download"></i> PDF İndir</button>
+                  <button class="btn btn-outline btn-sm" onclick="document.getElementById('pdfAlan').style.display='none'"><i class="fa-solid fa-arrow-left"></i> Geri</button>
+                </div>
+              </div>
+              <div class="pdf-wrap">
+                <div class="pdf-doc" id="pdfDoc" style="transform:scale(0.75);transform-origin:top left"></div>
+              </div>
             </div>
           </div>
+          ```
+
+Bunu yaptığınız an Analizler sayfasındaki PDF raporları (çarkların, kapak sayfasının, okul adının olduğu harika rapor ekranı) eksiksiz olarak geri gelecektir. Başka hiçbir kodu silmenize gerek yoktur.
 
           <div class="tc" id="tan-pdf">
             <div class="card" id="pdfBuilder">
@@ -3126,27 +3189,30 @@ function renderGelisimGiris() {
   
   let ogrList = getMyOgr().filter(o => o.sinif === sinif);
   
-  // TABLO BAŞLIKLARI (DİNAMİK YAZI BOYUTU VE DAR BOŞLUKLAR)
-  let html = `<table style="min-width:100%; font-size:${topluGirisZoom}px; border-collapse:collapse;"><thead>`;
+  // 2 SATIRLI BAŞLIK: ÜSTTE ÜNİTE/KONU, ALTTA KAZANIM (PUNTO 10PX VE SIKILAŞTIRILMIŞ)
+  let html = '<table style="min-width:100%; font-size:10px; border-collapse:collapse;"><thead>';
   
-  html += '<tr><th rowspan="2" style="border:1px solid #CBD5E1; width:60px; padding:4px;">Okul No</th><th rowspan="2" style="border:1px solid #CBD5E1; width:140px; padding:4px;">Adı Soyadı</th>';
+  // 1. Satır: Konular
+  html += '<tr><th rowspan="2" style="border:1px solid #CBD5E1; width:60px; padding:3px 4px;">Okul No</th><th rowspan="2" style="border:1px solid #CBD5E1; width:140px; padding:3px 4px;">Adı Soyadı</th>';
   mappedIds.forEach(id => {
     let g = app.d.gelisimHavuzu[id];
     let baslik = g.unite ? `${g.unite}` : `${g.konu || 'Genel Konu'}`;
-    html += `<th style="border:1px solid #CBD5E1; text-align:center; font-weight:700; font-size:${topluGirisZoom-1}px; padding:4px; background:#EEF2FF; color:var(--primary)" title="${g.konu}">${baslik}</th>`;
+    html += `<th style="border:1px solid #CBD5E1; text-align:center; font-weight:700; padding:3px 4px; background:#EEF2FF; color:var(--primary)">${baslik}</th>`;
   });
   html += '</tr><tr>';
   
-  mappedIds.forEach(id => {
+  // 2. Satır: Kazanımlar
+  mappedIdsSet.forEach(id => {
     let g = app.d.gelisimHavuzu[id];
-    html += `<th style="border:1px solid #CBD5E1; text-align:center; font-weight:normal; font-size:${topluGirisZoom-2}px; padding:4px; background:#F8FAFC; color:var(--text); max-width:150px; overflow:hidden;" title="${g.cikti}">${g.cikti.substring(0,40)}...</th>`;
+    html += `<th style="border:1px solid #CBD5E1; text-align:center; font-weight:normal; font-size:9px; padding:3px 4px; background:#F8FAFC; color:var(--text); max-width:150px; overflow:hidden;" title="${g.cikti}">${g.cikti.substring(0,40)}...</th>`;
   });
   html += '</tr></thead><tbody>';
   
+  // Öğrenci Satırları
   ogrList.forEach(o => {
     let no = String(o.no);
     let oGelisim = app.d.gelisimNotlari[no] || {};
-    html += `<tr><td style="border:1px solid #CBD5E1; padding:2px 4px;"><b>${no}</b></td><td style="border:1px solid #CBD5E1; padding:2px 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px;">${o.ads}</td>`;
+    html += `<tr><td style="border:1px solid #CBD5E1; padding:3px 4px;"><b>${no}</b></td><td style="border:1px solid #CBD5E1; padding:3px 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px;">${o.ads}</td>`;
     
     mappedIds.forEach(id => {
       let val = parseInt(oGelisim[id]) || 0;
@@ -3164,7 +3230,6 @@ function renderGelisimGiris() {
   html += '</tbody></table>';
   wrap.innerHTML = html;
 }
-
 function setGelisimNot(no, id, val, el) {
   if(!app.d.gelisimNotlari[no]) app.d.gelisimNotlari[no] = {};
   app.d.gelisimNotlari[no][id] = val;
@@ -3346,24 +3411,24 @@ function renderGelisimRapor() {
   let donemMetni = selectedExams.join(', ');
   
   let html = `
-    <div id="gelisimPdfContent" style="color:#000; font-family:'Arial',sans-serif; background:#fff; padding:20mm;">
-      <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px; margin-bottom:20px;">
-        <h2 style="margin:0; font-size:22px;">ÖĞRENCİ GELİŞİM DÜZEYİ RAPORU</h2>
-        <h3 style="margin:5px 0 0 0; color:#555; font-size:16px;">${app.okul}</h3>
+    <div id="gelisimPdfContent" style="color:#000; font-family:'Arial',sans-serif; background:#fff; padding:5mm; box-sizing:border-box;">
+      <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:5px; margin-bottom:10px;">
+        <h2 style="margin:0; font-size:18px;">ÖĞRENCİ GELİŞİM DÜZEYİ RAPORU</h2>
+        <h3 style="margin:4px 0 0 0; color:#555; font-size:14px;">${app.okul}</h3>
       </div>
       
-      <div style="display:flex; justify-content:space-between; margin-bottom:30px; font-size:14px; background:#F8FAFC; padding:15px; border:1px solid #E2E8F0; border-radius:8px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:12px; background:#F8FAFC; padding:6px; border:1px solid #E2E8F0; border-radius:6px;">
         <div><b>Öğrenci:</b> ${o.ads}<br><b>Okul No:</b> ${o.no}<br><b>Sınıf:</b> ${o.sinif}</div>
         <div style="text-align:right"><b>Değerlendirme:</b> ${donemMetni}<br><b>Tarih:</b> ${new Date().toLocaleDateString('tr-TR')}</div>
       </div>
       
-      <table style="width:100%; border-collapse:collapse; font-size:13px; line-height:1.6;">
+      <table style="width:100%; border-collapse:collapse; font-size:11px; line-height:1.3; table-layout:fixed;">
         <thead>
           <tr style="background:#1E293B; color:#fff;">
-            <th style="padding:12px; border:1px solid #ccc; text-align:left; width:20%">Ünite / Konu</th>
-            <th style="padding:12px; border:1px solid #ccc; text-align:left; width:35%">Öğrenme Çıktısı (Kazanım)</th>
-            <th style="padding:12px; border:1px solid #ccc; text-align:center; width:10%">Seviye</th>
-            <th style="padding:12px; border:1px solid #ccc; text-align:left; width:35%">Gelişim Durumu (Açıklama)</th>
+            <th style="padding:4px; border:1px solid #ccc; text-align:left; width:15%">Ünite / Konu</th>
+            <th style="padding:4px; border:1px solid #ccc; text-align:left; width:35%">Öğrenme Çıktısı (Kazanım)</th>
+            <th style="padding:4px; border:1px solid #ccc; text-align:center; width:5%">Seviye</th>
+            <th style="padding:4px; border:1px solid #ccc; text-align:left; width:45%">Gelişim Durumu (Açıklama)</th>
           </tr>
         </thead>
         <tbody>
@@ -3373,7 +3438,7 @@ function renderGelisimRapor() {
     let g = app.d.gelisimHavuzu[id];
     let val = notlar[id] || 0;
     
-    let seviyeMetni = 'Henüz değerlendirilmedi veya eksik veri.';
+    let seviyeMetni = 'Değerlendirilmedi.';
     let renk = 'transparent'; let spanRenk = '#000';
     if(val === 1) { seviyeMetni = g.s1; renk = '#FEE2E2'; spanRenk = '#991B1B'; }
     else if(val === 2) { seviyeMetni = g.s2; renk = '#FEF3C7'; spanRenk = '#92400E'; }
@@ -3381,35 +3446,37 @@ function renderGelisimRapor() {
     else if(val === 4) { seviyeMetni = g.s4; renk = '#D1FAE5'; spanRenk = '#065F46'; }
     
     html += `
-      <tr>
-        <td style="padding:12px; border:1px solid #ccc;">
+      <tr style="page-break-inside:avoid;">
+        <td style="padding:4px; border:1px solid #ccc; word-wrap:break-word;">
           ${g.unite ? `<b>Ünite:</b> ${g.unite}<br>` : ''}<b>Konu:</b> ${g.konu || 'Genel'}
         </td>
-        <td style="padding:12px; border:1px solid #ccc;">${g.cikti}</td>
-        <td style="padding:12px; border:1px solid #ccc; text-align:center; background:${renk}; font-weight:bold; font-size:18px; color:${spanRenk}">${val > 0 ? val : '-'}</td>
-        <td style="padding:12px; border:1px solid #ccc; background:${renk}; color:${spanRenk}">${seviyeMetni}</td>
+        <td style="padding:4px; border:1px solid #ccc; word-wrap:break-word;">${g.cikti}</td>
+        <td style="padding:4px; border:1px solid #ccc; text-align:center; background:${renk}; font-weight:bold; font-size:12px; color:${spanRenk}">${val > 0 ? val : '-'}</td>
+        <td style="padding:4px; border:1px solid #ccc; background:${renk}; color:${spanRenk}; word-wrap:break-word;">${seviyeMetni}</td>
       </tr>
     `;
   });
   
+  // ÖĞRETMEN İSMİ VE AÇIKLAMALAR YAN YANA GETİRİLDİ (ALANDAN TASARRUF)
   html += `
         </tbody>
       </table>
       
-      <div style="margin-top:20px; font-size:12px; color:#555; background:#F1F5F9; padding:15px; border-radius:8px;">
-        <b style="color:#1E293B">Seviye Açıklamaları (Rubrik Ölçeği):</b><br>
-        <ul style="margin:5px 0 0 0; padding-left:20px;">
-          <li><b>1:</b> Başlangıç düzeyindedir, ilgili beceride yoğun pedagojik desteğe ihtiyacı vardır.</li>
-          <li><b>2:</b> Gelişmekte olan düzeydedir, öğretmen yönlendirmesi ile yapabilir.</li>
-          <li><b>3:</b> Yeterli düzeydedir, ilgili beceriyi bağımsız olarak uygulayabilir.</li>
-          <li><b>4:</b> İleri düzeydedir, bilgiyi transfer edip farklı ve karmaşık bağlamlarda kullanabilir.</li>
-        </ul>
-      </div>
-      
-      <div style="margin-top:50px; text-align:right; padding-right:30px;">
-        <div style="border-bottom:1px dotted #000; width:200px; display:inline-block; margin-bottom:5px;"></div><br>
-        <b>${app.adSoyad || app.user}</b><br>
-        Branş Öğretmeni
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:10px; font-size:10px; color:#555; background:#F1F5F9; padding:8px; border-radius:6px; page-break-inside:avoid;">
+        <div>
+          <b style="color:#1E293B">Seviye Açıklamaları:</b>
+          <ul style="margin:3px 0 0 0; padding-left:15px;">
+            <li><b>1:</b> Başlangıç düzeyindedir, yoğun pedagojik desteğe ihtiyacı vardır.</li>
+            <li><b>2:</b> Gelişmekte olan düzeydedir, öğretmen yönlendirmesi ile yapabilir.</li>
+            <li><b>3:</b> Yeterli düzeydedir, ilgili beceriyi bağımsız olarak uygulayabilir.</li>
+            <li><b>4:</b> İleri düzeydedir, bilgiyi transfer edip farklı bağlamlarda kullanabilir.</li>
+          </ul>
+        </div>
+        <div style="text-align:right; min-width:150px;">
+          <div style="border-bottom:1px dotted #000; width:100%; display:inline-block; margin-bottom:3px;"></div><br>
+          <b style="color:#000; font-size:11px;">${app.adSoyad || app.user}</b><br>
+          Branş Öğretmeni
+        </div>
       </div>
     </div>
   `;
@@ -3475,19 +3542,19 @@ function yazdirTopluGelisimPrint() {
     mappedIds.forEach(id => {
       let g = app.d.gelisimHavuzu[id];
       let val = notlar[id] || 0;
-      let seviyeMetni = 'Değerlendirilmedi veya eksik veri.'; let renk = 'transparent'; let spanRenk = '#000';
+      let seviyeMetni = 'Değerlendirilmedi.'; let renk = 'transparent'; let spanRenk = '#000';
       if(val === 1) { seviyeMetni = g.s1; renk = '#FEE2E2'; spanRenk = '#991B1B'; }
       else if(val === 2) { seviyeMetni = g.s2; renk = '#FEF3C7'; spanRenk = '#92400E'; }
       else if(val === 3) { seviyeMetni = g.s3; renk = '#E0E7FF'; spanRenk = '#3730A3'; }
       else if(val === 4) { seviyeMetni = g.s4; renk = '#D1FAE5'; spanRenk = '#065F46'; }
       
-      // SÜTUN GENİŞLİKLERİ VE KESİLMEYİ ÖNLEYEN KOD
+      // SÜTUN GENİŞLİKLERİ VE SIFIR BOŞLUK (PADDING: 4PX)
       tbody += `
         <tr style="page-break-inside: avoid;">
-          <td style="padding:4px; border:1px solid #ccc; width:13%; word-wrap:break-word;">${g.unite ? `<b>Ünite:</b> ${g.unite}<br>` : ''}<b>Konu:</b> ${g.konu || 'Genel'}</td>
-          <td style="padding:4px; border:1px solid #ccc; width:30%; word-wrap:break-word;">${g.cikti}</td>
-          <td style="padding:4px; border:1px solid #ccc; text-align:center; background:${renk}; font-weight:bold; font-size:12px; color:${spanRenk}; width:7%;">${val > 0 ? val : '-'}</td>
-          <td style="padding:4px; border:1px solid #ccc; background:${renk}; color:${spanRenk}; width:50%; word-wrap:break-word;">${seviyeMetni}</td>
+          <td style="padding:4px; border:1px solid #ccc; width:15%; word-wrap:break-word;">${g.unite ? `<b>Ünite:</b> ${g.unite}<br>` : ''}<b>Konu:</b> ${g.konu || 'Genel'}</td>
+          <td style="padding:4px; border:1px solid #ccc; width:35%; word-wrap:break-word;">${g.cikti}</td>
+          <td style="padding:4px; border:1px solid #ccc; text-align:center; background:${renk}; font-weight:bold; font-size:12px; color:${spanRenk}; width:5%;">${val > 0 ? val : '-'}</td>
+          <td style="padding:4px; border:1px solid #ccc; background:${renk}; color:${spanRenk}; width:45%; word-wrap:break-word;">${seviyeMetni}</td>
         </tr>`;
     });
 
@@ -3497,50 +3564,54 @@ function yazdirTopluGelisimPrint() {
           <h2 style="margin:0; font-size:18px;">ÖĞRENCİ GELİŞİM DÜZEYİ RAPORU</h2>
           <h3 style="margin:4px 0 0 0; color:#555; font-size:14px;">${app.okul}</h3>
         </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:12px; background:#F8FAFC; padding:8px; border:1px solid #E2E8F0; border-radius:6px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:12px; background:#F8FAFC; padding:6px; border:1px solid #E2E8F0; border-radius:6px;">
           <div><b>Öğrenci:</b> ${o.ads}<br><b>Okul No:</b> ${o.no}<br><b>Sınıf:</b> ${o.sinif}</div>
           <div style="text-align:right"><b>Değerlendirme:</b> ${donemMetni}<br><b>Tarih:</b> ${new Date().toLocaleDateString('tr-TR')}</div>
         </div>
-        <table>
+        <table style="width:100%; border-collapse:collapse; font-size:11px; line-height:1.3; table-layout:fixed;">
           <thead>
             <tr style="background:#1E293B; color:#fff;">
-              <th style="padding:6px; border:1px solid #ccc; text-align:left; width:13%">Ünite / Konu</th>
-              <th style="padding:6px; border:1px solid #ccc; text-align:left; width:30%">Öğrenme Çıktısı (Kazanım)</th>
-              <th style="padding:6px; border:1px solid #ccc; text-align:center; width:7%">Seviye</th>
-              <th style="padding:6px; border:1px solid #ccc; text-align:left; width:50%">Gelişim Durumu (Açıklama)</th>
+              <th style="padding:4px; border:1px solid #ccc; text-align:left; width:15%">Ünite / Konu</th>
+              <th style="padding:4px; border:1px solid #ccc; text-align:left; width:35%">Öğrenme Çıktısı (Kazanım)</th>
+              <th style="padding:4px; border:1px solid #ccc; text-align:center; width:5%">Seviye</th>
+              <th style="padding:4px; border:1px solid #ccc; text-align:left; width:45%">Gelişim Durumu (Açıklama)</th>
             </tr>
           </thead>
           <tbody>${tbody}</tbody>
         </table>
-        <div style="margin-top:10px; font-size:10px; color:#555; background:#F1F5F9; padding:8px; border-radius:6px;">
-          <b style="color:#1E293B">Seviye Açıklamaları:</b><br>
-          <ul style="margin:3px 0 0 0; padding-left:15px;">
-            <li><b>1:</b> Başlangıç düzeyindedir, yoğun desteğe ihtiyacı vardır.</li>
-            <li><b>2:</b> Gelişmekte olan düzeydedir, yönlendirme ile yapabilir.</li>
-            <li><b>3:</b> Yeterli düzeydedir, beceriyi bağımsız olarak uygulayabilir.</li>
-            <li><b>4:</b> İleri düzeydedir, bilgiyi transfer edip farklı bağlamlarda kullanabilir.</li>
-          </ul>
-        </div>
-        <div style="margin-top:30px; text-align:right; padding-right:20px; font-size:12px;">
-          <div style="border-bottom:1px dotted #000; width:180px; display:inline-block; margin-bottom:5px;"></div><br>
-          <b>${app.adSoyad || app.user}</b><br>Branş Öğretmeni
+        
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:10px; font-size:10px; color:#555; background:#F1F5F9; padding:8px; border-radius:6px; page-break-inside:avoid;">
+          <div>
+            <b style="color:#1E293B">Seviye Açıklamaları:</b>
+            <ul style="margin:3px 0 0 0; padding-left:15px;">
+              <li><b>1:</b> Başlangıç düzeyindedir, yoğun pedagojik desteğe ihtiyacı vardır.</li>
+              <li><b>2:</b> Gelişmekte olan düzeydedir, öğretmen yönlendirmesi ile yapabilir.</li>
+              <li><b>3:</b> Yeterli düzeydedir, ilgili beceriyi bağımsız olarak uygulayabilir.</li>
+              <li><b>4:</b> İleri düzeydedir, bilgiyi transfer edip farklı bağlamlarda kullanabilir.</li>
+            </ul>
+          </div>
+          <div style="text-align:right; min-width:150px;">
+            <div style="border-bottom:1px dotted #000; width:100%; display:inline-block; margin-bottom:3px;"></div><br>
+            <b style="color:#000; font-size:11px;">${app.adSoyad || app.user}</b><br>
+            Branş Öğretmeni
+          </div>
         </div>
       </div>
     `;
   });
 
-  // ASLA BOŞ SAYFA ÇIKARTMAYAN DOĞAL YAZDIRMA MOTORU
+  // SIFIR BOŞLUK, MİNUMUM KENAR (7MM)
   let printWindow = window.open('', '', 'width=1000,height=800');
   printWindow.document.write('<html><head><title>Toplu Karneler</title>');
   printWindow.document.write(`<style>
     body { font-family: 'Arial', sans-serif; color: #000; margin: 0; padding: 0; background: #fff;}
-    table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 10px; line-height: 1.3; table-layout: fixed; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 11px; line-height: 1.3; table-layout: fixed; }
     th, td { border: 1px solid #000; text-align: left; word-wrap: break-word; }
-    .karne-page { padding: 10mm; box-sizing: border-box; page-break-after: always; }
+    .karne-page { padding: 0mm; box-sizing: border-box; page-break-after: always; }
     tr { page-break-inside: avoid; }
     @media print { 
         body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } 
-        @page { margin: 0; size: A4 portrait; }
+        @page { margin: 7mm; size: A4 portrait; }
     }
   </style>`);
   printWindow.document.write('</head><body>');
