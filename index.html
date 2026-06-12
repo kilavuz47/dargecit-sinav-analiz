@@ -2844,4 +2844,77 @@ async function pdfOnizleOlustur(){
         Object.keys(uniteMap).forEach(u=>{
           let sorular=uniteMap[u]; let uOrt=Math.round(sorular.reduce((a,s)=>a+s.basariPct,0)/sorular.length);
           let uRenk=uOrt>=baraj?'#D1FAE5':uOrt>=50?'#FEF3C7':'#FEE2E2'; let uTC=uOrt>=baraj?'#065F46':uOrt>=50?'#92400E':'#991B1B';
-          html+=`<div style="background:${uRenk};border-radius:
+          html+=`<div style="background:${uRenk};border-radius:6px;padding:10px 14px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b style="color:${uTC};font-size:${fs+1}px">${u}</b><span style="background:#fff;color:${uTC};border-radius:20px;padding:2px 10px;font-weight:700;font-size:${fs}px">${uOrt}%</span></div>`;
+          sorular.forEach(s=>{ html+=`<div style="font-size:${fs-1}px;color:#333;padding:2px 0">• <b>Soru ${s.no}:</b> ${s.kazanim.substring(0,80)}… — <b style="color:${uTC}">${s.basariPct}%</b></div>`; });
+          html+='</div>';
+        }); 
+        html+='</div>'; break;
+
+      case 'aiYorum':
+        html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Pedagojik Değerlendirme & Yorum</h2>
+        <div style="background:#ECFDF5;border:2px solid #A7F3D0;border-radius:8px;padding:14px 16px;font-size:${fs}px;line-height:1.8">${yorumMetni.replace(/<b>/g,'<b style="color:#1E293B">').replace(/\n/g,'<br>')}</div></div>`; break;
+
+      case 'eylemPlan':
+        html+=`<div style="page-break-inside:avoid;"><h2 style="${h2Stil}">Zümre Eylem Planı Önerileri</h2>`;
+        let eylemler=[];
+        soruStat.filter(s=>s.basariPct<baraj).forEach(s=>{ eylemler.push(`<b>Soru ${s.no} — ${s.kazanim.substring(0,50)}:</b> Ek etkinlik önerilir. Başarı: %${s.basariPct}.`); });
+        if(eylemler.length){ html+=`<ol style="padding-left:18px;line-height:2;font-size:${fs}px">`; eylemler.forEach(e=>html+=`<li style="margin-bottom:6px">${e}</li>`); html+=`</ol></div>`; }
+        else{ html+=`<div style="background:#D1FAE5;border-radius:8px;padding:12px 16px;font-size:${fs}px;color:#065F46"><b>✓ Tüm öğrenme çıktıları başarı barajını geçmiştir.</b></div></div>`; }
+        break;
+    }
+  }
+
+  html += `<div style="margin-top:50px; text-align:right; font-size:${fs+1}px; padding:0 20px; page-break-inside: avoid; break-inside: avoid;">
+    <div style="display:inline-block; text-align:center; width:250px;">
+      <div style="margin-bottom: 40px; font-weight: 600;">Tarih: ${new Date().toLocaleDateString('tr-TR')}</div>
+      <div style="border-bottom:1px dotted #000; margin-bottom: 5px;"></div>
+      <b style="font-size:${fs+2}px">${app.adSoyad||app.user}</b><br>
+      <span style="color:#555;font-size:${fs-1}px">Branş Öğretmeni${app.brans?' — '+app.brans:''}</span>
+    </div>
+  </div>`;
+
+  html+='</div>';
+  document.getElementById('pdfDoc').innerHTML=html;
+  document.getElementById('pdfDoc').style.padding = pdfAyarlar.kenar + 'mm';
+  document.getElementById('pdfAlan').style.display='block';
+  document.getElementById('zoomVal').textContent=zoomLevel.toFixed(2);
+  btn.innerHTML='<i class="fa-solid fa-eye"></i> Önizleme Oluştur'; btn.disabled=false;
+}
+
+function pdfGrafikHTML(canvasId, h, w, display){
+  try{
+    let canvas=document.getElementById(canvasId);
+    if(!canvas) return `<p style="color:#999;font-size:11px">[Grafik mevcut değil]</p>`;
+    let img=canvas.toDataURL('image/png');
+    return `<img src="${img}" style="width:${w};height:${h}px;display:${display};margin-bottom:12px;border:1px solid #eee;border-radius:4px">`;
+  }catch(e){ return `<p style="color:#999;font-size:11px">[Grafik alınamadı]</p>`; }
+}
+
+function pdfZoom(val){
+  zoomLevel=Math.max(0.3,Math.min(1.5,zoomLevel+val));
+  document.getElementById('pdfDoc').style.transform=`scale(${zoomLevel})`;
+  document.getElementById('zoomVal').textContent=zoomLevel.toFixed(2);
+}
+
+function dlPdf(){
+  if(typeof html2pdf==='undefined'){ alert('PDF kütüphanesi yüklenemedi.'); return; }
+  let el=document.getElementById('pdfDoc');
+  let ot=el.style.transform; el.style.transform='scale(1)';
+  html2pdf().set({
+    margin: 5,
+    filename:`Rapor_${anState.senId?.substring(0,25)||'Sinav'}_${new Date().toLocaleDateString('tr-TR').replace(/\./g,'-')}.pdf`,
+    image:{type:'jpeg',quality:0.98},
+    html2canvas:{scale:2,useCORS:true,logging:false},
+    jsPDF:{format:'a4',orientation:'portrait'}
+  }).from(el).save().then(()=>{ el.style.transform=ot; });
+}
+
+window.onload=function(){
+  document.getElementById('loginPass')?.addEventListener('keydown',function(e){ if(e.key==='Enter') doLogin(); });
+  initPdfBuilder();
+  syncBransSelect();
+  syncOkulSelect();
+};
+</script>
+</body>
+</html>
