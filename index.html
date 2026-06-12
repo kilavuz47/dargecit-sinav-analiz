@@ -904,9 +904,14 @@ textarea.sen-edit-inp { resize: vertical; }
           <div class="card">
             <div class="ct">
               <span>e-Okul Toplu Veri Girişi Ekranı (1-2-3-4)</span>
-              <button class="btn btn-success btn-sm" onclick="saveGelisimNotlari()"><i class="fa-solid fa-floppy-disk"></i> Manuel Değişiklikleri Kaydet</button>
+              <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                <button class="btn btn-outline btn-sm" onclick="zoomGelisimToplu(-1)" title="Yazıları Küçült">A-</button>
+                <button class="btn btn-outline btn-sm" onclick="zoomGelisimToplu(1)" title="Yazıları Büyüt">A+</button>
+                <button class="btn btn-danger btn-sm" onclick="yazdirGelisimTopluPDF()"><i class="fa-solid fa-file-pdf"></i> Listeyi PDF İndir</button>
+                <button class="btn btn-success btn-sm" onclick="saveGelisimNotlari()"><i class="fa-solid fa-floppy-disk"></i> Manuel Değişiklikleri Kaydet</button>
+              </div>
             </div>
-            <div class="alert alert-info"><i class="fa-solid fa-info-circle"></i> Sınıfınızı ve hesaplamaya dahil etmek istediğiniz <b>birden fazla sınavı</b> seçebilirsiniz. Sistem, seçili sınavlardaki puanları toplayarak genel gelişimi hesaplar. Alt alta liste e-Okul'a veri girişini hızlandırmak için tasarlanmıştır.</div>
+            <div class="alert alert-info"><i class="fa-solid fa-info-circle"></i> Sınıfınızı ve hesaplamaya dahil etmek istediğiniz <b>birden fazla sınavı</b> seçebilirsiniz. Sistem, seçili sınavlardaki puanları toplayarak genel gelişimi hesaplar. "A-" tuşu ile tabloyu küçültüp PDF alabilirsiniz.</div>
             <div class="g2" style="margin-bottom:14px; align-items:start;">
               <div class="fg" style="margin:0"><label>Sınıf Filtresi</label><select class="fc" id="gelGirisSinif" onchange="renderGelisimGiris()"></select></div>
               <div class="fg" style="margin:0"><label>Hesaplamaya Dahil Edilecek Sınavlar (Çoklu Seçim)</label>
@@ -915,10 +920,12 @@ textarea.sen-edit-inp { resize: vertical; }
             </div>
             <div style="margin-bottom:14px">
               <button class="btn btn-primary" onclick="autoCalcGelisim()"><i class="fa-solid fa-robot"></i> Seçili Sınavlardan Verileri Çek ve Listeyi Hesapla</button>
-              <span style="font-size:12px; color:var(--muted); margin-left:10px;">Hesaplama Mantığı: (Toplam Aldığı Puan / Toplam Soru Max Puanı) -> %80-100=4, %60-79=3, %40-59=2, %0-39=1</span>
+              <span style="font-size:12px; color:var(--muted); margin-left:10px;">%80-100=4, %60-79=3, %40-59=2, %0-39=1</span>
             </div>
-            <div id="gelGirisWrap" class="tr-wrap wrap-text">
-              <div style="padding:20px; text-align:center; color:var(--muted)">Sınıf ve Sınav(ları) seçerek "Hesapla" butonuna basınız.</div>
+            <div id="gelGirisPrintArea" style="background:#fff; padding:10px; font-size:12px;">
+              <div id="gelGirisWrap" class="tr-wrap wrap-text" style="border:none; margin:0; overflow:visible;">
+                <div style="padding:20px; text-align:center; color:var(--muted)">Sınıf ve Sınav(ları) seçerek "Hesapla" butonuna basınız.</div>
+              </div>
             </div>
           </div>
         </div>
@@ -926,18 +933,23 @@ textarea.sen-edit-inp { resize: vertical; }
         <div class="tc" id="tgel-rapor">
           <div class="card">
             <div class="ct">Öğrenci Gelişim Raporları (Tam Metin PDF)</div>
-            <div class="g3" style="margin-bottom:14px">
-              <div class="fg" style="margin:0"><label>Sınıf</label><select class="fc" id="gelRaporSinif" onchange="syncGelisimRaporOgr()"></select></div>
-              <div class="fg" style="margin:0"><label>Öğrenci</label><select class="fc" id="gelRaporOgr" onchange="renderGelisimRapor()"></select></div>
-              <div class="fg" style="margin:0"><label>Sınav Dönemi (Eşleşmeleri Getirir)</label><select class="fc" id="gelRaporSenaryo" onchange="renderGelisimRapor()"></select></div>
+            <div class="alert alert-info"><i class="fa-solid fa-info-circle"></i> Sınıfı ve değerlendirmeye almak istediğiniz sınavları (bir veya birden fazla) işaretleyin. "Tüm Sınıfı İndir" derseniz karneler alt alta birleşir.</div>
+            <div class="g2" style="margin-bottom:14px; align-items:start;">
+              <div class="fg" style="margin:0">
+                <label>Sınıf</label><select class="fc" id="gelRaporSinif" onchange="syncGelisimRaporOgr()" style="margin-bottom:10px;"></select>
+                <label>Öğrenci (Tekli Rapor İçin)</label><select class="fc" id="gelRaporOgr" onchange="renderGelisimRapor()"></select>
+              </div>
+              <div class="fg" style="margin:0"><label>Değerlendirmeye Dahil Edilecek Sınavlar (Dönem Başına)</label>
+                <div id="gelRaporSenaryolar" class="cb-list"></div>
+                <button class="btn btn-outline btn-sm" style="margin-top:8px; width:100%" onclick="renderGelisimRapor()">Seçili Sınavları Birleştir & Ekranda Göster</button>
+              </div>
             </div>
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
-              <button class="btn btn-outline" onclick="yazdirBolum('gelRaporPrintArea')"><i class="fa-solid fa-print"></i> Yazdır</button>
-              <button class="btn btn-danger" onclick="yazdirGelisimPDF()"><i class="fa-solid fa-file-pdf"></i> Tekli Öğrenci PDF İndir</button>
+              <button class="btn btn-danger" onclick="yazdirGelisimPDF()"><i class="fa-solid fa-file-pdf"></i> Tek Öğrenci PDF İndir</button>
               <button class="btn btn-primary" onclick="yazdirTopluGelisimPDF()"><i class="fa-solid fa-file-pdf"></i> Tüm Sınıfı Toplu PDF İndir</button>
             </div>
             <div id="gelRaporPrintArea" style="background:#fff; border:1px solid var(--border); border-radius:12px; padding:30px; margin-top:20px; overflow-x:auto;">
-               <div style="color:var(--muted); text-align:center">Öğrenci ve Sınav Seçin.</div>
+               <div style="color:var(--muted); text-align:center">Öğrenci ve Sınav(ları) Seçin.</div>
             </div>
           </div>
         </div>
@@ -2927,24 +2939,25 @@ function initGelisim() {
   
   let senKeys = Object.keys(app.d.senaryolar || {});
   
-  let els = ['gelEslesmeSenaryo', 'gelRaporSenaryo'];
-  els.forEach(id => {
-    let el = document.getElementById(id);
-    if(el) {
-      el.innerHTML = '<option value="">-- Senaryo/Sınav Seçin --</option>';
-      senKeys.forEach(k => el.innerHTML += `<option value="${k}">${k}</option>`);
-    }
-  });
-
-  let cbList = document.getElementById('gelGirisSenaryolar');
-  if(cbList) {
-    let cbHtml = '';
-    senKeys.forEach(k => {
-      cbHtml += `<label class="cb-item"><input type="checkbox" value="${k}" class="gel-sinav-cb"> ${k}</label>`;
-    });
-    if(senKeys.length === 0) cbHtml = '<div style="color:#888; font-size:12px;">Önce sınav oluşturun.</div>';
-    cbList.innerHTML = cbHtml;
+  let elEsl = document.getElementById('gelEslesmeSenaryo');
+  if(elEsl) {
+    elEsl.innerHTML = '<option value="">-- Senaryo/Sınav Seçin --</option>';
+    senKeys.forEach(k => elEsl.innerHTML += `<option value="${k}">${k}</option>`);
   }
+
+  let cbLists = ['gelGirisSenaryolar', 'gelRaporSenaryolar'];
+  cbLists.forEach(listId => {
+      let cbList = document.getElementById(listId);
+      if(cbList) {
+        let cbHtml = '';
+        let clsName = listId === 'gelGirisSenaryolar' ? 'gel-sinav-cb' : 'gel-rapor-cb';
+        senKeys.forEach(k => {
+          cbHtml += `<label class="cb-item"><input type="checkbox" value="${k}" class="${clsName}"> ${k}</label>`;
+        });
+        if(senKeys.length === 0) cbHtml = '<div style="color:#888; font-size:12px;">Önce sınav oluşturun.</div>';
+        cbList.innerHTML = cbHtml;
+      }
+  });
 
   let myOgr = getMyOgr();
   let siniflar = [...new Set(myOgr.map(o=>o.sinif).filter(Boolean))].sort();
@@ -3222,22 +3235,29 @@ function syncGelisimRaporOgr() {
 
 function renderGelisimRapor() {
   let no = document.getElementById('gelRaporOgr').value;
-  let senId = document.getElementById('gelRaporSenaryo').value; 
   let wrap = document.getElementById('gelRaporPrintArea');
   
-  if(!no || !senId) { wrap.innerHTML = '<div style="color:var(--muted); text-align:center">Öğrenci ve Sınav Dönemi Seçin.</div>'; return; }
+  let cbs = document.querySelectorAll('.gel-rapor-cb:checked');
+  let selectedExams = Array.from(cbs).map(cb => cb.value);
+
+  if(!no || selectedExams.length === 0) { wrap.innerHTML = '<div style="color:var(--muted); text-align:center">Öğrenci ve Değerlendirilecek Sınav(ları) Seçin.</div>'; return; }
   
   let o = getMyOgr().find(x => String(x.no) === String(no));
   if(!o) return;
   
-  let map = app.d.senaryolar[senId]?.gelisimMap || {};
-  let mappedIds = [...new Set(Object.values(map))];
+  let mappedIdsSet = new Set();
+  selectedExams.forEach(senId => {
+    let map = app.d.senaryolar[senId]?.gelisimMap || {};
+    Object.values(map).forEach(id => mappedIdsSet.add(id));
+  });
+  let mappedIds = Array.from(mappedIdsSet);
   
   if(mappedIds.length === 0) {
-    wrap.innerHTML = '<div class="alert alert-warn">Bu sınav/dönem için değerlendirilmiş gelişim kriteri bulunamadı.</div>'; return;
+    wrap.innerHTML = '<div class="alert alert-warn">Seçili sınavlarda değerlendirilmiş gelişim kriteri bulunamadı.</div>'; return;
   }
   
   let notlar = app.d.gelisimNotlari[no] || {};
+  let donemMetni = selectedExams.join(', ');
   
   let html = `
     <div id="gelisimPdfContent" style="color:#000; font-family:'Arial',sans-serif; background:#fff; padding:20mm;">
@@ -3248,7 +3268,7 @@ function renderGelisimRapor() {
       
       <div style="display:flex; justify-content:space-between; margin-bottom:30px; font-size:14px; background:#F8FAFC; padding:15px; border:1px solid #E2E8F0; border-radius:8px;">
         <div><b>Öğrenci:</b> ${o.ads}<br><b>Okul No:</b> ${o.no}<br><b>Sınıf:</b> ${o.sinif}</div>
-        <div style="text-align:right"><b>Değerlendirme Dönemi:</b> ${senId}<br><b>Tarih:</b> ${new Date().toLocaleDateString('tr-TR')}</div>
+        <div style="text-align:right"><b>Değerlendirme:</b> ${donemMetni}<br><b>Tarih:</b> ${new Date().toLocaleDateString('tr-TR')}</div>
       </div>
       
       <table style="width:100%; border-collapse:collapse; font-size:13px; line-height:1.6;">
@@ -3268,8 +3288,7 @@ function renderGelisimRapor() {
     let val = notlar[id] || 0;
     
     let seviyeMetni = 'Henüz değerlendirilmedi veya eksik veri.';
-    let renk = 'transparent';
-    let spanRenk = '#000';
+    let renk = 'transparent'; let spanRenk = '#000';
     if(val === 1) { seviyeMetni = g.s1; renk = '#FEE2E2'; spanRenk = '#991B1B'; }
     else if(val === 2) { seviyeMetni = g.s2; renk = '#FEF3C7'; spanRenk = '#92400E'; }
     else if(val === 3) { seviyeMetni = g.s3; renk = '#E0E7FF'; spanRenk = '#3730A3'; }
@@ -3278,8 +3297,7 @@ function renderGelisimRapor() {
     html += `
       <tr>
         <td style="padding:12px; border:1px solid #ccc;">
-          ${g.unite ? `<b>Ünite:</b> ${g.unite}<br>` : ''}
-          <b>Konu:</b> ${g.konu || 'Genel'}
+          ${g.unite ? `<b>Ünite:</b> ${g.unite}<br>` : ''}<b>Konu:</b> ${g.konu || 'Genel'}
         </td>
         <td style="padding:12px; border:1px solid #ccc;">${g.cikti}</td>
         <td style="padding:12px; border:1px solid #ccc; text-align:center; background:${renk}; font-weight:bold; font-size:18px; color:${spanRenk}">${val > 0 ? val : '-'}</td>
@@ -3309,14 +3327,12 @@ function renderGelisimRapor() {
       </div>
     </div>
   `;
-  
   wrap.innerHTML = html;
 }
 
 function yazdirGelisimPDF() {
   let el = document.getElementById('gelisimPdfContent');
   if(!el) { alert("Lütfen önce raporu oluşturun."); return; }
-  
   if(typeof html2pdf === 'undefined'){ alert('PDF kütüphanesi yüklenemedi.'); return; }
   let ogrNo = document.getElementById('gelRaporOgr').value;
   let o = getMyOgr().find(x => String(x.no) === String(ogrNo));
@@ -3329,6 +3345,7 @@ function yazdirGelisimPDF() {
     jsPDF:{format:'a4',orientation:'portrait'}
   }).from(el).save();
 }
+
 function yazdirTopluKarnePDF() {
   let el = document.getElementById('karneWrap');
   if(!el || el.innerHTML.includes('Öğrenci bulunamadı')) { alert("Önce Karneleri oluşturun."); return; }
@@ -3336,45 +3353,43 @@ function yazdirTopluKarnePDF() {
   
   let btn = document.querySelector('button[onclick="yazdirTopluKarnePDF()"]');
   let oldText = btn.innerHTML;
-  btn.innerHTML = '<span class="spin"></span> Hazırlanıyor...';
-  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Hazırlanıyor...'; btn.disabled = true;
 
   html2pdf().set({
-    margin: 5,
-    filename: `Toplu_Sinav_Karneleri_${anState.senId || 'Sinav'}.pdf`,
-    image: {type:'jpeg', quality:1},
-    html2canvas: {scale:2, useCORS:true, logging:false},
+    margin: 5, filename: `Toplu_Sinav_Karneleri_${anState.senId || 'Sinav'}.pdf`,
+    image: {type:'jpeg', quality:1}, html2canvas: {scale:2, useCORS:true, logging:false},
     jsPDF: {format:'a4', orientation:'portrait'}
-  }).from(el).save().then(() => {
-    btn.innerHTML = oldText;
-    btn.disabled = false;
-  });
+  }).from(el).save().then(() => { btn.innerHTML = oldText; btn.disabled = false; });
 }
 
 function yazdirTopluGelisimPDF() {
   let sinif = document.getElementById('gelRaporSinif').value;
-  let senId = document.getElementById('gelRaporSenaryo').value; 
+  let cbs = document.querySelectorAll('.gel-rapor-cb:checked');
+  let selectedExams = Array.from(cbs).map(cb => cb.value);
   
-  if(!sinif || !senId) { alert("Lütfen Sınıf ve Sınav Dönemi seçin."); return; }
+  if(!sinif || selectedExams.length === 0) { alert("Lütfen Sınıf ve en az bir Sınav Dönemi seçin."); return; }
   if(typeof html2pdf === 'undefined'){ alert('PDF kütüphanesi yüklenemedi.'); return; }
   
   let ogrList = getMyOgr().filter(o => o.sinif === sinif);
   if(ogrList.length === 0) { alert("Bu sınıfta öğrenci bulunamadı."); return; }
 
-  let map = app.d.senaryolar[senId]?.gelisimMap || {};
-  let mappedIds = [...new Set(Object.values(map))];
+  let mappedIdsSet = new Set();
+  selectedExams.forEach(senId => {
+    let map = app.d.senaryolar[senId]?.gelisimMap || {};
+    Object.values(map).forEach(id => mappedIdsSet.add(id));
+  });
+  let mappedIds = Array.from(mappedIdsSet);
   if(mappedIds.length === 0) { alert("Bu sınav/dönem için değerlendirilmiş gelişim kriteri bulunamadı."); return; }
 
   let btn = document.querySelector('button[onclick="yazdirTopluGelisimPDF()"]');
   let oldText = btn.innerHTML;
-  btn.innerHTML = '<span class="spin"></span> Hazırlanıyor...';
-  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> PDF Hazırlanıyor...'; btn.disabled = true;
 
+  let donemMetni = selectedExams.join(', ');
   let topluHtml = '<div style="background:#fff; color:#000;">';
   
   ogrList.forEach((o, index) => {
     let notlar = app.d.gelisimNotlari[o.no] || {};
-    
     let tbody = '';
     mappedIds.forEach(id => {
       let g = app.d.gelisimHavuzu[id];
@@ -3403,7 +3418,7 @@ function yazdirTopluGelisimPDF() {
         </div>
         <div style="display:flex; justify-content:space-between; margin-bottom:30px; font-size:14px; background:#F8FAFC; padding:15px; border:1px solid #E2E8F0; border-radius:8px;">
           <div><b>Öğrenci:</b> ${o.ads}<br><b>Okul No:</b> ${o.no}<br><b>Sınıf:</b> ${o.sinif}</div>
-          <div style="text-align:right"><b>Değerlendirme Dönemi:</b> ${senId}<br><b>Tarih:</b> ${new Date().toLocaleDateString('tr-TR')}</div>
+          <div style="text-align:right"><b>Değerlendirme:</b> ${donemMetni}<br><b>Tarih:</b> ${new Date().toLocaleDateString('tr-TR')}</div>
         </div>
         <table style="width:100%; border-collapse:collapse; font-size:13px; line-height:1.6;">
           <thead>
@@ -3417,7 +3432,7 @@ function yazdirTopluGelisimPDF() {
           <tbody>${tbody}</tbody>
         </table>
         <div style="margin-top:20px; font-size:12px; color:#555; background:#F1F5F9; padding:15px; border-radius:8px;">
-          <b style="color:#1E293B">Seviye Açıklamaları (Rubrik Ölçeği):</b><br>
+          <b style="color:#1E293B">Seviye Açıklamaları:</b><br>
           <ul style="margin:5px 0 0 0; padding-left:20px;">
             <li><b>1:</b> Başlangıç düzeyindedir, yoğun desteğe ihtiyacı vardır.</li>
             <li><b>2:</b> Gelişmekte olan düzeydedir, yönlendirme ile yapabilir.</li>
@@ -3427,15 +3442,11 @@ function yazdirTopluGelisimPDF() {
         </div>
         <div style="margin-top:50px; text-align:right; padding-right:30px;">
           <div style="border-bottom:1px dotted #000; width:200px; display:inline-block; margin-bottom:5px;"></div><br>
-          <b>${app.adSoyad || app.user}</b><br>
-          Branş Öğretmeni
+          <b>${app.adSoyad || app.user}</b><br>Branş Öğretmeni
         </div>
       </div>
     `;
-    
-    if(index < ogrList.length - 1) {
-      topluHtml += '<div class="html2pdf__page-break"></div>';
-    }
+    if(index < ogrList.length - 1) topluHtml += '<div class="html2pdf__page-break"></div>';
   });
   topluHtml += '</div>';
 
@@ -3443,16 +3454,41 @@ function yazdirTopluGelisimPDF() {
   tempContainer.innerHTML = topluHtml;
   
   html2pdf().set({
-    margin: 0,
-    filename: `Toplu_Gelisim_Raporlari_${sinif}.pdf`,
-    image: {type:'jpeg', quality:1},
-    html2canvas: {scale:2, useCORS:true, logging:false},
+    margin: 0, filename: `Toplu_Gelisim_Raporlari_${sinif}.pdf`,
+    image: {type:'jpeg', quality:1}, html2canvas: {scale:2, useCORS:true, logging:false},
     jsPDF: {format:'a4', orientation:'portrait'}
-  }).from(tempContainer).save().then(() => {
-    btn.innerHTML = oldText;
-    btn.disabled = false;
-  });
+  }).from(tempContainer).save().then(() => { btn.innerHTML = oldText; btn.disabled = false; });
 }
+
+let topluGirisZoom = 12;
+function zoomGelisimToplu(delta) {
+    topluGirisZoom += delta;
+    if(topluGirisZoom < 8) topluGirisZoom = 8;
+    if(topluGirisZoom > 18) topluGirisZoom = 18;
+    document.getElementById('gelGirisPrintArea').style.fontSize = topluGirisZoom + 'px';
+}
+
+function yazdirGelisimTopluPDF() {
+    let el = document.getElementById('gelGirisPrintArea');
+    if(!el) return;
+    if(typeof html2pdf === 'undefined'){ alert('PDF kütüphanesi yüklenemedi.'); return; }
+    
+    let sinif = document.getElementById('gelGirisSinif').value;
+    if(!sinif) { alert("Önce Sınıfı ve Sınavları seçip listeyi hesaplatın."); return; }
+
+    let btn = document.querySelector('button[onclick="yazdirGelisimTopluPDF()"]');
+    let oldText = btn.innerHTML;
+    btn.innerHTML = '<span class="spin"></span> Hazırlanıyor...'; btn.disabled = true;
+
+    html2pdf().set({
+        margin: 5,
+        filename: `eOkul_Toplu_Giris_Listesi_${sinif}.pdf`,
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2, useCORS:true, logging:false },
+        jsPDF: { format: 'a4', orientation: 'landscape' }
+    }).from(el).save().then(() => { btn.innerHTML = oldText; btn.disabled = false; });
+}
+
 window.onload=function(){
   document.getElementById('loginPass')?.addEventListener('keydown',function(e){ if(e.key==='Enter') doLogin(); });
   initPdfBuilder();
