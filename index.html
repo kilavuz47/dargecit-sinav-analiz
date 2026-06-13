@@ -2602,10 +2602,10 @@ async function aiKarneleriOlustur() {
   
   let btn = document.getElementById('btnAiKarne');
   let oldText = btn.innerHTML;
-  btn.innerHTML = '<span class="spin"></span> Yapay Zeka Değerlendiriyor...'; 
+  btn.innerHTML = '<span class="spin"></span> Yapay Zeka Değerlendiriyor (Biraz sürebilir)...'; 
   btn.disabled = true;
 
-  // Öğrenci verisini küçülterek AI'nin kafasının karışmasını önlüyoruz
+  // Öğrenci verisini küçültüyoruz
   let ogrenciOzetleri = data.map(r => {
     let eksikler = [];
     det.forEach((k,i)=>{
@@ -2616,43 +2616,55 @@ async function aiKarneleriOlustur() {
     return { no: String(r['Okul No']), ad: (r['Adı Soyadı'] || 'Öğrenci').split(' ')[0], eksik: eksikler.slice(0,2) };
   });
 
-  let prompt = `Sen eğitim koçu bir yapay zekasın. Aşağıda öğrencilerin Okul No, Adı ve eksik olduğu konular JSON dizisi olarak verilmiştir.
-  Her öğrenci için eksik olduğu konuları vurgulayarak, doğrudan öğrenciye adıyla hitap eden, motive edici 2 cümlelik kısa bir tavsiye yaz. Eğer eksiği yoksa tebrik et.
-  SADECE JSON OBjESİ DÖNDÜR. ANAHTAR OLARAK OKUL NO KULLAN. Başka hiçbir metin yazma.
-  Format Örneği:
-  {"108": "Sevgili Elif, Cebirsel İfadeler konusunda eksikliklerin var. Bu konuya tekrar çalışmalısın.", "368": "Tebrikler Ali, harika bir iş çıkardın!"}
+  // Tıkanmayı önlemek için 10'arlı gruplara (batch) bölüyoruz
+  let batchSize = 10;
+  let hasError = false;
 
-  Öğrenci Verisi:
-  ${JSON.stringify(ogrenciOzetleri)}`;
+  for (let i = 0; i < ogrenciOzetleri.length; i += batchSize) {
+    let batch = ogrenciOzetleri.slice(i, i + batchSize);
+    
+    btn.innerHTML = `<span class="spin"></span> Öğrenciler İşleniyor (${i+1} - ${Math.min(i+batchSize, ogrenciOzetleri.length)})...`;
 
-  try {
-    let res = await fetch(`${GEM_URL}?key=${GEM_KEY}`,{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        contents:[{parts:[{text:prompt}]}],
-        generationConfig:{ 
-            responseMimeType: 'application/json',
-            temperature: 0.2 
-        }
-      })
-    });
-    
-    if(!res.ok) throw new Error('API Bağlantı Hatası: Sunucu yanıt vermedi.');
-    
-    let resData = await res.json();
-    let raw = resData.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-    
-    // Güçlü JSON temizliği (Gemini markdown atarsa diye)
-    raw = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
-    let parsed = JSON.parse(raw);
-    
-    karneAiYorumlari = Object.assign({}, karneAiYorumlari, parsed);
-    drawKarneler(anState.data, anState.det, anState.baraj); 
-    
-    alert('Yapay zeka destekli pedagojik değerlendirmeler başarıyla oluşturuldu!');
-  } catch(e) {
-    alert('Yapay Zeka Hatası: Yanıt alınamadı. Sınıf mevcudu çok kalabalık olabilir veya bağlantı koptu. Lütfen tekrar deneyin.');
-    console.error("AI Karne Hatası:", e);
+    let prompt = `Sen eğitim koçu bir yapay zekasın. Aşağıda öğrencilerin Okul No, Adı ve eksik olduğu konular JSON dizisi olarak verilmiştir.
+    Her öğrenci için eksik olduğu konuları vurgulayarak, doğrudan öğrenciye adıyla hitap eden, motive edici 2 cümlelik kısa bir tavsiye yaz. Eğer eksiği yoksa tebrik et.
+    SADECE JSON OBJESİ DÖNDÜR. ANAHTAR OLARAK OKUL NO KULLAN. Başka hiçbir metin yazma.
+    Format Örneği:
+    {"108": "Sevgili Elif, Cebirsel İfadeler konusunda eksikliklerin var. Bu konuya tekrar çalışmalısın.", "368": "Tebrikler Ali, harika bir iş çıkardın!"}
+
+    Öğrenci Verisi:
+    ${JSON.stringify(batch)}`;
+
+    try {
+      let res = await fetch(`${GEM_URL}?key=${GEM_KEY}`,{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          contents:[{parts:[{text:prompt}]}],
+          generationConfig:{ responseMimeType: 'application/json', temperature: 0.2 }
+        })
+      });
+      
+      if(!res.ok) throw new Error('API Bağlantı Hatası');
+      
+      let resData = await res.json();
+      let raw = resData.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+      
+      // Güçlü JSON temizliği
+      raw = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
+      let parsed = JSON.parse(raw);
+      
+      karneAiYorumlari = Object.assign({}, karneAiYorumlari, parsed);
+    } catch(e) {
+      console.error("AI Karne Hatası (Grup " + i + "):", e);
+      hasError = true;
+    }
+  }
+
+  drawKarneler(anState.data, anState.det, anState.baraj); 
+  
+  if(hasError) {
+    alert('Bazı öğrenciler için zaman aşımı oldu, ancak alınanlar tabloya işlendi. Lütfen tekrar deneyin.');
+  } else {
+    alert('Tüm sınıf için yapay zeka destekli pedagojik değerlendirmeler başarıyla oluşturuldu!');
   }
   
   btn.innerHTML = oldText; 
